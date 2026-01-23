@@ -229,8 +229,8 @@ function renderFactoryList() {
             ]),
             ...factories.map(f => n('tr', [
                 n('td', [factoryLink(f)]),
-                n('td', [f.power]),
-                n('td', [f.heat])
+                n('td', [f.power], { style: 'color: cyan' }),
+                n('td', [f.heat], { style: 'color: coral' })
             ]))
         ], { id: 'factoryTbl' })
     ])
@@ -252,8 +252,8 @@ function renderFactory(id) {
                 n('button', ['🪣'], { '$click': () => deleteFactory(factory), class: 'fab' }),
             ], { style: 'display:flex; gap: 10px;' })
         ], { style: 'display:flex; align-items: center; gap: 50px;' }),
-        n('p', ['Strom: ', factory.power,]),
-        n('p', ['Hitze: ', factory.heat,]),
+        n('p', ['Hitze: ', factory.heat,], { style: 'color: coral' }),
+        n('p', ['Strom: ', factory.power,], { style: 'color: cyan' }),
         n('p', ['Stellt her: ', ...recipeNodes])
     ])
 }
@@ -642,11 +642,18 @@ function renderFactorySummary(data) {
     console.log(factories)
     return n('div', [
         'Zusammenfassung Fabriken:',
-        n('ul', [...factories.entries()].map(([id, amount]) => n('li', [
-            factoryById(config(), id).name,
-            ' ',
-            amount
-        ])))
+        n('ul', [...factories.entries()].map(([id, amount]) => {
+            const factory = factoryById(config(), id)
+            return n('li', [
+                factory.name,
+                ' ',
+                amount,
+                ' ',
+                n('span', [`H:${factory.heat * amount}`], { style: 'color: coral' }),
+                ' ',
+                n('span', [`E:${factory.power * amount}`], { style: 'color: cyan' })
+            ])
+        }))
     ])
 }
 
