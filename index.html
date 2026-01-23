@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de" color-mode="user">
+
+<head>
+    <meta charset=" UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crafty</title>
+    <script src="./d3.v7.min.js"></script>
+    <script src="./crafty.js"></script>
+    <link rel="stylesheet" href="./mvp.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body onload="init()" style="max-height: 100vmax;">
+    <dialog id="newConfig">
+        <form method="dialog" onsubmit="crafty.noi(event)">
+            <label>
+                <span>Name</span>
+                <input name="game" required>
+            </label>
+            <button>doit</button>
+        </form>
+    </dialog>
+    <dialog id="loadConfig">
+        <form method="dialog" onsubmit="loadFile(event)">
+            <label>
+                Load Crafty Spec
+                <input type="file" name="cfg">
+            </label>
+            <button>doit</button>
+        </form>
+        <br>
+        <h3>Beispiel Specs</h3>
+        <a href="./startrupture.json" download>StarRupture</a>
+    </dialog>
+    <dialog id="addRecipeDialog">
+
+    </dialog>
+    <dialog id="addFactoryDialog">
+        <h2>Fabrik hinzufügen</h2>
+        <form class="formRows" method="dialog" onsubmit="submitFactory(event)">
+            <div style="display: flex; gap: 0.5rem">
+                <label>
+                    <span>Name</span>
+                    <input name="name" required>
+                </label>
+            </div>
+            <div>
+                <button style="margin-left: auto; display: block;" type="submit">add</button>
+            </div>
+        </form>
+        <br>
+    </dialog>
+    <header style="display: flex; align-items: center; justify-content: space-between;">
+        <h1>🛠️ Crafty</h1>
+        <nav>
+            <ul style="margin: 0;">
+                <li>
+                    <a href="/#factory"><strong>Fabriken</strong></a>
+                </li>
+                <li>
+                    <a href="/#tree"><strong>TechTree</strong></a>
+                </li>
+                <li>
+                    <button type="button" onclick="openDialog('newConfig')">Neu</button>
+                </li>
+                <li>
+                    <button type="button" onclick="openDialog('loadConfig')">Laden</button>
+                </li>
+                <li>
+                    <button type="button" onclick="save()">Speichern</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <content id="content">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <info></info>
+                <div>
+                    <button class="fab" type="button" onclick="addRecipe()">+ 📄</button>
+                    <button class="fab" type="button" onclick="addFactory()">+ 🏭</button>
+                </div>
+            </div>
+            <div style="display: flex;">
+                <div style="width: 300px;">
+                    <h2>Rezepte 📄</h2>
+                    <filter style="display:block"></filter>
+                    <recipes style="display:block; overflow: auto; max-height: 80vh; border: 1px solid darkgray;">
+                    </recipes>
+                </div>
+                <div style="flex-grow: 1;">
+                    <outlet>
+                        <calculation style="flex-grow: 1;"></calculation>
+                    </outlet>
+                    <tree></tree>
+                </div>
+            </div>
+            <fab-container>
+            </fab-container>
+        </content>
+    </main>
+</body>
+
+</html>

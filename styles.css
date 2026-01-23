@@ -1,0 +1,49 @@
+.formRows {
+
+    label {
+
+        span {
+            width: 200px;
+            flex-grow: 1;
+
+            &+* {
+                flex-grow: 3;
+            }
+        }
+    }
+}
+
+label.inline {
+    input {
+        display: inline-block;
+    }
+}
+
+th[dir="asc"]::after {
+    content: " ↑";
+}
+
+th[dir="desc"]::after {
+    content: " ↓";
+}
+
+.space-2 *+* {
+    margin-left: 0.5rem;
+}
+
+fab-container {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+.recipe-card {
+    border: 1px solid #999;
+    padding: 2px 10px;
+    margin-bottom: 2px;
+    border-radius: 4px;
+}
+
+.block {
+    display: block;
+}
