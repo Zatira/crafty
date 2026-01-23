@@ -611,7 +611,14 @@ function renderCalcTree(data) {
         style: 'display: inline-block'
     })
     if (!data.ingredients || data.ingredients.length == 0) {
-        return singleRecipe
+        return n('details', [
+            n('summary', [
+                singleRecipe
+            ])
+        ], {
+            style: 'padding: 10px',
+            open: 'true'
+        })
     }
     return n('details', [
         n('summary', [
