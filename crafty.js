@@ -150,11 +150,11 @@ function renderOops() {
 }
 
 function recipeLink(recipe) {
-    return n('a', [recipe.name], { href: '/#recipe/' + recipe.id + '-' + sluggy(recipe.name) })
+    return n('a', [recipe.name], { href: '#recipe/' + recipe.id + '-' + sluggy(recipe.name) })
 }
 
 function factoryLink(factory) {
-    return n('a', [factory.name], { href: '/#factory/' + factory.id + '-' + sluggy(factory.name) })
+    return n('a', [factory.name], { href: '#factory/' + factory.id + '-' + sluggy(factory.name) })
 }
 
 function renderTechTree() {
@@ -770,7 +770,7 @@ function displayRecipes(filter = "") {
                 }) ?? [])
             ], { "class": "space-2 recipe-card" })],
             {
-                "href": "/#recipe/" + recipe.id + '-' + sluggy(recipe.name),
+                "href": "#recipe/" + recipe.id + '-' + sluggy(recipe.name),
                 "class": "block"
             }
         )
