@@ -863,7 +863,7 @@ function techtree(options, recipes) {
         .selectAll("line")
         .data(links)
         .join("line")
-        .attr("stroke", d => d.level === undefined ? '#999' : color((d.level ?? 0) / maxLevel))
+        .attr("stroke", d => d.level === undefined ? '#999' : color((d.level ?? 0) / (maxLevel == 0 ? 1 : 0)))
         .attr("marker-end", "url(#arrow)")
         .attr("level", d => d.level)
         .attr("stroke-width", "2")
