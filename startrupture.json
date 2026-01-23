@@ -1,1 +1,834 @@
-{"recipes":[{"name":"Titan","quantity":"2","time":"2","id":0,"factoryId":0},{"name":"Titanbarren","quantity":"2","time":"2","ingredients":[{"id":"0","amount":"2"}],"id":1,"factoryId":1},{"name":"Titanträger","quantity":"1","time":"3","ingredients":[{"id":"1","amount":"1"}],"id":2,"factoryId":2},{"name":"Titanplatte","quantity":"2","time":"2","ingredients":[{"id":"1","amount":"1"}],"id":3,"factoryId":2},{"name":"Titanrahmen","quantity":"1","time":"2","ingredients":[{"id":"2","amount":"1"},{"id":"3","amount":"2"}],"id":4,"factoryId":3},{"name":"Kalzium","quantity":"2","time":"2","id":5,"factoryId":0},{"name":"Kalzium Block","quantity":"2","time":"2","ingredients":[{"id":"5","amount":"2"}],"id":6,"factoryId":1},{"name":"Kalziumpulver","quantity":"3","time":"3","ingredients":[{"id":"6","amount":"1"}],"id":7,"factoryId":3},{"name":"Helium-3","quantity":"8","time":"2","id":8,"factoryId":4},{"name":"Glas","quantity":"1","time":"3","ingredients":[{"id":"8","amount":"1"},{"id":"7","amount":"2"}],"id":9,"factoryId":3},{"name":"Wolfram","quantity":"2","time":"2","id":10,"factoryId":0},{"name":"Wolframbarren","quantity":"2","time":"2","ingredients":[{"id":"10","amount":"2"}],"id":11,"factoryId":1},{"name":"Wolframplatte","quantity":"1","time":"1","ingredients":[{"id":"11","amount":"1"}],"id":12,"factoryId":2},{"name":"Hitzeresistente Platte","quantity":"1","time":"4","ingredients":[{"id":"12","amount":"1"},{"id":"3","amount":"2"},{"id":"9","amount":"1"}],"id":13,"factoryId":3},{"name":"Titanstab","factoryId":"2","quantity":"1","time":"2","ingredients":[{"id":"1","amount":"1"}],"id":14},{"name":"Wolframdraht","factoryId":"2","quantity":"2","time":"4","ingredients":[{"id":"11","amount":"1"}],"id":15},{"name":"Rotor","factoryId":"2","quantity":"1","time":"6","ingredients":[{"id":"14","amount":"2"},{"id":"15","amount":"2"}],"id":16},{"name":"Stabilisator","factoryId":"2","quantity":"1","time":"6","ingredients":[{"id":"16","amount":"1"},{"id":"14","amount":"2"}],"id":17},{"name":"Düse","factoryId":"5","quantity":"1","time":"5","ingredients":[{"id":"13","amount":"2"},{"id":"8","amount":"1"},{"id":"17","amount":"2"}],"id":18},{"name":"Ventil","factoryId":"5","quantity":"1","time":"10","ingredients":[{"id":"4","amount":"1"},{"id":"2","amount":"3"},{"id":"14","amount":"2"},{"id":"18","amount":"1"}],"id":19},{"name":"Kalzittafel","factoryId":"2","quantity":"2","time":"2","ingredients":[{"id":"6","amount":"1"}],"id":20},{"name":"Wolframpulver","factoryId":"3","quantity":"3","time":"2","ingredients":[{"id":"11","amount":"1"}],"id":21},{"name":"Keramik","factoryId":"3","quantity":"2","time":"2","ingredients":[{"id":"20","amount":"1"},{"id":"21","amount":"1"}],"id":22},{"name":"Synthetisches Silikon","factoryId":"3","quantity":"2","time":"2","ingredients":[{"id":"7","amount":"2"},{"id":"8","amount":"1"},{"id":"22","amount":"2"}],"id":23},{"name":"Chemikalien","factoryId":"3","quantity":"2","time":"2","ingredients":[{"id":"23","amount":"1"},{"id":"8","amount":"1"},{"id":"21","amount":"3"}],"id":24},{"name":"Antreiber","factoryId":"5","quantity":"1","time":"4","ingredients":[{"id":"14","amount":"2"},{"id":"13","amount":"2"},{"id":"12","amount":"1"},{"id":"17","amount":"1"}],"id":"25"},{"name":"Schwefel Erz","factoryId":"6","quantity":"8","time":"2","id":26},{"name":"Schwefelsäure","factoryId":"7","quantity":"2","time":"1","ingredients":[{"id":"26","amount":"4"},{"id":"24","amount":"2"}],"id":27},{"name":"Komprimiertes Helium","factoryId":"7","quantity":"1","time":"2","ingredients":[{"id":"26","amount":"1"},{"id":"8","amount":"1"}],"id":28},{"name":"Rohr","factoryId":"2","quantity":"2","time":"2","ingredients":[{"id":"14","amount":"1"},{"id":"3","amount":"1"}],"id":29},{"name":"Induktor","factoryId":"3","quantity":"1","time":"3","ingredients":[{"id":"29","amount":"2"},{"id":"15","amount":"1"},{"id":"22","amount":"2"}],"id":30},{"name":"Stator","factoryId":"2","quantity":"1","time":"3","ingredients":[{"id":"4","amount":"2"},{"id":"15","amount":"1"}],"id":31},{"name":"Elektronik","factoryId":"3","quantity":"1","time":"5","ingredients":[{"id":"23","amount":"2"},{"id":"30","amount":"1"},{"id":"31","amount":"1"}],"id":"32"},{"name":"Batterie","factoryId":"5","quantity":"1","time":"4","ingredients":[{"id":"30","amount":"2"},{"id":"32","amount":"2"},{"id":"27","amount":"1"}],"id":33},{"name":"Akkumulator","factoryId":"8","quantity":"1","time":"6","ingredients":[{"id":"32","amount":"2"},{"id":"33","amount":"2"},{"id":"31","amount":"1"}],"id":34},{"name":"Turbine","factoryId":"5","quantity":"1","time":"6","ingredients":[{"id":"25","amount":"1"},{"id":"31","amount":"1"},{"id":"16","amount":"2"},{"id":"27","amount":"2"}],"id":35},{"name":"Generator","factoryId":"8","quantity":"1","time":"10","ingredients":[{"id":"35","amount":"1"},{"id":"33","amount":"1"},{"id":"18","amount":"1"}],"id":36},{"name":"Applikator","factoryId":"2","quantity":"1","time":"4","ingredients":[{"id":"29","amount":"8"},{"id":"9","amount":"2"}],"id":37},{"name":"Härtungsmittel","factoryId":"3","quantity":"2","time":"4","ingredients":[{"id":"27","amount":"5"},{"id":"23","amount":"1"},{"id":"37","amount":"1"}],"id":38}],"game":"StartRupture","factories":[{"name":"Bergwerk","power":"5","heat":"3","id":"0"},{"name":"Schmelzofen","power":"5","heat":"3","id":"1"},{"name":"Fabrikator","power":"10","heat":"6","id":"2"},{"name":"Schmelzhütte","power":"20","heat":"8","id":"3"},{"name":"Helium Extraktor","power":"15","heat":"60","id":"4"},{"name":"Megapresse","power":"30","heat":"15","id":"5"},{"name":"Schwefel Extraktor","power":"40","heat":"60","id":"6"},{"name":"Rafinerie","power":"40","heat":"60","id":"7"},{"name":"Montierer","power":"60","heat":"150","id":"8"},{"name":"Aufbereiter","power":"60","heat":"150","id":"9"}]}
+{
+    "recipes": [
+        {
+            "name": "Titan",
+            "quantity": "2",
+            "time": "2",
+            "id": 0,
+            "factoryId": 0
+        },
+        {
+            "name": "Titanbarren",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "0",
+                    "amount": "2"
+                }
+            ],
+            "id": 1,
+            "factoryId": 1
+        },
+        {
+            "name": "Titanträger",
+            "quantity": "1",
+            "time": "3",
+            "ingredients": [
+                {
+                    "id": "1",
+                    "amount": "1"
+                }
+            ],
+            "id": 2,
+            "factoryId": 2
+        },
+        {
+            "name": "Titanplatte",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "1",
+                    "amount": "1"
+                }
+            ],
+            "id": 3,
+            "factoryId": 2
+        },
+        {
+            "name": "Titanrahmen",
+            "quantity": "1",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "2",
+                    "amount": "1"
+                },
+                {
+                    "id": "3",
+                    "amount": "2"
+                }
+            ],
+            "id": 4,
+            "factoryId": 3
+        },
+        {
+            "name": "Kalzium",
+            "quantity": "2",
+            "time": "2",
+            "id": 5,
+            "factoryId": 0
+        },
+        {
+            "name": "Kalzium Block",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "5",
+                    "amount": "2"
+                }
+            ],
+            "id": 6,
+            "factoryId": 1
+        },
+        {
+            "name": "Kalziumpulver",
+            "quantity": "3",
+            "time": "3",
+            "ingredients": [
+                {
+                    "id": "6",
+                    "amount": "1"
+                }
+            ],
+            "id": 7,
+            "factoryId": 3
+        },
+        {
+            "name": "Helium-3",
+            "quantity": "8",
+            "time": "2",
+            "id": 8,
+            "factoryId": 4
+        },
+        {
+            "name": "Glas",
+            "quantity": "1",
+            "time": "3",
+            "ingredients": [
+                {
+                    "id": "8",
+                    "amount": "1"
+                },
+                {
+                    "id": "7",
+                    "amount": "2"
+                }
+            ],
+            "id": 9,
+            "factoryId": 3
+        },
+        {
+            "name": "Wolfram",
+            "quantity": "2",
+            "time": "2",
+            "id": 10,
+            "factoryId": 0
+        },
+        {
+            "name": "Wolframbarren",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "10",
+                    "amount": "2"
+                }
+            ],
+            "id": 11,
+            "factoryId": 1
+        },
+        {
+            "name": "Wolframplatte",
+            "quantity": "1",
+            "time": "1",
+            "ingredients": [
+                {
+                    "id": "11",
+                    "amount": "1"
+                }
+            ],
+            "id": 12,
+            "factoryId": 2
+        },
+        {
+            "name": "Hitzeresistente Platte",
+            "quantity": "1",
+            "time": "4",
+            "ingredients": [
+                {
+                    "id": "12",
+                    "amount": "1"
+                },
+                {
+                    "id": "3",
+                    "amount": "2"
+                },
+                {
+                    "id": "9",
+                    "amount": "1"
+                }
+            ],
+            "id": 13,
+            "factoryId": 3
+        },
+        {
+            "name": "Titanstab",
+            "factoryId": "2",
+            "quantity": "1",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "1",
+                    "amount": "1"
+                }
+            ],
+            "id": 14
+        },
+        {
+            "name": "Wolframdraht",
+            "factoryId": "2",
+            "quantity": "2",
+            "time": "4",
+            "ingredients": [
+                {
+                    "id": "11",
+                    "amount": "1"
+                }
+            ],
+            "id": 15
+        },
+        {
+            "name": "Rotor",
+            "factoryId": "2",
+            "quantity": "1",
+            "time": "6",
+            "ingredients": [
+                {
+                    "id": "14",
+                    "amount": "2"
+                },
+                {
+                    "id": "15",
+                    "amount": "2"
+                }
+            ],
+            "id": 16
+        },
+        {
+            "name": "Stabilisator",
+            "factoryId": "2",
+            "quantity": "1",
+            "time": "6",
+            "ingredients": [
+                {
+                    "id": "16",
+                    "amount": "1"
+                },
+                {
+                    "id": "14",
+                    "amount": "2"
+                }
+            ],
+            "id": 17
+        },
+        {
+            "name": "Düse",
+            "factoryId": "5",
+            "quantity": "1",
+            "time": "5",
+            "ingredients": [
+                {
+                    "id": "13",
+                    "amount": "2"
+                },
+                {
+                    "id": "8",
+                    "amount": "1"
+                },
+                {
+                    "id": "17",
+                    "amount": "2"
+                }
+            ],
+            "id": 18
+        },
+        {
+            "name": "Ventil",
+            "factoryId": "5",
+            "quantity": "1",
+            "time": "10",
+            "ingredients": [
+                {
+                    "id": "4",
+                    "amount": "1"
+                },
+                {
+                    "id": "2",
+                    "amount": "3"
+                },
+                {
+                    "id": "14",
+                    "amount": "2"
+                },
+                {
+                    "id": "18",
+                    "amount": "1"
+                }
+            ],
+            "id": 19
+        },
+        {
+            "name": "Kalzittafel",
+            "factoryId": "2",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "6",
+                    "amount": "1"
+                }
+            ],
+            "id": 20
+        },
+        {
+            "name": "Wolframpulver",
+            "factoryId": "3",
+            "quantity": "3",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "11",
+                    "amount": "1"
+                }
+            ],
+            "id": 21
+        },
+        {
+            "name": "Keramik",
+            "factoryId": "3",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "20",
+                    "amount": "1"
+                },
+                {
+                    "id": "21",
+                    "amount": "1"
+                }
+            ],
+            "id": 22
+        },
+        {
+            "name": "Synthetisches Silikon",
+            "factoryId": "3",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "7",
+                    "amount": "2"
+                },
+                {
+                    "id": "8",
+                    "amount": "1"
+                },
+                {
+                    "id": "22",
+                    "amount": "2"
+                }
+            ],
+            "id": 23
+        },
+        {
+            "name": "Chemikalien",
+            "factoryId": "3",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "23",
+                    "amount": "1"
+                },
+                {
+                    "id": "8",
+                    "amount": "1"
+                },
+                {
+                    "id": "21",
+                    "amount": "3"
+                }
+            ],
+            "id": 24
+        },
+        {
+            "name": "Antreiber",
+            "factoryId": "5",
+            "quantity": "1",
+            "time": "4",
+            "ingredients": [
+                {
+                    "id": "14",
+                    "amount": "2"
+                },
+                {
+                    "id": "13",
+                    "amount": "2"
+                },
+                {
+                    "id": "12",
+                    "amount": "1"
+                },
+                {
+                    "id": "17",
+                    "amount": "1"
+                }
+            ],
+            "id": "25"
+        },
+        {
+            "name": "Schwefel Erz",
+            "factoryId": "6",
+            "quantity": "8",
+            "time": "2",
+            "id": 26
+        },
+        {
+            "name": "Schwefelsäure",
+            "factoryId": "7",
+            "quantity": "2",
+            "time": "1",
+            "ingredients": [
+                {
+                    "id": "26",
+                    "amount": "4"
+                },
+                {
+                    "id": "24",
+                    "amount": "2"
+                }
+            ],
+            "id": 27
+        },
+        {
+            "name": "Komprimiertes Helium",
+            "factoryId": "7",
+            "quantity": "1",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "26",
+                    "amount": "1"
+                },
+                {
+                    "id": "8",
+                    "amount": "1"
+                }
+            ],
+            "id": 28
+        },
+        {
+            "name": "Rohr",
+            "factoryId": "2",
+            "quantity": "2",
+            "time": "2",
+            "ingredients": [
+                {
+                    "id": "14",
+                    "amount": "1"
+                },
+                {
+                    "id": "3",
+                    "amount": "1"
+                }
+            ],
+            "id": 29
+        },
+        {
+            "name": "Induktor",
+            "factoryId": "3",
+            "quantity": "1",
+            "time": "3",
+            "ingredients": [
+                {
+                    "id": "29",
+                    "amount": "2"
+                },
+                {
+                    "id": "15",
+                    "amount": "1"
+                },
+                {
+                    "id": "22",
+                    "amount": "2"
+                }
+            ],
+            "id": 30
+        },
+        {
+            "name": "Stator",
+            "factoryId": "2",
+            "quantity": "1",
+            "time": "3",
+            "ingredients": [
+                {
+                    "id": "4",
+                    "amount": "2"
+                },
+                {
+                    "id": "15",
+                    "amount": "1"
+                }
+            ],
+            "id": 31
+        },
+        {
+            "name": "Elektronik",
+            "factoryId": "3",
+            "quantity": "1",
+            "time": "5",
+            "ingredients": [
+                {
+                    "id": "23",
+                    "amount": "2"
+                },
+                {
+                    "id": "30",
+                    "amount": "1"
+                },
+                {
+                    "id": "31",
+                    "amount": "1"
+                }
+            ],
+            "id": "32"
+        },
+        {
+            "name": "Batterie",
+            "factoryId": "5",
+            "quantity": "1",
+            "time": "4",
+            "ingredients": [
+                {
+                    "id": "30",
+                    "amount": "2"
+                },
+                {
+                    "id": "32",
+                    "amount": "2"
+                },
+                {
+                    "id": "27",
+                    "amount": "1"
+                }
+            ],
+            "id": 33
+        },
+        {
+            "name": "Akkumulator",
+            "factoryId": "8",
+            "quantity": "1",
+            "time": "6",
+            "ingredients": [
+                {
+                    "id": "32",
+                    "amount": "2"
+                },
+                {
+                    "id": "33",
+                    "amount": "2"
+                },
+                {
+                    "id": "31",
+                    "amount": "1"
+                }
+            ],
+            "id": 34
+        },
+        {
+            "name": "Turbine",
+            "factoryId": "5",
+            "quantity": "1",
+            "time": "6",
+            "ingredients": [
+                {
+                    "id": "25",
+                    "amount": "1"
+                },
+                {
+                    "id": "31",
+                    "amount": "1"
+                },
+                {
+                    "id": "16",
+                    "amount": "2"
+                },
+                {
+                    "id": "27",
+                    "amount": "2"
+                }
+            ],
+            "id": 35
+        },
+        {
+            "name": "Generator",
+            "factoryId": "8",
+            "quantity": "1",
+            "time": "10",
+            "ingredients": [
+                {
+                    "id": "35",
+                    "amount": "1"
+                },
+                {
+                    "id": "33",
+                    "amount": "1"
+                },
+                {
+                    "id": "18",
+                    "amount": "1"
+                }
+            ],
+            "id": 36
+        },
+        {
+            "name": "Applikator",
+            "factoryId": "2",
+            "quantity": "1",
+            "time": "4",
+            "ingredients": [
+                {
+                    "id": "29",
+                    "amount": "8"
+                },
+                {
+                    "id": "9",
+                    "amount": "2"
+                }
+            ],
+            "id": 37
+        },
+        {
+            "name": "Härtungsmittel",
+            "factoryId": "3",
+            "quantity": "2",
+            "time": "4",
+            "ingredients": [
+                {
+                    "id": "27",
+                    "amount": "5"
+                },
+                {
+                    "id": "23",
+                    "amount": "1"
+                },
+                {
+                    "id": "37",
+                    "amount": "1"
+                }
+            ],
+            "id": 38
+        },
+        {
+            "name": "Supermagnet",
+            "factoryId": "1",
+            "quantity": "1",
+            "time": "3",
+            "ingredients": [
+                {
+                    "id": "27",
+                    "amount": "5"
+                },
+                {
+                    "id": "12",
+                    "amount": "5"
+                },
+                {
+                    "id": "24",
+                    "amount": "2"
+                }
+            ],
+            "id": 39
+        },
+        {
+            "name": "Elektromagnetische Spule",
+            "factoryId": "5",
+            "quantity": "1",
+            "time": "4",
+            "ingredients": [
+                {
+                    "id": "30",
+                    "amount": "1"
+                },
+                {
+                    "id": "28",
+                    "amount": "1"
+                },
+                {
+                    "id": "12",
+                    "amount": "6"
+                },
+                {
+                    "id": "39",
+                    "amount": "1"
+                }
+            ],
+            "id": 40
+        },
+        {
+            "name": "Pumpe",
+            "factoryId": "5",
+            "quantity": "1",
+            "time": "10",
+            "ingredients": [
+                {
+                    "id": "27",
+                    "amount": "3"
+                },
+                {
+                    "id": "35",
+                    "amount": "1"
+                },
+                {
+                    "id": "25",
+                    "amount": "1"
+                },
+                {
+                    "id": "19",
+                    "amount": "1"
+                }
+            ],
+            "id": 41
+        },
+        {
+            "name": "Synthetisches Harz",
+            "factoryId": "9",
+            "quantity": "1",
+            "time": "3",
+            "ingredients": [
+                {
+                    "id": "38",
+                    "amount": "2"
+                },
+                {
+                    "id": "27",
+                    "amount": "4"
+                },
+                {
+                    "id": "20",
+                    "amount": "10"
+                }
+            ],
+            "id": 42
+        },
+        {
+            "name": "Elektromagnet",
+            "factoryId": "8",
+            "quantity": "1",
+            "time": "5",
+            "ingredients": [
+                {
+                    "id": "40",
+                    "amount": "3"
+                },
+                {
+                    "id": "42",
+                    "amount": "3"
+                },
+                {
+                    "id": "34",
+                    "amount": "2"
+                }
+            ],
+            "id": 43
+        },
+        {
+            "name": "Linse",
+            "factoryId": "9",
+            "quantity": "1",
+            "time": "12",
+            "ingredients": [
+                {
+                    "id": "9",
+                    "amount": "10"
+                },
+                {
+                    "id": "38",
+                    "amount": "8"
+                },
+                {
+                    "id": "42",
+                    "amount": "8"
+                }
+            ],
+            "id": 44
+        }
+    ],
+    "game": "StartRupture",
+    "factories": [
+        {
+            "name": "Bergwerk",
+            "power": "5",
+            "heat": "3",
+            "id": "0"
+        },
+        {
+            "name": "Schmelzofen",
+            "power": "5",
+            "heat": "3",
+            "id": "1"
+        },
+        {
+            "name": "Fabrikator",
+            "power": "10",
+            "heat": "6",
+            "id": "2"
+        },
+        {
+            "name": "Schmelzhütte",
+            "power": "20",
+            "heat": "8",
+            "id": "3"
+        },
+        {
+            "name": "Helium Extraktor",
+            "power": "15",
+            "heat": "60",
+            "id": "4"
+        },
+        {
+            "name": "Megapresse",
+            "power": "30",
+            "heat": "15",
+            "id": "5"
+        },
+        {
+            "name": "Schwefel Extraktor",
+            "power": "40",
+            "heat": "60",
+            "id": "6"
+        },
+        {
+            "name": "Rafinerie",
+            "power": "40",
+            "heat": "60",
+            "id": "7"
+        },
+        {
+            "name": "Montierer",
+            "power": "60",
+            "heat": "150",
+            "id": "8"
+        },
+        {
+            "name": "Aufbereiter",
+            "power": "60",
+            "heat": "150",
+            "id": "9"
+        }
+    ]
+}
