@@ -1,3 +1,8 @@
+const defaultConfig = {
+    recipes: [],
+    factories: []
+}
+
 const FactoryDescription = {
     id: {
         transform: (v) => +v,
@@ -60,20 +65,16 @@ function config() {
 
 async function loadFile(event) {
     const formData = new FormData(event.target)
-    console.log(event, formData)
     const filehandle = formData.get("cfg")
-
     const content = await filehandle.text()
-    console.log(content, filehandle.name)
     readInfo(content, filehandle.name)
 }
 
 function init() {
     const fromStorage = localStorage.getItem("crafty")
     if (fromStorage) {
-        const [config, configName] = JSON.parse(fromStorage)
-        updateFactories(config)
-        state.config = config
+        const [parsedConfig, configName] = JSON.parse(fromStorage)
+        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
         state.configName = configName
     }
     navigate(new URL(window.location.href))
@@ -311,40 +312,10 @@ function hookIntoNav() {
     });
 }
 
-function updateFactories(config) {
-    const recipes = config.recipes ?? []
-    const factories = config.factories ?? []
-    if (recipes.length == 0) {
-        return
-    }
-    for (const recipe of recipes) {
-        if (recipe.factory) {
-            const factoryName = recipe.factory
-            const exists = factories.filter(f => f.name == factoryName)
-            if (exists.length == 1) {
-                recipe.factoryId = exists[0].id
-            } else {
-                const newFactory = {
-                    id: Math.max(...factories.map(f => +f.id), -1) + 1,
-                    name: factoryName
-                }
-                factories.push(newFactory)
-                recipe.factoryId = newFactory.id
-            }
-            delete recipe.factory
-        }
-    }
-    config.factories = factories
-}
-
 function readInfo(configContent, name) {
     try {
         const parsedConfig = JSON.parse(configContent)
-        if (!parsedConfig.recipes) {
-            parsedConfig.recipes = []
-        }
-        updateFactories(parsedConfig)
-        state.config = parsedConfig
+        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
         state.configName = name
     } catch (e) {
         console.log(e)
@@ -382,25 +353,14 @@ function download(data, filename, type) {
     }
 }
 
-function b(content) {
-    const el = document.createElement('b')
-    el.innerText = content
-    return el
-}
-
 function displayInfo(root) {
     root.innerHTML = ""
-    const el = document.createElement('div')
-    el.innerText = "Rezepte geladen für: "
-    el.appendChild(b(config().game))
-    root.appendChild(el)
+    root.append(n('div', [`Rezepte geladen für: ${config().game}`]))
 }
 
 function noi(event) {
     const formData = new FormData(event.target)
-    const newConfig = {
-        recipes: []
-    }
+    const newConfig = structuredClone(defaultConfig)
     for (const [key, value] of formData.entries()) {
         newConfig[key] = value
     }
@@ -412,42 +372,57 @@ function noi(event) {
     return true
 }
 
-function submitFactory(event) {
-    event.preventDefault()
-    console.log(event)
-    const formData = new FormData(event.target)
-    if (!config().factories) {
-        config().factories = []
-    }
-    const factory = {}
+function mergeForm(formData, target) {
     for (const [key, value] of formData.entries()) {
         if (key.indexOf('.') == -1) {
-            factory[key] = value
+            target[key] = value
         } else {
             const [parentKey, index, subkey] = key.split('.')
-            if (!factory[parentKey]) {
-                factory[parentKey] = []
+            if (!target[parentKey]) {
+                target[parentKey] = []
             }
-            if (!factory[parentKey][index]) {
-                factory[parentKey][index] = {}
+            if (!target[parentKey][index]) {
+                target[parentKey][index] = {}
             }
-            factory[parentKey][index][subkey] = value
+            target[parentKey][index][subkey] = value
         }
     }
-    if (factory.id === 0 || factory.id) {
-        config().factories[config().factories.findIndex(r => r.id == factory.id)] = factory
+}
+
+function isNameUnique(event, collection) {
+    const inp = event.target.querySelector('[name="name"]')
+    if (collection.some(item => item.name.toLowerCase() === inp.value.toLowerCase())) {
+        inp.setCustomValidity(inp.value + " ist bereits vorhanden")
+        inp.reportValidity()
+        return false
     } else {
-        const inp = event.target.querySelector('[name="name"]')
-        if (config().factories.some(f => f.name.toLowerCase() === factory.name.toLowerCase())) {
-            inp.setCustomValidity(factory.name + " ist bereits vorhanden")
-            inp.reportValidity()
+        inp.setCustomValidity("")
+        return true
+    }
+}
+
+function upsert(collection, element) {
+    if (element.id === 0 || element.id) {
+        collection[collection.findIndex(r => r.id == element.id)] = element
+    } else {
+        if (isNameUnique(event, collection)) {
             return false
-        } else {
-            inp.setCustomValidity("")
         }
-        const ids = config().factories.map(r => r.id)
-        factory.id = Math.max(...ids, -1) + 1
-        config().factories.push(factory)
+        const ids = collection.map(r => r.id)
+        element.id = Math.max(...ids, -1) + 1
+        collection.push(element)
+    }
+    return true
+}
+
+function submitFactory(event) {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const element = mergeForm(formData, {})
+    const collection = config().factories
+    const inserted = upsert(collection, element)
+    if (!inserted) {
+        return false
     }
     state.config = config()
     saveInternal()
@@ -455,42 +430,13 @@ function submitFactory(event) {
 
 function submitRecipe(event) {
     event.preventDefault()
-    console.log(event)
     const formData = new FormData(event.target)
-    const recipe = {}
-    if (!config().recipes) {
-        config().recipes = []
+    const element = mergeForm(formData, {})
+    const collection = config().recipes
+    const inserted = upsert(collection, element)
+    if (!inserted) {
+        return false
     }
-    for (const [key, value] of formData.entries()) {
-        if (key.indexOf('.') == -1) {
-            recipe[key] = value
-        } else {
-            const [parentKey, index, subkey] = key.split('.')
-            if (!recipe[parentKey]) {
-                recipe[parentKey] = []
-            }
-            if (!recipe[parentKey][index]) {
-                recipe[parentKey][index] = {}
-            }
-            recipe[parentKey][index][subkey] = value
-        }
-    }
-    if (recipe.id === 0 || recipe.id) {
-        config().recipes[config().recipes.findIndex(r => r.id == recipe.id)] = recipe
-    } else {
-        const inp = event.target.querySelector('[name="name"]')
-        if (config().recipes.some(f => f.name.toLowerCase() === recipe.name.toLowerCase())) {
-            inp.setCustomValidity(recipe.name + " ist bereits vorhanden")
-            inp.reportValidity()
-            return false
-        } else {
-            inp.setCustomValidity("")
-        }
-        const ids = config().recipes.map(r => r.id)
-        recipe.id = Math.max(...ids, -1) + 1
-        config().recipes.push(recipe)
-    }
-    console.log(recipe)
     state.config = config()
     saveInternal()
 }

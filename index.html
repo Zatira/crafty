@@ -13,7 +13,7 @@
 
 <body onload="init()" style="max-height: 100vmax;">
     <dialog id="newConfig">
-        <form method="dialog" onsubmit="crafty.noi(event)">
+        <form method="dialog" onsubmit="noi(event)">
             <label>
                 <span>Name</span>
                 <input name="game" required>
@@ -25,31 +25,13 @@
         <form method="dialog" onsubmit="loadFile(event)">
             <label>
                 Load Crafty Spec
-                <input type="file" name="cfg">
+                <input type="file" name="cfg" required>
             </label>
             <button>doit</button>
         </form>
         <br>
         <h3>Beispiel Specs</h3>
         <a href="./startrupture.json" download>StarRupture</a>
-    </dialog>
-    <dialog id="addRecipeDialog">
-
-    </dialog>
-    <dialog id="addFactoryDialog">
-        <h2>Fabrik hinzufügen</h2>
-        <form class="formRows" method="dialog" onsubmit="submitFactory(event)">
-            <div style="display: flex; gap: 0.5rem">
-                <label>
-                    <span>Name</span>
-                    <input name="name" required>
-                </label>
-            </div>
-            <div>
-                <button style="margin-left: auto; display: block;" type="submit">add</button>
-            </div>
-        </form>
-        <br>
     </dialog>
     <header style="display: flex; align-items: center; justify-content: space-between;">
         <h1>🛠️ Crafty</h1>
