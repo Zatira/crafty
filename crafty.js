@@ -349,7 +349,13 @@ function renderMap() {
         container.scrollLeft = 915
     }, 1)
     renderMarkers()
-    return n('div', [container, markerList])
+    return n('div', [
+        n('h2', ['Map']),
+        n('div', [
+            n('span', ['Marker können mit Rechtsklick hinzugefügt werden.'])
+        ]),
+        n('div', [container, markerList], { style: "display: flex; gap: 10px;" })
+    ])
 }
 
 function renderTechTree() {
