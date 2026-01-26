@@ -23,7 +23,7 @@
   --width-card: 285px;
   --width-card-medium: 460px;
   --width-card-wide: 800px;
-  --width-content: 1280px;
+  --width-content: 100%;
 }
 
 @media (prefers-color-scheme: dark) {

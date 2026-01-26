@@ -357,7 +357,7 @@ function renderMap() {
         'div',
         [map],
         {
-            style: "overflow: auto; width: 600px; height: 600px;",
+            style: "overflow: auto; height: 80vh;",
             $click: (event) => {
                 event.stopPropagation()
                 event.preventDefault()
