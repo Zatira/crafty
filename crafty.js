@@ -115,6 +115,8 @@ function mainNodeByType(type, id) {
             return renderRecipe(id)
         case 'tree':
             return renderTechTree()
+        case 'map':
+            return renderMap()
         default:
             return renderOops()
     }
@@ -156,6 +158,129 @@ function recipeLink(recipe) {
 
 function factoryLink(factory) {
     return n('a', [factory.name], { href: '#factory/' + factory.id + '-' + sluggy(factory.name) })
+}
+
+function updateScroll() {
+    if (!isDragging) return;
+
+    const dx = currentX - startX;
+    const dy = currentY - startY;
+
+    sContainer.scrollLeft = startScrollLeft - dx;
+    sContainer.scrollTop = startScrollTop - dy;
+
+    rafId = requestAnimationFrame(updateScroll);
+}
+
+
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+let startScrollLeft = 0;
+let startScrollTop = 0;
+let currentX = 0;
+let currentY = 0;
+let rafId = null;
+let sContainer;
+
+function renderMap() {
+
+    const maxX = 16
+    const maxY = 16
+    const tileWidth = 256
+    const tiles = []
+    const markers = JSON.parse(localStorage.getItem('craftyMap') ?? '[]')
+
+    const marker = (md, markerList, map) => {
+        markerList.append(n('a', [md.icon, " (", md.y, ",", md.x, ") - ", md.text], {
+            $click: () => {
+                sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
+                sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
+            },
+            style: "display:flex; flex-direction:col;"
+        }))
+        map.append(n('span', [md.icon], { title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem` }))
+    }
+
+    const suppress = (event) => {
+        event.stopPropagation()
+        event.preventDefault()
+        console.log('img', event)
+    }
+    for (let xi = 0; xi < maxX; xi++) {
+        for (let yi = 0; yi < maxY; yi++) {
+            tiles.push(n('img', [], { src: `./tiles/${yi}_${xi}.webp`, $click: suppress, style: "pointer-events:none; user-select:none" }))
+        }
+    }
+
+
+    const map = n('div', tiles, { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: relative;` })
+    const markerList = n('div')
+    const container = n(
+        'div',
+        [map],
+        {
+            style: "overflow: auto; width: 600px; height: 600px;",
+            $click: (event) => {
+                event.stopPropagation()
+                event.preventDefault()
+            },
+            $mousedown: (e) => {
+                if (e.button !== 0) return;
+
+                e.preventDefault();
+                isDragging = true;
+
+                sContainer.classList.add('dragging');
+
+                startX = currentX = e.clientX;
+                startY = currentY = e.clientY;
+                startScrollLeft = sContainer.scrollLeft;
+                startScrollTop = sContainer.scrollTop;
+
+                rafId = requestAnimationFrame(updateScroll);
+            },
+            $mouseup: (e) => {
+                if (!isDragging) return;
+
+                isDragging = false;
+                sContainer.classList.remove('dragging');
+
+                cancelAnimationFrame(rafId);
+            },
+            $mousemove: (e) => {
+                if (!isDragging) return;
+                currentX = e.clientX;
+                currentY = e.clientY;
+            },
+            $contextmenu: (event) => {
+                if (event.target.nodeName.toLowerCase() == "span") {
+                    event.preventDefault()
+                    return
+                }
+                event.stopPropagation()
+                event.preventDefault()
+                const t = prompt("text")
+                const i = prompt("icon")
+                const md = {
+                    text: t,
+                    icon: i,
+                    x: event.layerX,
+                    y: event.layerY
+                }
+                markers.push(md)
+                marker(md, markerList, map)
+                localStorage.setItem("craftyMap", JSON.stringify(markers))
+            }
+        }
+    )
+    sContainer = container
+    setTimeout(() => {
+        container.scrollTop = 1954
+        container.scrollLeft = 915
+    }, 1)
+    markers.forEach(m => marker(m, markerList, map))
+    return n('div', [container, markerList])
 }
 
 function renderTechTree() {
