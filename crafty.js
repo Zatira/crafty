@@ -73,6 +73,19 @@ async function loadFile(event) {
     readInfo(content, filehandle.name)
 }
 
+function readInfo(configContent, name) {
+    try {
+        const parsedConfig = JSON.parse(configContent)
+        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
+        state.configName = name
+    } catch (e) {
+        console.log(e)
+        alert("failed to read config", e)
+        return
+    }
+    saveInternal()
+}
+
 function init() {
     const fromStorage = localStorage.getItem("crafty")
     if (fromStorage) {
@@ -232,6 +245,55 @@ function renderMap() {
         dialog.showModal()
     }
 
+    function importMarkers() {
+        const dialog = n('dialog', [markerImportForm()], { $close: (event) => dialog.remove() })
+        document.body.append(dialog)
+        dialog.showModal()
+    }
+
+    function markerImportForm() {
+        const form = n('div', [
+            n('h2', ['Marker Import']),
+            n('form', [
+                n('div', [
+                    fieldFn('Datei', { name: "markerFile", type: 'file', requierd: true })
+                ], { style: "display: flex; gap: 0.5rem" }),
+                n('div', [
+                    n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
+                    n('button', ['OK'], { type: "submit" })
+                ], { style: "display:flex; justify-content:end; gap:10px;" }),
+            ], { $submit: async (event) => await submitImportMarker(event), class: "formRows", method: "dialog" }),
+            n('br')
+        ])
+        return form
+    }
+
+    async function submitImportMarker(event) {
+        const formData = new FormData(event.target)
+        const filehandle = formData.get("markerFile")
+        const content = await filehandle.text()
+        readMarkerInfo(content)
+    }
+
+    function readMarkerInfo(markerContent) {
+        try {
+            const parsedMarkers = JSON.parse(markerContent)
+            markers = parsedMarkers
+            renderMarkers()
+            saveInternal()
+        } catch (e) {
+            console.log(e)
+            alert("failed to read markers", e)
+            return
+        }
+    }
+
+    function exportMarkers() {
+        const stringied = JSON.stringify(markers)
+        const fileName = "CraftyMarkers-" + sluggy(config().game) + '-' + new Date().getTime() + '.json'
+        download(stringied, fileName, 'application/json')
+    }
+
     function removeMarker(marker) {
         const markerIndex = markers.findIndex(m => m.id == marker.id)
         if (markerIndex != -1) {
@@ -349,12 +411,17 @@ function renderMap() {
         container.scrollLeft = 915
     }, 1)
     renderMarkers()
+    const markerActions = n('div', [
+        n('button', ['Marker Import'], { type: 'button', $click: () => importMarkers() }),
+        n('button', ['Marker Export'], { type: 'button', $click: () => exportMarkers() })
+    ], { style: 'display:flex; gap:10px' })
+    const makerListContainer = n('div', [markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; justify-content:space-between;' })
     return n('div', [
         n('h2', ['Map']),
         n('div', [
             n('span', ['Marker können mit Rechtsklick hinzugefügt werden.'])
         ]),
-        n('div', [container, markerList], { style: "display: flex; gap: 10px;" })
+        n('div', [container, makerListContainer], { style: "display: flex; gap: 10px;" })
     ])
 }
 
@@ -510,19 +577,6 @@ function hookIntoNav() {
         const url = new URL(event.destination.url);
         navigate(url)
     });
-}
-
-function readInfo(configContent, name) {
-    try {
-        const parsedConfig = JSON.parse(configContent)
-        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
-        state.configName = name
-    } catch (e) {
-        console.log(e)
-        alert("failed to read config", e)
-        return
-    }
-    saveInternal()
 }
 
 function saveInternal() {
