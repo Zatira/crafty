@@ -318,25 +318,44 @@ function renderMap() {
     }
 
     function renderMarkers() {
+        const filter = markerFilterInput.value
         markerList.innerHTML = '';
         [...(map.querySelectorAll('span.mapMarker'))].forEach(node => node.remove())
-        markers.forEach(m => renderMarker(m, map))
+        markers.forEach(m => renderMarker(m, map, filter))
     }
 
-    const renderMarker = (md, map) => {
-        const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
-        const markerLink = n('a', [md.icon, " (", md.y, ",", md.x, ") - ", md.text], {
-            $click: () => {
-                sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
-                sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
-            },
-            style: "display:flex; flex-direction:col;"
-        })
-        const markerRow = n('div', [markerLink, markerEditButton], { style: "display:flex; gap:2rem; align-items:center;" })
-        markerList.append(
-            markerRow
-        )
-        map.append(n('span', [md.icon], { class: "mapMarker", title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem` }))
+    const renderMarker = (md, map, filter = "") => {
+        const mapMarker = n('span', [md.icon], {
+            class: "mapMarker", title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem; transform: translate(-50%, -50%); background-color: white;
+  border: 1px solid black;
+  border-radius: 100%;
+  aspect-ratio: 1;
+  padding: 1px;
+  cursor: pointer;` })
+        const shouldDisplay = (md.icon + ' ' + md.text).toLowerCase().indexOf(filter.toLowerCase()) > -1
+        if (shouldDisplay) {
+            const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
+            const markerLink = n('a', [md.icon, " - ", md.text], {
+                $click: () => {
+                    sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
+                    sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
+                    const selected = map.querySelector(".selected")
+                    if (selected) {
+                        selected.style.backgroundColor = "white"
+                        selected.classList.toggle("selected")
+                    }
+                    mapMarker.style.backgroundColor = "red"
+                    mapMarker.classList.toggle("selected")
+                },
+                style: "display:flex; flex-direction:col;"
+            })
+
+            const markerRow = n('div', [markerLink, markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;" })
+            markerList.append(
+                markerRow
+            )
+        }
+        map.append(mapMarker)
     }
 
     const suppress = (event) => {
@@ -351,8 +370,8 @@ function renderMap() {
         }
     }
 
-    const map = n('div', tiles, { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: relative;` })
-    markerList = n('div')
+    const map = n('div', tiles, { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: relative; cursor: all-scroll;` })
+    markerList = n('div', [], { style: "overflow:auto; padding: 0px 5px; flex-grow: 1" })
     const container = n(
         'div',
         [map],
@@ -410,18 +429,24 @@ function renderMap() {
         container.scrollTop = 1954
         container.scrollLeft = 915
     }, 1)
+    const markerFilterInput = n('input', [], {
+        placeholder: 'Marker Filter', $input: () => {
+            renderMarkers()
+        }
+    })
     renderMarkers()
+    const markerFilter = n('div', [markerFilterInput])
     const markerActions = n('div', [
         n('button', ['Marker Import'], { type: 'button', $click: () => importMarkers() }),
         n('button', ['Marker Export'], { type: 'button', $click: () => exportMarkers() })
     ], { style: 'display:flex; gap:10px' })
-    const makerListContainer = n('div', [markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; justify-content:space-between;' })
+    const makerListContainer = n('div', [markerFilter, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 80vh; width: 250px' })
     return n('div', [
         n('h2', ['Map']),
         n('div', [
             n('span', ['Marker können mit Rechtsklick hinzugefügt werden.'])
         ]),
-        n('div', [container, makerListContainer], { style: "display: flex; gap: 10px;" })
+        n('div', [container, makerListContainer], { style: "display: grid; gap: 10px; grid-template-columns: 1fr 250px" })
     ])
 }
 
