@@ -568,7 +568,7 @@ function renderRecipe(id) {
         recipeNodes.push(n('br'))
         recipeNodes.push(recipeLink(recipe))
     }
-    return [
+    return n('div', [
         n('div', [
             n('div', [
                 n('div', [
@@ -594,7 +594,7 @@ function renderRecipe(id) {
         ], { style: 'display:flex; gap: 10px; align-items:start; justify-content: space-between;' }),
         displayCalc(recipe.id),
         techtree({}, dependantRecipies)
-    ]
+    ], { style: 'max-width: 1000px' })
 }
 
 function hookIntoNav() {
@@ -806,6 +806,12 @@ function displayCalc(id) {
             ' ',
             n('button', ['Go!'])
         ], { $submit: (event) => calculate(event) }),
+        n('form', [
+            n('input', [], { type: 'hidden', value: id, name: 'ingredient' }),
+            n('label', ['Fabriken: ', n('input', [], { name: 'factories', style: 'display:inline-block' })], { style: 'display:inline-block' }),
+            ' ',
+            n('button', ['Go!'])
+        ], { $submit: (event) => calculate(event) }),
         n('result')
     ])
 }
@@ -869,7 +875,6 @@ function renderFactorySummary(data) {
         el.ingredients?.forEach(i => edge.push(i))
         factories.set(+el.factoryId, (factories.get(+el.factoryId) ?? 0) + Math.ceil(el.machines))
     }
-    console.log(factories)
     return n('div', [
         'Zusammenfassung Fabriken:',
         n('ul', [...factories.entries()].map(([id, amount]) => {
@@ -887,18 +892,52 @@ function renderFactorySummary(data) {
     ])
 }
 
+function renderMaterialSummary(data) {
+    const materials = new Map()
+    const edge = []
+    if ((data.ingredients ?? []).length > 0) {
+        data.ingredients?.forEach(i => edge.push(i))
+    }
+    while (edge.length > 0) {
+        const el = edge.shift()
+        el.ingredients?.forEach(i => edge.push(i))
+        materials.set(+el.recipeId, (materials.get(+el.recipeId) ?? 0) + Math.ceil(el.amount))
+    }
+    return n('div', [
+        'Zusammenfassung Material:',
+        n('ul', [...materials.entries()].map(([id, amount]) => {
+            const recipe = recipeById(config(), id)
+            return n('li', [
+                recipe.name,
+                ' ',
+                amount,
+                '/s'
+            ])
+        }))
+    ])
+}
+
 function calculate(event) {
     event.preventDefault()
     const formData = new FormData(event.target)
-    const amount = +formData.get("amount")
     const recipeId = +formData.get("ingredient")
     const recipe = recipeById(config(), recipeId)
+    let amount = 0;
+    if (formData.has("amount")) {
+        amount = +formData.get("amount")
+    }
+    if (formData.has("factories")) {
+        amount = +formData.get("factories") * (+(recipe.quantity) / +(recipe.time))
+    }
 
     const justData = calcInner(recipe, amount)
 
     const parts = []
     parts.push(renderCalcTree(justData))
-    parts.push(renderFactorySummary(justData))
+    parts.push(n('div', [
+        renderFactorySummary(justData),
+        renderMaterialSummary(justData)
+    ]))
 
     res = document.querySelector("result")
     res.innerHTML = ''
@@ -1000,6 +1039,7 @@ function displayRecipes(filter = "") {
     const root = document.querySelector("recipes")
     root.innerHTML = ""
     const cfg = config()
+    cfg.recipes.sort((a, b) => a.name.localeCompare(b.name))
     for (const recipe of cfg.recipes.filter(r => filterRecipes(cfg, r, filter))) {
         root.appendChild(n('a',
             [n('div', [
