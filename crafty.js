@@ -59,6 +59,9 @@ const state = {
     }
 }
 
+let markers = []
+let markerList = null
+
 function config() {
     return state.config
 }
@@ -74,6 +77,7 @@ function init() {
     const fromStorage = localStorage.getItem("crafty")
     if (fromStorage) {
         const [parsedConfig, configName] = JSON.parse(fromStorage)
+        markers = JSON.parse(localStorage.getItem('craftyMap') ?? '[]')
         state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
         state.configName = configName
     }
@@ -189,17 +193,88 @@ function renderMap() {
     const maxY = 16
     const tileWidth = 256
     const tiles = []
-    const markers = JSON.parse(localStorage.getItem('craftyMap') ?? '[]')
 
-    const marker = (md, markerList, map) => {
-        markerList.append(n('a', [md.icon, " (", md.y, ",", md.x, ") - ", md.text], {
+    function markerForm(marker) {
+
+        const deleteBtn = n('div', [
+            n('button', ['Löschen 🪣'], {
+                type: "button", $click: (event) => {
+                    removeMarker(marker)
+                    event.target.closest('dialog').close()
+                }
+            }),
+        ], { style: "display:flex; justify-content:end; gap:10px;" })
+
+        const form = n('div', [
+            n('h2', ['Marker']),
+            n('form', [
+                n('div', [
+                    fieldFn('Icon', { name: "icon", requierd: true, value: marker.icon, size: 1, maxLength: 10 }),
+                    fieldFn('Text', { name: "text", requierd: true, value: marker.text })
+                ], { style: "display: flex; gap: 0.5rem" }),
+                ...(marker.id != undefined ? [deleteBtn] : []),
+                n('div', [
+                    n('input', [], { value: marker.x, name: 'x', type: 'hidden' }),
+                    n('input', [], { value: marker.y, name: 'y', type: 'hidden' }),
+                    n('input', [], { value: marker.id, name: 'id', type: 'hidden' }),
+                    n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
+                    n('button', ['OK'], { type: "submit" })
+                ], { style: "display:flex; justify-content:end; gap:10px;" }),
+            ], { $submit: (event) => submitMarker(event), class: "formRows", method: "dialog" }),
+            n('br')
+        ])
+        return form
+    }
+
+    function editMarker(marker) {
+        const dialog = n('dialog', [markerForm(marker)], { $close: (event) => dialog.remove() })
+        document.body.append(dialog)
+        dialog.showModal()
+    }
+
+    function removeMarker(marker) {
+        const markerIndex = markers.findIndex(m => m.id == marker.id)
+        if (markerIndex != -1) {
+            markers.splice(markerIndex, 1)
+            renderMarkers()
+            saveInternal()
+        }
+    }
+
+    function submitMarker(event) {
+        event.preventDefault()
+        const formData = new FormData(event.target)
+        const element = mergeForm(formData, {})
+        const collection = markers
+        const inserted = upsert(collection, element, event)
+        if (!inserted) {
+            return false
+        }
+        renderMarkers()
+        saveInternal()
+        event.target.closest('dialog').close()
+    }
+
+    function renderMarkers() {
+        markerList.innerHTML = '';
+        [...(map.querySelectorAll('span.mapMarker'))].forEach(node => node.remove())
+        markers.forEach(m => renderMarker(m, map))
+    }
+
+    const renderMarker = (md, map) => {
+        const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
+        const markerLink = n('a', [md.icon, " (", md.y, ",", md.x, ") - ", md.text], {
             $click: () => {
                 sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
                 sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
             },
             style: "display:flex; flex-direction:col;"
-        }))
-        map.append(n('span', [md.icon], { title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem` }))
+        })
+        const markerRow = n('div', [markerLink, markerEditButton], { style: "display:flex; gap:2rem; align-items:center;" })
+        markerList.append(
+            markerRow
+        )
+        map.append(n('span', [md.icon], { class: "mapMarker", title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem` }))
     }
 
     const suppress = (event) => {
@@ -207,15 +282,15 @@ function renderMap() {
         event.preventDefault()
         console.log('img', event)
     }
+
     for (let xi = 0; xi < maxX; xi++) {
         for (let yi = 0; yi < maxY; yi++) {
             tiles.push(n('img', [], { src: `./tiles/${yi}_${xi}.webp`, $click: suppress, style: "pointer-events:none; user-select:none" }))
         }
     }
 
-
     const map = n('div', tiles, { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: relative;` })
-    const markerList = n('div')
+    markerList = n('div')
     const container = n(
         'div',
         [map],
@@ -260,17 +335,11 @@ function renderMap() {
                 }
                 event.stopPropagation()
                 event.preventDefault()
-                const t = prompt("text")
-                const i = prompt("icon")
                 const md = {
-                    text: t,
-                    icon: i,
                     x: event.layerX,
                     y: event.layerY
                 }
-                markers.push(md)
-                marker(md, markerList, map)
-                localStorage.setItem("craftyMap", JSON.stringify(markers))
+                editMarker(md)
             }
         }
     )
@@ -279,7 +348,7 @@ function renderMap() {
         container.scrollTop = 1954
         container.scrollLeft = 915
     }, 1)
-    markers.forEach(m => marker(m, markerList, map))
+    renderMarkers()
     return n('div', [container, markerList])
 }
 
@@ -452,6 +521,7 @@ function readInfo(configContent, name) {
 
 function saveInternal() {
     localStorage.setItem("crafty", JSON.stringify([config(), sluggy(config().game)]))
+    localStorage.setItem("craftyMap", JSON.stringify(markers))
 }
 
 function save() {
@@ -512,10 +582,14 @@ function mergeForm(formData, target) {
             target[parentKey][index][subkey] = value
         }
     }
+    return target
 }
 
 function isNameUnique(event, collection) {
     const inp = event.target.querySelector('[name="name"]')
+    if (!inp) {
+        return true
+    }
     if (collection.some(item => item.name.toLowerCase() === inp.value.toLowerCase())) {
         inp.setCustomValidity(inp.value + " ist bereits vorhanden")
         inp.reportValidity()
@@ -526,11 +600,11 @@ function isNameUnique(event, collection) {
     }
 }
 
-function upsert(collection, element) {
+function upsert(collection, element, event) {
     if (element.id === 0 || element.id) {
         collection[collection.findIndex(r => r.id == element.id)] = element
     } else {
-        if (isNameUnique(event, collection)) {
+        if (!isNameUnique(event, collection)) {
             return false
         }
         const ids = collection.map(r => r.id)
@@ -545,7 +619,7 @@ function submitFactory(event) {
     const formData = new FormData(event.target)
     const element = mergeForm(formData, {})
     const collection = config().factories
-    const inserted = upsert(collection, element)
+    const inserted = upsert(collection, element, event)
     if (!inserted) {
         return false
     }
@@ -558,7 +632,7 @@ function submitRecipe(event) {
     const formData = new FormData(event.target)
     const element = mergeForm(formData, {})
     const collection = config().recipes
-    const inserted = upsert(collection, element)
+    const inserted = upsert(collection, element, event)
     if (!inserted) {
         return false
     }
