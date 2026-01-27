@@ -361,10 +361,10 @@ function renderMap() {
                     mapMarker.style.backgroundColor = "red"
                     mapMarker.classList.toggle("selected")
                 },
-                style: "display:flex; flex-direction:col;"
+                style: "display:flex; flex-direction:col; cursor: pointer;"
             })
 
-            const markerRow = n('div', [markerLink, markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;" })
+            const markerRow = n('div', [markerLink, markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
             markerList.append(
                 markerRow
             )
@@ -384,7 +384,7 @@ function renderMap() {
     }
 
     const map = n('div', tiles, { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: relative; cursor: all-scroll;` })
-    markerList = n('div', [], { style: "overflow:auto; padding: 0px 5px; flex-grow: 1" })
+    markerList = n('div', [], { style: "overflow:auto; padding: 0px 5px; flex-grow: 1; display:flex; flex-direction: column; gap: 5px;" })
     const container = n(
         'div',
         [map],

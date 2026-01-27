@@ -131,8 +131,8 @@ header a b,
 header a em,
 header a i,
 header a strong {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  margin-left: 0rem;
+  margin-right: 0rem;
 }
 
 header nav img {
@@ -334,7 +334,7 @@ input[type="submit"] {
   font-size: medium;
   font-weight: bold;
   line-height: var(--line-height);
-  margin: 0.5rem 0;
+  margin: 0 0;
   padding: 0.5rem 1rem;
 
   &.fab {

@@ -19,6 +19,10 @@ label.inline {
     }
 }
 
+.hoverRow:hover {
+    background-color: #0003;
+}
+
 th[dir="asc"]::after {
     content: " ↑";
 }
