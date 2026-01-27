@@ -375,7 +375,6 @@ function renderMap() {
     const suppress = (event) => {
         event.stopPropagation()
         event.preventDefault()
-        console.log('img', event)
     }
 
     for (let xi = 0; xi < maxX; xi++) {
@@ -1120,7 +1119,6 @@ function techtree(options, recipes) {
                 level: recipe.level
             })
         })
-        console.log(recipe)
     }
 
     // Specify the color scale.
