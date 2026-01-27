@@ -13,25 +13,30 @@
 
 <body onload="init()" style="max-height: 100vmax;">
     <dialog id="newConfig">
+        <h2>Neue Config:</h2>
         <form method="dialog" onsubmit="noi(event)">
             <label>
-                <span>Name</span>
+                <span>Name:</span>
                 <input name="game" required>
             </label>
-            <button>doit</button>
-        </form>
-    </dialog>
-    <dialog id="loadConfig">
-        <form method="dialog" onsubmit="loadFile(event)">
-            <label>
-                Load Crafty Spec
-                <input type="file" name="cfg" required>
-            </label>
-            <button>doit</button>
+            <button>Erstellen</button>
         </form>
         <br>
-        <h3>Beispiel Specs</h3>
+    </dialog>
+    <dialog id="loadConfig">
+        <h2>Config laden:</h2>
+        <form method="dialog" onsubmit="loadFile(event)">
+            <label>
+                Crafty Spec:
+                <input type="file" name="cfg" required>
+            </label>
+            <button>Laden</button>
+        </form>
+        <br>
+        <h3>Beispiel Specs:</h3>
         <a href="./startrupture.json" download>StarRupture</a>
+        <br>
+        <br>
     </dialog>
     <header style="display: flex; align-items: center; justify-content: space-between;">
         <h1>🛠️ Crafty</h1>
