@@ -104,10 +104,24 @@ function navigate(url) {
         const sansPound = hash.substring(1)
         if (sansPound.indexOf("/") == -1) {
             renderMain(sansPound, null)
+            if (sansPound == 'map') {
+                const root = document.querySelector('outlet')
+                if (root) {
+                    root.scrollIntoView()
+                    return
+                }
+            }
         } else {
             const type = sansPound.substring(0, sansPound.indexOf("/"))
             const id = hash.substring(hash.indexOf("/") + 1, hash.indexOf("-"))
             renderMain(type, id)
+            if (type == 'recipe' || type == 'factory') {
+                const root = document.querySelector('outlet')
+                if (root) {
+                    root.scrollIntoView()
+                    return
+                }
+            }
         }
     }
     document.scrollingElement.scrollTop = 0
