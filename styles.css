@@ -19,6 +19,14 @@ label.inline {
     }
 }
 
+.hidden {
+    display: none !important;
+}
+
+.flip {
+    transform: rotate(180deg);
+}
+
 .hoverRow:hover {
     background-color: #0003;
 }

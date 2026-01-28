@@ -230,7 +230,7 @@ function renderMap() {
                     event.target.closest('dialog').close()
                 }
             }),
-        ], { style: "display:flex; justify-content:end; gap:10px;" })
+        ], { style: "display:flex; justify-content:end; gap:10px; margin-bottom: 10px" })
 
         const form = n('div', [
             n('h2', ['Marker']),
@@ -890,18 +890,20 @@ function renderFactorySummary(data) {
     }
     return n('div', [
         'Zusammenfassung Fabriken:',
-        n('ul', [...factories.entries()].map(([id, amount]) => {
-            const factory = factoryById(config(), id)
-            return n('li', [
-                factory.name,
-                ' ',
-                amount,
-                ' ',
-                n('span', [`H:${factory.heat * amount}`], { style: 'color: coral' }),
-                ' ',
-                n('span', [`E:${factory.power * amount}`], { style: 'color: cyan' })
-            ])
-        }))
+        n('ul', [...factories.entries()]
+            .map(([id, amount]) => [factoryById(config(), id), amount])
+            .toSorted((a, b) => a[0].name.localeCompare(b[0].name))
+            .map(([factory, amount]) => {
+                return n('li', [
+                    factory.name,
+                    ' ',
+                    amount,
+                    ' ',
+                    n('span', [`H:${factory.heat * amount}`], { style: 'color: coral' }),
+                    ' ',
+                    n('span', [`E:${factory.power * amount}`], { style: 'color: cyan' })
+                ])
+            }))
     ])
 }
 
@@ -918,15 +920,17 @@ function renderMaterialSummary(data) {
     }
     return n('div', [
         'Zusammenfassung Material:',
-        n('ul', [...materials.entries()].map(([id, amount]) => {
-            const recipe = recipeById(config(), id)
-            return n('li', [
-                recipe.name,
-                ' ',
-                amount,
-                '/s'
-            ])
-        }))
+        n('ul', [...materials.entries()]
+            .map(([id, amount]) => [recipeById(config(), id), amount])
+            .toSorted((a, b) => a[0].name.localeCompare(b[0].name))
+            .map(([recipe, amount]) => {
+                return n('li', [
+                    recipe.name,
+                    ' ',
+                    amount,
+                    '/s'
+                ])
+            }))
     ])
 }
 

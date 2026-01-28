@@ -72,12 +72,16 @@
                     <button class="fab" type="button" onclick="addFactory()">+ 🏭</button>
                 </div>
             </div>
-            <div style="display: grid; grid-template-columns: 300px minmax(1px, 1fr); position: relative;">
-                <div style="width: 300px; position: sticky; top: 0px; height: fit-content;">
-                    <h2>Rezepte 📄</h2>
-                    <filter style="display:block"></filter>
-                    <recipes style="display:block; overflow: auto; max-height: 80vh; border: 1px solid darkgray;">
-                    </recipes>
+            <div style="display: grid; grid-template-columns: min-content minmax(1px, 1fr); position: relative;">
+                <div style="max-width: 300px; position: sticky; top: 0px; height: fit-content; padding-top: 10px;">
+                    <div style="position: relative;">
+                        <button class="fab" style="float: right; margin-top: 5px;"
+                            onclick="[...event.target.parentElement.children].filter(a => a != event.target).forEach(e => e.classList.toggle('hidden')); event.target.classList.toggle('flip')">◀️</button>
+                        <h2>Rezepte 📄</h2>
+                        <filter style="display:block"></filter>
+                        <recipes style="display:block; overflow: auto; max-height: 80vh; border: 1px solid darkgray;">
+                        </recipes>
+                    </div>
                 </div>
                 <div style="flex-grow: 1;">
                     <outlet>
