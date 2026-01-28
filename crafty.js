@@ -1231,5 +1231,17 @@ function techtree(options, recipes) {
 
     });
 
+
+    const g = svg.selectAll("g");
+
+    svg.call(d3.zoom()
+        .extent([[0, 0], [width, height]])
+        .scaleExtent([0, 8])
+        .on("zoom", zoomed));
+
+    function zoomed({ transform }) {
+        g.attr("transform", transform);
+    }
+
     return svg.node()
 }
