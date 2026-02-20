@@ -1,6 +1,8 @@
+//@ts-check
 const defaultConfig = {
     recipes: [],
-    factories: []
+    factories: [],
+    game: ''
 }
 
 const FactoryDescription = {
@@ -46,9 +48,52 @@ const RecipeDescription = {
         item: IngredientDescription
     }
 }
+/**
+ * Config type definition
+ * @typedef {Object} Factory
+ * @property {string} name
+ * @property {number} heat
+ * @property {number} power
+ * @property {number} id
+ */
 
+/**
+ * Config type definition
+ * @typedef {Object} Recipe
+ * @property {string} name
+ * @property {number} id
+ * @property {number} factoryId
+ * @property {number} quantity
+ * @property {number} time
+ * @property {Ingredient[]} ingredients
+ */
+
+/**
+ * Config type definition
+ * @typedef {Object} Ingredient
+ * @property {number} id
+ * @property {number} amount
+ */
+
+/**
+ * Config type definition
+ * @typedef {Object} Config
+ * @property {Recipe[]} recipes
+ * @property {Factory[]} factories
+ * @property {string} game
+ */
+
+/**
+* State type definition
+* @typedef {Object} State
+* @property {string | null} configName
+* @property {Config} config
+* @property {Config} _config
+*/
+
+/** @type {State} */
 const state = {
-    _config: null,
+    _config: structuredClone(defaultConfig),
     configName: null,
     set config(config) {
         this._config = config
@@ -58,7 +103,6 @@ const state = {
         return this._config
     }
 }
-
 let markers = []
 let markerList = null
 
@@ -69,6 +113,9 @@ function config() {
 async function loadFile(event) {
     const formData = new FormData(event.target)
     const filehandle = formData.get("cfg")
+    if (!filehandle || typeof filehandle === "string") {
+        return
+    }
     const content = await filehandle.text()
     readInfo(content, filehandle.name)
 }
@@ -80,7 +127,7 @@ function readInfo(configContent, name) {
         state.configName = name
     } catch (e) {
         console.log(e)
-        alert("failed to read config", e)
+        alert("failed to read config")
         return
     }
     saveInternal()
@@ -124,11 +171,17 @@ function navigate(url) {
             }
         }
     }
-    document.scrollingElement.scrollTop = 0
+    document.scrollingElement && (document.scrollingElement.scrollTop = 0)
 }
 
 function renderMain(type, id) {
-    const root = document.querySelector('outlet')
+    const rootElementName = 'outlet'
+    const root = document.querySelector(rootElementName)
+    if (!root) {
+        console.log("missing root node", rootElementName)
+        alert("failed render")
+        return
+    }
     const node = mainNodeByType(type, id)
     root.innerHTML = ''
     if (Array.isArray(node)) {
@@ -146,6 +199,8 @@ function mainNodeByType(type, id) {
             return renderRecipe(id)
         case 'tree':
             return renderTechTree()
+        case 'responsive':
+            return renderResponsive2()
         case 'map':
             return renderMap()
         default:
@@ -155,6 +210,9 @@ function mainNodeByType(type, id) {
 
 function sortTable(id, n) {
     const table = document.getElementById(id);
+    if (!table || !(table instanceof HTMLTableElement)) {
+        return
+    }
     const elements = []
     const rows = table.rows;
     const tableHeader = rows[0]
@@ -166,10 +224,12 @@ function sortTable(id, n) {
     for (var i = 1; i < (rows.length); i++) {
         const row = rows[i]
         const el = row.getElementsByTagName("TD")[n]
-        elements.push({ row, v: el.innerText });
+        if (el && el instanceof HTMLTableCellElement) {
+            elements.push({ row, v: el.innerText });
+        }
     }
     elements.sort((a, b) => {
-        const literal = b.v - a.v
+        const literal = +b.v - +a.v
         if (isNaN(literal)) {
             return a.v.localeCompare(b.v) * (nextDir == "asc" ? 1 : -1)
         }
@@ -183,6 +243,11 @@ function renderOops() {
     return n('div', [n('h1'), ['Oops! 404 Ersatzteil benötigt!']])
 }
 
+/**
+ * 
+ * @param {Recipe} recipe 
+ * @returns 
+ */
 function recipeLink(recipe) {
     return n('a', [recipe.name], { href: '#recipe/' + recipe.id + '-' + sluggy(recipe.name) })
 }
@@ -254,15 +319,11 @@ function renderMap() {
     }
 
     function editMarker(marker) {
-        const dialog = n('dialog', [markerForm(marker)], { $close: (event) => dialog.remove() })
-        document.body.append(dialog)
-        dialog.showModal()
+        displayModal(markerForm(marker))
     }
 
     function importMarkers() {
-        const dialog = n('dialog', [markerImportForm()], { $close: (event) => dialog.remove() })
-        document.body.append(dialog)
-        dialog.showModal()
+        displayModal(markerImportForm())
     }
 
     function markerImportForm() {
@@ -285,6 +346,9 @@ function renderMap() {
     async function submitImportMarker(event) {
         const formData = new FormData(event.target)
         const filehandle = formData.get("markerFile")
+        if (!filehandle || typeof filehandle === "string") {
+            return
+        }
         const content = await filehandle.text()
         readMarkerInfo(content)
     }
@@ -297,7 +361,7 @@ function renderMap() {
             saveInternal()
         } catch (e) {
             console.log(e)
-            alert("failed to read markers", e)
+            alert("failed to read markers")
             return
         }
     }
@@ -463,6 +527,39 @@ function renderMap() {
     ])
 }
 
+function renderResponsive2() {
+    const templateState = {
+        value: 0
+    }
+    return c('div', templateState, [
+        n('h2', ['Responsive']),
+        n('div', [templateState.value]),
+        n('button', [templateState.value, ' +1'], { $click() { templateState.value += 1 } })
+    ])
+}
+
+function renderResponsive() {
+    const templateState = {
+        _value: 0,
+        get value() {
+            return this._value
+        },
+        set value(v) {
+            this._value = v
+            self()
+        }
+    }
+    const btn = r('button', [() => (templateState.value), '+1'], { $click: () => templateState.value += 1 })
+    const template = r('div', [() => (templateState.value)])
+    const self = r('div', [
+        n('h2', ['Responsive']),
+        template,
+        btn
+    ])
+    return self()
+}
+
+
 function renderTechTree() {
     const slot = n('div')
     const options = { distance: 100, strength: -800 }
@@ -567,10 +664,13 @@ function renderFactory(id) {
 function renderRecipe(id) {
     const recipe = recipeById(config(), id)
     const dependantRecipies = [{ ...recipe, primary: true, level: 0 }]
-    const edge = [{ ...recipe, level: 0 }]
+    const edge = [{ ...recipe, primary: false, level: 0 }]
     while (edge.length > 0) {
         const r = edge.shift();
-        (r.ingredients ?? []).forEach(i => edge.push({ ...recipeById(config(), i.id), level: r.level + 1 }));
+        if (!r) {
+            return
+        }
+        (r.ingredients ?? []).forEach(i => edge.push({ ...recipeById(config(), i.id), level: r.level + 1, primary: false }));
         if (dependantRecipies.find(d => +d.id === +r.id) == undefined) {
             dependantRecipies.push(r);
         }
@@ -611,6 +711,7 @@ function renderRecipe(id) {
 }
 
 function hookIntoNav() {
+    // @ts-ignore
     navigation.addEventListener("navigate", (event) => {
         const url = new URL(event.destination.url);
         navigate(url)
@@ -630,20 +731,16 @@ function save() {
 
 function download(data, filename, type) {
     var file = new Blob([data], { type: type });
-    if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-    else { // Others
-        var a = document.createElement("a"),
-            url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function () {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }, 0);
-    }
+    var a = document.createElement("a"),
+        url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }, 0);
 }
 
 function displayInfo(root) {
@@ -741,8 +838,7 @@ function submitRecipe(event) {
 function addIngredient(event, parent, ingredient) {
     const parentDataset = parent.dataset
     const count = parentDataset['count'] ?? 0
-
-    recipeChoices = () => config().recipes.map(r => n('option', [r.name], { value: r.id }))
+    const recipeChoices = () => config().recipes.map(r => n('option', [r.name], { value: r.id }))
     const newIngredient = n('div', [
         selectFn('Zutat', recipeChoices(), { name: `ingredients.${count}.id`, requierd: true, value: ingredient?.id ?? null }),
         fieldFn('Anzahl', { name: `ingredients.${count}.amount`, requierd: true, value: ingredient?.amount ?? null }),
@@ -778,8 +874,7 @@ function factoryForm(factory) {
 }
 
 function recipeForm(recipe) {
-    factoryChoices = () => config().factories.map(f => n('option', [f.name], { value: f.id }))
-    recipeChoices = () => config().recipes.map(r => n('option', [r.name], { value: r.id }))
+    const factoryChoices = () => config().factories.map(f => n('option', [f.name], { value: f.id }))
     const ingredientNode = n('div')
 
     const form = n('div', [
@@ -829,6 +924,10 @@ function displayCalc(id) {
     ])
 }
 
+/**
+ * @param {Recipe} recipe 
+ * @param {number} amount 
+ */
 function calcInner(recipe, amount) {
     const singleRate = (+(recipe.quantity) / +(recipe.time))
     return {
@@ -956,9 +1055,89 @@ function calculate(event) {
         renderMaterialSummary(justData)
     ]))
 
-    res = document.querySelector("result")
+    const res = document.querySelector("result")
+    if (!res) {
+        return
+    }
     res.innerHTML = ''
     res.append(n('div', parts, { style: 'display:flex; gap: 10px; align-items:start; justify-content: space-between;' }))
+}
+
+function c(type, d, children = [], opts = {}) {
+    const el = document.createElement(type)
+    const r = () => {
+        el.innerHTML = ''
+        el.append(...children.map(child => {
+            if (typeof child == "function") {
+                return child()
+            }
+            return child
+        }))
+        for (const [key, value] of Object.entries(opts)) {
+            if (key === 'value') {
+                if (value != undefined) {
+                    el.setAttribute(key, value)
+                    el.value = value
+                }
+            } else if (key.startsWith('$')) {
+                el.addEventListener(key.substring(1), value)
+            } else if (key == 'class') {
+                el.classList.add(...(value.split(' ')))
+            } else {
+                el.setAttribute(key, value)
+            }
+        }
+        return el
+    };
+    let n = r()
+    const handler = {
+        listeners: new Set(),
+        get(obj, prop, receiver) {
+            this.listeners.add(prop)
+            Reflect.get(...arguments)
+            console.log("saw getter", ...arguments)
+        },
+        set(obj, prop, value, receiver) {
+            if (this.listeners.has(prop)) {
+                const nn = r()
+                n.replaceWith(nn)
+                n = nn
+            }
+            const done = (Reflect.set(...arguments))
+            console.log("saw setter", ...arguments)
+            return done
+        }
+    }
+    const p = new Proxy(d, handler)
+    return n
+}
+
+function r(type, children = [], opts = {}) {
+    const el = document.createElement(type)
+    return () => {
+        el.innerHTML = ''
+        el.append(...children.map(child => {
+            if (typeof child == "function") {
+                return child()
+            }
+            return child
+        }))
+        for (const [key, value] of Object.entries(opts)) {
+            if (key === 'value') {
+                if (value != undefined) {
+                    el.setAttribute(key, value)
+                    el.value = value
+                }
+            } else if (key.startsWith('$')) {
+                el.addEventListener(key.substring(1), value)
+            } else if (key == 'class') {
+                el.classList.add(...(value.split(' ')))
+            } else {
+                el.setAttribute(key, value)
+            }
+        }
+        return el
+    };
 }
 
 function n(type, children = [], opts = {}) {
@@ -982,12 +1161,6 @@ function n(type, children = [], opts = {}) {
     return el;
 }
 
-function editFactory(factory) {
-    const dialog = n('dialog', [factoryForm(factory)], { $close: (event) => dialog.remove() })
-    document.body.append(dialog)
-    dialog.showModal()
-}
-
 function deleteFactory(factory) {
     const cfg = config()
     if (factoryMakesRecipes(cfg, factory.id).length > 0) {
@@ -999,28 +1172,42 @@ function deleteFactory(factory) {
     }
 }
 
-function editRecipe(recipe) {
-    const dialog = n('dialog', [recipeForm(recipe)], { $close: (event) => dialog.remove() })
+function displayModal(content) {
+    const dialog = n('dialog', [content], { $close: () => dialog.remove() })
     document.body.append(dialog)
     dialog.showModal()
+}
+
+function editRecipe(recipe) {
+    displayModal(recipeForm(recipe))
 }
 
 function addRecipe() {
-    const dialog = n('dialog', [recipeForm({})], { $close: (event) => dialog.remove() })
-    document.body.append(dialog)
-    dialog.showModal()
+    displayModal(recipeForm({}))
+}
+
+function editFactory(factory) {
+    displayModal(factoryForm(factory))
 }
 
 function addFactory() {
-    const dialog = n('dialog', [factoryForm({})], { $close: (event) => dialog.remove() })
-    document.body.append(dialog)
-    dialog.showModal()
+    displayModal(factoryForm({}))
 }
 
+/**
+ * @param {Config} config 
+ * @param {number} id
+ * @returns {Recipe}
+ */
 function recipeById(config, id) {
     return config.recipes.filter(r => r.id == id)[0]
 }
 
+/**
+ * @param {Config} config 
+ * @param {number} id
+ * @returns {Factory}
+ */
 function factoryById(config, id) {
     return config.factories.filter(f => f.id == id)[0]
 }
@@ -1029,10 +1216,20 @@ function filterRecipes(config, recipe, filter) {
     return recipe.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0
 }
 
+/**
+ * @param {Config} config 
+ * @param {number} id
+ * @returns {Recipe[]}
+ */
 function recipeUsedByRecipes(config, id) {
     return config.recipes.filter(r => (r.ingredients ?? []).filter(i => +i.id == +id).length > 0)
 }
 
+/**
+ * @param {Config} config 
+ * @param {number} id
+ * @returns {Recipe[]}
+ */
 function factoryMakesRecipes(config, id) {
     return config.recipes.filter(r => r.factoryId == id)
 }
@@ -1048,12 +1245,20 @@ function deleteRecipe(recipe) {
     }
 }
 
+/**
+ * @param {string} text
+ */
 function sluggy(text) {
-    return text?.toLowerCase() // TODO make this better
+    return text.toLowerCase() // TODO make this better
 }
 
 function displayRecipes(filter = "") {
-    const root = document.querySelector("recipes")
+    const rootElementName = "recipes"
+    const root = document.querySelector(rootElementName)
+    if (!root) {
+        alert(`could not find root ${rootElementName}`)
+        return
+    }
     root.innerHTML = ""
     const cfg = config()
     cfg.recipes.sort((a, b) => a.name.localeCompare(b.name))
@@ -1097,7 +1302,10 @@ function displayConfig() {
 }
 
 function openDialog(id) {
-    document.querySelector("dialog#" + id)?.showModal()
+    const el = document.querySelector("dialog#" + id)
+    if (el && el instanceof HTMLDialogElement) {
+        el.showModal()
+    }
 }
 
 function techtree(options, recipes) {
@@ -1129,6 +1337,9 @@ function techtree(options, recipes) {
     const maxLevel = Math.max(...links.map(r => r.level).filter(Boolean), 0)
     //const color = d3.scaleLinear([0, Math.ceil(maxLevel / 2), maxLevel], ["red", "yellow", "blue"])
     //const color = d3.scaleSequential(d3.interpolateRainbow)
+
+    // @ts-ignore
+    const d3 = window.d3
     const color = d3.scaleLinear([0, 1], ["red", "blue"])
 
     // Create a simulation with several forces.
