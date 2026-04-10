@@ -423,7 +423,7 @@ function renderMap() {
         'div',
         [map],
         {
-            style: "overflow: auto; height: 80vh;",
+            style: "overflow: auto; height: 90vh;",
             $click: (event) => {
                 event.stopPropagation()
                 event.preventDefault()
@@ -487,7 +487,7 @@ function renderMap() {
         n('button', ['Marker Import'], { type: 'button', $click: () => importMarkers() }),
         n('button', ['Marker Export'], { type: 'button', $click: () => exportMarkers() })
     ], { style: 'display:flex; gap:10px' })
-    const makerListContainer = n('div', [markerFilter, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 80vh; width: 250px' })
+    const makerListContainer = n('div', [markerFilter, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 90vh; width: 250px' })
     return n('div', [
         n('h2', ['Map']),
         n('div', [
