@@ -59,3 +59,7 @@ fab-container {
 .block {
     display: block;
 }
+
+button.active {
+    border: 2px solid yellow;
+}

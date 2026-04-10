@@ -1,53 +1,21 @@
 //@ts-check
+import { n } from "./dom.mjs"
+import { deserialize, serialize } from "./ser.mjs"
+
+window.loadFile = loadFile
+window.init = init
+window.noi = noi
+window.openDialog = openDialog
+window.save = save
+window.addRecipe = addRecipe
+window.addFactory = addFactory
+
 const defaultConfig = {
     recipes: [],
     factories: [],
     game: ''
 }
 
-const FactoryDescription = {
-    id: {
-        transform: (v) => +v,
-        type: 'auto'
-    },
-    name: {
-        label: 'Name',
-        type: 'input'
-    }
-}
-
-const IngredientDescription = {
-    id: {
-        label: 'Zutat',
-        type: 'select',
-        source: 'recipes'
-    },
-    amount: {
-        label: 'Menge',
-        type: 'input',
-        transform: (v) => +v
-    }
-}
-
-const RecipeDescription = {
-    id: {
-        transform: (v) => +v,
-        type: 'auto'
-    },
-    name: {
-        label: 'Name',
-        type: 'input'
-    },
-    factoryId: {
-        label: 'Fabrik',
-        type: 'select',
-        source: 'factories'
-    },
-    ingredients: {
-        type: 'array',
-        item: IngredientDescription
-    }
-}
 /**
  * Config type definition
  * @typedef {Object} Factory
@@ -122,7 +90,7 @@ async function loadFile(event) {
 
 function readInfo(configContent, name) {
     try {
-        const parsedConfig = JSON.parse(configContent)
+        const parsedConfig = deserialize(configContent)
         state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
         state.configName = name
     } catch (e) {
@@ -136,8 +104,8 @@ function readInfo(configContent, name) {
 function init() {
     const fromStorage = localStorage.getItem("crafty")
     if (fromStorage) {
-        const [parsedConfig, configName] = JSON.parse(fromStorage)
-        markers = JSON.parse(localStorage.getItem('craftyMap') ?? '[]')
+        const [parsedConfig, configName] = deserialize(fromStorage)
+        markers = deserialize(localStorage.getItem('craftyMap') ?? '[]')
         state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
         state.configName = configName
     }
@@ -199,8 +167,6 @@ function mainNodeByType(type, id) {
             return renderRecipe(id)
         case 'tree':
             return renderTechTree()
-        case 'responsive':
-            return renderResponsive2()
         case 'map':
             return renderMap()
         default:
@@ -355,7 +321,7 @@ function renderMap() {
 
     function readMarkerInfo(markerContent) {
         try {
-            const parsedMarkers = JSON.parse(markerContent)
+            const parsedMarkers = deserialize(markerContent)
             markers = parsedMarkers
             renderMarkers()
             saveInternal()
@@ -367,9 +333,9 @@ function renderMap() {
     }
 
     function exportMarkers() {
-        const stringied = JSON.stringify(markers)
+        const stringified = serialize(markers)
         const fileName = "CraftyMarkers-" + sluggy(config().game) + '-' + new Date().getTime() + '.json'
-        download(stringied, fileName, 'application/json')
+        download(stringified, fileName, 'application/json')
     }
 
     function removeMarker(marker) {
@@ -441,13 +407,17 @@ function renderMap() {
         event.preventDefault()
     }
 
-    for (let xi = 0; xi < maxX; xi++) {
-        for (let yi = 0; yi < maxY; yi++) {
-            tiles.push(n('img', [], { src: `./tiles/${yi}_${xi}.webp`, $click: suppress, style: "pointer-events:none; user-select:none" }))
+    function createMap(tiles, base = "tiles") {
+        tiles = []
+        for (let xi = 0; xi < maxX; xi++) {
+            for (let yi = 0; yi < maxY; yi++) {
+                tiles.push(n('img', [], { src: `./${base}/${yi}_${xi}.webp`, $click: suppress, style: "pointer-events:none; user-select:none" }))
+            }
         }
+        return n('div', tiles, { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: relative; cursor: all-scroll;` })
     }
 
-    const map = n('div', tiles, { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: relative; cursor: all-scroll;` })
+    let map = createMap(tiles)
     markerList = n('div', [], { style: "overflow:auto; padding: 0px 5px; flex-grow: 1; display:flex; flex-direction: column; gap: 5px;" })
     const container = n(
         'div',
@@ -521,44 +491,33 @@ function renderMap() {
     return n('div', [
         n('h2', ['Map']),
         n('div', [
-            n('span', ['Marker können mit Rechtsklick hinzugefügt werden.'])
-        ]),
+            n('span', ['Marker können mit Rechtsklick hinzugefügt werden.']),
+            n('div', [], { style: "flex-grow:1" }),
+            n('button', ['Mit Strahlung'], {
+                $click: (event) => {
+                    const newMap = createMap(tiles, "tiles_rad")
+                    map.replaceWith(newMap)
+                    map = newMap
+                    renderMarkers()
+                    event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
+                    event.target.classList.add("active")
+                }
+            }),
+            n('button', ['Ohne Strahlung'], {
+                $click: (event) => {
+                    const newMap = createMap(tiles, "tiles")
+                    map.replaceWith(newMap)
+                    map = newMap
+                    renderMarkers()
+                    event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
+                    event.target.classList.add("active")
+                },
+                class: "active"
+            })
+        ], { style: "display:flex; gap:10px; align-items:center;" }),
         n('div', [container, makerListContainer], { style: "display: grid; gap: 10px; grid-template-columns: 1fr 250px" })
-    ])
+    ], { style: "display:flex; gap:5px; flex-direction:column;" })
 }
-
-function renderResponsive2() {
-    const templateState = {
-        value: 0
-    }
-    return c('div', templateState, [
-        n('h2', ['Responsive']),
-        n('div', [templateState.value]),
-        n('button', [templateState.value, ' +1'], { $click() { templateState.value += 1 } })
-    ])
-}
-
-function renderResponsive() {
-    const templateState = {
-        _value: 0,
-        get value() {
-            return this._value
-        },
-        set value(v) {
-            this._value = v
-            self()
-        }
-    }
-    const btn = r('button', [() => (templateState.value), '+1'], { $click: () => templateState.value += 1 })
-    const template = r('div', [() => (templateState.value)])
-    const self = r('div', [
-        n('h2', ['Responsive']),
-        template,
-        btn
-    ])
-    return self()
-}
-
 
 function renderTechTree() {
     const slot = n('div')
@@ -719,12 +678,12 @@ function hookIntoNav() {
 }
 
 function saveInternal() {
-    localStorage.setItem("crafty", JSON.stringify([config(), sluggy(config().game)]))
-    localStorage.setItem("craftyMap", JSON.stringify(markers))
+    localStorage.setItem("crafty", serialize([config(), sluggy(config().game)]))
+    localStorage.setItem("craftyMap", serialize(markers))
 }
 
 function save() {
-    const stringied = JSON.stringify(config())
+    const stringied = serialize(config())
     const fileName = "Crafty-" + sluggy(config().game) + '-' + new Date().getTime() + '.json'
     download(stringied, fileName, 'application/json')
 }
@@ -771,10 +730,10 @@ function mergeForm(formData, target) {
             if (!target[parentKey]) {
                 target[parentKey] = []
             }
-            if (!target[parentKey][index]) {
-                target[parentKey][index] = {}
+            if (!target[parentKey].find(item => item.index == index)) {
+                target[parentKey].push({ index: index })
             }
-            target[parentKey][index][subkey] = value
+            target[parentKey].find(item => item.index == index)[subkey] = value
         }
     }
     return target
@@ -842,7 +801,8 @@ function addIngredient(event, parent, ingredient) {
     const newIngredient = n('div', [
         selectFn('Zutat', recipeChoices(), { name: `ingredients.${count}.id`, requierd: true, value: ingredient?.id ?? null }),
         fieldFn('Anzahl', { name: `ingredients.${count}.amount`, requierd: true, value: ingredient?.amount ?? null }),
-    ], { style: "display: flex; gap: 0.5rem" })
+        n('button', ['🪣'], { '$click': () => parent.removeChild(newIngredient), class: 'fab' }),
+    ], { style: "display: flex; align-items:center; gap: 0.5rem" })
 
     parent.appendChild(newIngredient)
     parentDataset['count'] = +count + 1
@@ -1063,104 +1023,6 @@ function calculate(event) {
     res.append(n('div', parts, { style: 'display:flex; gap: 10px; align-items:start; justify-content: space-between;' }))
 }
 
-function c(type, d, children = [], opts = {}) {
-    const el = document.createElement(type)
-    const r = () => {
-        el.innerHTML = ''
-        el.append(...children.map(child => {
-            if (typeof child == "function") {
-                return child()
-            }
-            return child
-        }))
-        for (const [key, value] of Object.entries(opts)) {
-            if (key === 'value') {
-                if (value != undefined) {
-                    el.setAttribute(key, value)
-                    el.value = value
-                }
-            } else if (key.startsWith('$')) {
-                el.addEventListener(key.substring(1), value)
-            } else if (key == 'class') {
-                el.classList.add(...(value.split(' ')))
-            } else {
-                el.setAttribute(key, value)
-            }
-        }
-        return el
-    };
-    let n = r()
-    const handler = {
-        listeners: new Set(),
-        get(obj, prop, receiver) {
-            this.listeners.add(prop)
-            Reflect.get(...arguments)
-            console.log("saw getter", ...arguments)
-        },
-        set(obj, prop, value, receiver) {
-            if (this.listeners.has(prop)) {
-                const nn = r()
-                n.replaceWith(nn)
-                n = nn
-            }
-            const done = (Reflect.set(...arguments))
-            console.log("saw setter", ...arguments)
-            return done
-        }
-    }
-    const p = new Proxy(d, handler)
-    return n
-}
-
-function r(type, children = [], opts = {}) {
-    const el = document.createElement(type)
-    return () => {
-        el.innerHTML = ''
-        el.append(...children.map(child => {
-            if (typeof child == "function") {
-                return child()
-            }
-            return child
-        }))
-        for (const [key, value] of Object.entries(opts)) {
-            if (key === 'value') {
-                if (value != undefined) {
-                    el.setAttribute(key, value)
-                    el.value = value
-                }
-            } else if (key.startsWith('$')) {
-                el.addEventListener(key.substring(1), value)
-            } else if (key == 'class') {
-                el.classList.add(...(value.split(' ')))
-            } else {
-                el.setAttribute(key, value)
-            }
-        }
-        return el
-    };
-}
-
-function n(type, children = [], opts = {}) {
-    const el = document.createElement(type)
-    el.append(...children)
-    for (const [key, value] of Object.entries(opts)) {
-        if (key === 'value') {
-            if (value != undefined) {
-                el.setAttribute(key, value)
-                el.value = value
-            }
-        } else if (key.startsWith('$')) {
-            el.addEventListener(key.substring(1), value)
-        } else if (key == 'class') {
-            el.classList.add(...(value.split(' ')))
-        } else {
-            el.setAttribute(key, value)
-        }
-    }
-
-    return el;
-}
-
 function deleteFactory(factory) {
     const cfg = config()
     if (factoryMakesRecipes(cfg, factory.id).length > 0) {
@@ -1299,6 +1161,7 @@ function displayConfig() {
     displayInfo(document.querySelector("info"))
     displayRecipes()
     displayFilter(document.querySelector("filter"))
+    navigate(new URL(window.location.href))
 }
 
 function openDialog(id) {

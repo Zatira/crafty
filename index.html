@@ -4,9 +4,10 @@
 <head>
     <meta charset=" UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json" />
     <title>Crafty</title>
     <script src="./d3.v7.min.js"></script>
-    <script src="./crafty.js"></script>
+    <script src="./crafty.mjs" type="module"></script>
     <link rel="stylesheet" href="./mvp.css">
     <link rel="stylesheet" href="./styles.css">
 </head>
@@ -79,7 +80,8 @@
                             onclick="[...event.target.parentElement.children].filter(a => a != event.target).forEach(e => e.classList.toggle('hidden')); event.target.classList.toggle('flip')">◀️</button>
                         <h2>Rezepte 📄</h2>
                         <filter style="display:block"></filter>
-                        <recipes style="display:block; overflow: auto; max-height: 80vh; border: 1px solid darkgray;">
+                        <recipes
+                            style="display:block; overflow: auto; max-height: 80vh; border: 1px solid darkgray; padding: 2px">
                         </recipes>
                     </div>
                 </div>
