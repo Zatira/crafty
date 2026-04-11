@@ -5,7 +5,7 @@ import { signal } from "./signals.mjs";
 export const connection = {
     online: signal(false),
     stun: "stun:stun.l.google.com:19302",
-    signaling: "192.168.178.91:3000"
+    signaling: "zeus-olympus.fly.dev"
 }
 
 export function updateRtc(data) {
