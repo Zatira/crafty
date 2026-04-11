@@ -4,9 +4,15 @@ import { signal } from "./signals.mjs";
 
 export const connection = {
     online: signal(false),
-    stun: "stun:stun.l.google.com:19302",
-    signaling: "zeus-olympus.fly.dev"
+    signaling: "zeus-olympus.fly.dev",
+    useStun: false,
+    stun: {
+        iceServers: [
+            { urls: "stun:stun.l.google.com:19302" }
+        ]
+    }
 }
+window.rtcc = connection
 
 export function updateRtc(data) {
     if (!channel || !connection.online) {
@@ -27,11 +33,7 @@ async function tryConnect() {
         await ws.close()
     }
     ws = new WebSocket(`wss:////${connection.signaling}`);
-    const pc = new RTCPeerConnection({
-        iceServers: [
-            { urls: "stun:stun.l.google.com:19302" }
-        ]
-    });
+    const pc = connection.useStun ? new RTCPeerConnection(connection.stun) : new RTCPeerConnection();
 
     // Create data channel if first peer
     pc.onnegotiationneeded = async () => {
