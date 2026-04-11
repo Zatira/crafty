@@ -13,7 +13,9 @@ export function updateRtc(data) {
         connection.online.value = false
         return
     }
-    channel.send(data)
+    if (channel.readyState == 'open') {
+        channel.send(data)
+    }
 }
 
 export const rtcUpdates = signal()
