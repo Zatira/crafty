@@ -5,7 +5,7 @@ import { signal } from "./signals.mjs";
 export const connection = {
     online: signal(false),
     signaling: "zeus-olympus.fly.dev",
-    useStun: false,
+    useStun: true,
     stun: {
         iceServers: [
             { urls: "stun:stun.l.google.com:19302" }
