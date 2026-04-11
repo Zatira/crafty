@@ -24,7 +24,7 @@ async function tryConnect() {
     if (ws) {
         await ws.close()
     }
-    ws = new WebSocket(`ws:////${connection.signaling}`);
+    ws = new WebSocket(`wss:////${connection.signaling}`);
     const pc = new RTCPeerConnection({
         iceServers: [
             { urls: "stun:stun.l.google.com:19302" }
