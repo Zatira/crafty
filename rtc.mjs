@@ -5,7 +5,7 @@ import { signal } from "./signals.mjs";
 export const connection = {
     online: signal(false),
     stun: "stun:stun.l.google.com:19302",
-    signaling: "192.168.178.91"
+    signaling: "192.168.178.91:3000"
 }
 
 export function updateRtc(data) {
@@ -24,7 +24,7 @@ async function tryConnect() {
     if (ws) {
         await ws.close()
     }
-    ws = new WebSocket(`ws:////${connection.signaling}:3000`);
+    ws = new WebSocket(`ws:////${connection.signaling}`);
     const pc = new RTCPeerConnection({
         iceServers: [
             { urls: "stun:stun.l.google.com:19302" }
