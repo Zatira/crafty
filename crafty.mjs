@@ -1,7 +1,9 @@
 //@ts-check
-import { n } from "./dom.mjs"
+import { displayModal, fieldFn, n } from "./dom.mjs"
+import { connection, rtcUpdates, updateRtc } from "./rtc.mjs"
 import { deserialize, serialize } from "./ser.mjs"
 
+console.log(connection)
 window.loadFile = loadFile
 window.init = init
 window.noi = noi
@@ -11,6 +13,8 @@ window.addRecipe = addRecipe
 window.addFactory = addFactory
 
 const defaultConfig = {
+    updated: 0,
+    markers: [],
     recipes: [],
     factories: [],
     game: ''
@@ -48,6 +52,8 @@ const defaultConfig = {
  * @typedef {Object} Config
  * @property {Recipe[]} recipes
  * @property {Factory[]} factories
+ * @property {any[]} markers
+ * @property {number} updated
  * @property {string} game
  */
 
@@ -65,14 +71,29 @@ const state = {
     configName: null,
     set config(config) {
         this._config = config
+        if (connection.online) {
+            updateRtc(serialize(config))
+        }
         displayConfig()
     },
     get config() {
         return this._config
     }
 }
-let markers = []
+window.state = state
 let markerList = null
+
+function updateLocalConfig(config) {
+    config.updated = new Date().getTime()
+    state.config = config
+}
+
+rtcUpdates.subscribe((v) => {
+    const des = deserialize(v)
+    if (des.updated > config().updated) {
+        state.config = des
+    }
+})
 
 function config() {
     return state.config
@@ -91,7 +112,7 @@ async function loadFile(event) {
 function readInfo(configContent, name) {
     try {
         const parsedConfig = deserialize(configContent)
-        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
+        updateLocalConfig(Object.assign(structuredClone(defaultConfig), parsedConfig))
         state.configName = name
     } catch (e) {
         console.log(e)
@@ -105,8 +126,10 @@ function init() {
     const fromStorage = localStorage.getItem("crafty")
     if (fromStorage) {
         const [parsedConfig, configName] = deserialize(fromStorage)
-        markers = deserialize(localStorage.getItem('craftyMap') ?? '[]')
-        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
+        updateLocalConfig(Object.assign(structuredClone(defaultConfig), parsedConfig))
+        if (state.config.markers.length == 0) {
+            state.config.markers = deserialize(localStorage.getItem('craftyMap') ?? '[]')
+        }
         state.configName = configName
     }
     navigate(new URL(window.location.href))
@@ -322,7 +345,7 @@ function renderMap() {
     function readMarkerInfo(markerContent) {
         try {
             const parsedMarkers = deserialize(markerContent)
-            markers = parsedMarkers
+            config().markers = parsedMarkers
             renderMarkers()
             saveInternal()
         } catch (e) {
@@ -333,15 +356,15 @@ function renderMap() {
     }
 
     function exportMarkers() {
-        const stringified = serialize(markers)
+        const stringified = serialize(config().markers)
         const fileName = "CraftyMarkers-" + sluggy(config().game) + '-' + new Date().getTime() + '.json'
         download(stringified, fileName, 'application/json')
     }
 
     function removeMarker(marker) {
-        const markerIndex = markers.findIndex(m => m.id == marker.id)
+        const markerIndex = config().markers.findIndex(m => m.id == marker.id)
         if (markerIndex != -1) {
-            markers.splice(markerIndex, 1)
+            config().markers.splice(markerIndex, 1)
             renderMarkers()
             saveInternal()
         }
@@ -351,12 +374,13 @@ function renderMap() {
         event.preventDefault()
         const formData = new FormData(event.target)
         const element = mergeForm(formData, {})
-        const collection = markers
+        const collection = config().markers
         const inserted = upsert(collection, element, event)
         if (!inserted) {
             return false
         }
         renderMarkers()
+        updateLocalConfig(config())
         saveInternal()
         event.target.closest('dialog').close()
     }
@@ -365,7 +389,7 @@ function renderMap() {
         const filter = markerFilterInput.value
         markerList.innerHTML = '';
         [...(map.querySelectorAll('span.mapMarker'))].forEach(node => node.remove())
-        markers.forEach(m => renderMarker(m, map, filter))
+        config().markers.forEach(m => renderMarker(m, map, filter))
     }
 
     const renderMarker = (md, map, filter = "") => {
@@ -679,7 +703,7 @@ function hookIntoNav() {
 
 function saveInternal() {
     localStorage.setItem("crafty", serialize([config(), sluggy(config().game)]))
-    localStorage.setItem("craftyMap", serialize(markers))
+    localStorage.setItem("craftyMap", serialize(config().markers))
 }
 
 function save() {
@@ -708,6 +732,9 @@ function displayInfo(root) {
 }
 
 function noi(event) {
+    if (1 > 0) { // disabled until rtc is stable
+        return false
+    }
     const formData = new FormData(event.target)
     const newConfig = structuredClone(defaultConfig)
     for (const [key, value] of formData.entries()) {
@@ -715,7 +742,7 @@ function noi(event) {
     }
     const slug = newConfig.game // TODO: sluggify
     const configName = slug
-    state.config = newConfig
+    updateLocalConfig(newConfig)
     state.configName = configName
     saveInternal()
     return true
@@ -777,7 +804,7 @@ function submitFactory(event) {
     if (!inserted) {
         return false
     }
-    state.config = config()
+    updateLocalConfig(config())
     saveInternal()
 }
 
@@ -790,7 +817,7 @@ function submitRecipe(event) {
     if (!inserted) {
         return false
     }
-    state.config = config()
+    updateLocalConfig(config())
     saveInternal()
 }
 
@@ -808,7 +835,6 @@ function addIngredient(event, parent, ingredient) {
     parentDataset['count'] = +count + 1
 }
 
-const fieldFn = (label, opts) => n('label', [n('span', [label]), n('input', [], opts)])
 const selectFn = (label, choices, opts) => n('label', [n('span', [label]), n('select', choices, opts)])
 
 function factoryForm(factory) {
@@ -1032,12 +1058,6 @@ function deleteFactory(factory) {
         // state.config = cfg
         console.log('can delete')
     }
-}
-
-function displayModal(content) {
-    const dialog = n('dialog', [content], { $close: () => dialog.remove() })
-    document.body.append(dialog)
-    dialog.showModal()
 }
 
 function editRecipe(recipe) {

@@ -47,3 +47,12 @@ export function n(type, children = [], opts = {}) {
     }
     return el;
 }
+
+
+export function displayModal(content) {
+    const dialog = n('dialog', [content], { $close: () => dialog.remove() })
+    document.body.append(dialog)
+    dialog.showModal()
+}
+
+export const fieldFn = (label, opts) => n('label', [n('span', [label]), n('input', [], opts)])

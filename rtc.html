@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>WebRTC Sync (Auto)</title>
+</head>
+
+<body>
+  <h2>WebRTC Sync (No Copy/Paste)</h2>
+  <textarea id="data" placeholder="Type here..."></textarea>
+
+  <script>
+    const ws = new WebSocket("ws://192.168.178.91:3000");
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" }
+      ]
+    });
+
+    let channel;
+    const dataBox = document.getElementById("data");
+
+    // Create data channel if first peer
+    pc.onnegotiationneeded = async () => {
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      ws.send(JSON.stringify({ desc: pc.localDescription }));
+    };
+
+    pc.ondatachannel = (event) => {
+      console.log(channel)
+      channel = event.channel;
+      setupChannel(channel);
+    };
+
+    function setupChannel(channel) {
+      channel.onmessage = (e) => {
+        dataBox.value = e.data;
+      };
+
+      dataBox.oninput = () => {
+        channel.send(dataBox.value);
+      };
+    }
+
+    // ICE candidates
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        ws.send(JSON.stringify({ candidate: event.candidate }));
+      }
+    };
+
+    ws.onmessage = async (event) => {
+      const msg = JSON.parse(event.data);
+
+      if (msg.desc) {
+        if (msg.desc.type === "offer") {
+          await pc.setRemoteDescription(msg.desc);
+
+          channel = pc.createDataChannel("sync");
+          setupChannel(channel);
+
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+
+          ws.send(JSON.stringify({ desc: pc.localDescription }));
+        } else if (msg.desc.type === "answer") {
+          await pc.setRemoteDescription(msg.desc);
+        }
+      }
+
+      if (msg.candidate) {
+        try {
+          await pc.addIceCandidate(msg.candidate);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+
+    // Start connection when WebSocket opens
+    ws.onopen = () => {
+      // Try to become initiator
+      channel = pc.createDataChannel("sync");
+      setupChannel(channel);
+    };
+  </script>
+</body>
+
+</html>
