@@ -17,6 +17,7 @@ const defaultConfig = {
     markers: [],
     recipes: [],
     factories: [],
+    todo: [],
     game: ''
 }
 
@@ -53,6 +54,7 @@ const defaultConfig = {
  * @property {Recipe[]} recipes
  * @property {Factory[]} factories
  * @property {any[]} markers
+ * @property {any[]} todo
  * @property {number} updated
  * @property {string} game
  */
@@ -79,6 +81,9 @@ const state = {
     get config() {
         return this._config
     }
+}
+const ephemeral = {
+
 }
 window.state = state
 let markerList = null
@@ -136,7 +141,7 @@ function init() {
     hookIntoNav()
 }
 
-function navigate(url) {
+function navigate(url, shouldScroll = true) {
     const hash = url.hash
     if (hash && hash.startsWith("#")) {
         const sansPound = hash.substring(1)
@@ -144,7 +149,7 @@ function navigate(url) {
             renderMain(sansPound, null)
             if (sansPound == 'map') {
                 const root = document.querySelector('outlet')
-                if (root) {
+                if (root && shouldScroll) {
                     root.scrollIntoView()
                     return
                 }
@@ -155,14 +160,16 @@ function navigate(url) {
             renderMain(type, id)
             if (type == 'recipe' || type == 'factory') {
                 const root = document.querySelector('outlet')
-                if (root) {
+                if (root && shouldScroll) {
                     root.scrollIntoView()
                     return
                 }
             }
         }
     }
-    document.scrollingElement && (document.scrollingElement.scrollTop = 0)
+    if (shouldScroll) {
+        document.scrollingElement && (document.scrollingElement.scrollTop = 0)
+    }
 }
 
 function renderMain(type, id) {
@@ -192,9 +199,102 @@ function mainNodeByType(type, id) {
             return renderTechTree()
         case 'map':
             return renderMap()
+        case 'todo':
+            return renderToDo()
         default:
             return renderOops()
     }
+}
+
+function renderToDo() {
+    const items = config().todo.toSorted(i => i.done ? 1 : 0).map(todo => {
+        return renderItem(todo)
+    })
+    const newTodo = {}
+    const titleInput = n('input', [], {
+        value: newTodo.title,
+        required: true,
+        style: "margin: 0; flex-grow: 1"
+    });
+    const submitButton = n('button', ['✅'], {
+        type: 'button', $click: () => {
+            if (!titleInput.checkValidity()) return
+            newTodo.title = titleInput.value
+            config().todo.push(newTodo)
+            console.log(config().todo)
+            updateLocalConfig(config())
+        }
+    })
+    const newItem = n('div', [
+        titleInput, submitButton
+    ], { style: "display:flex; align-items:center; width: 100%; max-width: 400px; gap: 5px", $click: (ev) => ev.stopPropagation() })
+    const list = n('div', [
+        n('h2', ['ToDos']),
+        ...items,
+        newItem
+    ], {
+        style: "height:100%", $click: () => {
+            if (ephemeral.editing) {
+                const prev = ephemeral.editing
+                delete ephemeral.editing
+                prev.item.replaceWith(renderItem(prev.todo))
+            }
+        }
+    })
+    return list;
+}
+
+function renderItem(todo) {
+    const children = []
+    const item = n('div', children, { style: "display:flex; justify-content:space-between; align-items:center; width: 100%; max-width: 400px; gap: 5px; border: 1px solid var(--color-link); margin-bottom: 5px; padding:5px; box-sizing:border-box", $click: (ev) => ev.stopPropagation() })
+    if (ephemeral.editing?.todo == todo) {
+        ephemeral.editing = { todo, item }
+        const titleInput = n('input', [], { value: todo.title, required: true, style: "margin:0; flex-grow: 1" });
+        const submitButton = n('button', ['✅'], {
+            type: 'button', $click: () => {
+                if (!titleInput.checkValidity()) return
+                todo.title = titleInput.value
+                delete ephemeral.editing
+                updateLocalConfig(config())
+                saveInternal()
+            }
+        })
+        const deleteButton = n('button', ['🪣'], {
+            type: 'button', $click: () => {
+                item.remove()
+                config().todo = config().todo.filter(i => i != todo)
+                updateLocalConfig(config())
+                saveInternal()
+            }
+        })
+        children.push(titleInput, submitButton, deleteButton)
+    } else {
+        const title = n('div', [todo.title], {
+            $click: () => {
+                if (todo.done) return
+                if (ephemeral.editing) {
+                    const prev = ephemeral.editing
+                    delete ephemeral.editing
+                    prev.item.replaceWith(renderItem(prev.todo))
+                }
+                ephemeral.editing = { todo, item }
+                item.replaceWith(renderItem(todo))
+            },
+            style: "flex-grow:1; cursor:pointer;"
+        });
+        const checkbox = n('input', [], {
+            type: 'checkbox', $change: (ev) => {
+                todo.done = ev.target.checked
+                updateLocalConfig(config())
+                saveInternal()
+            },
+            checked: todo.done ? true : undefined,
+            style: "margin:0"
+        })
+        children.push(title, checkbox)
+    }
+    item.append(...children)
+    return item
 }
 
 function sortTable(id, n) {
@@ -1181,7 +1281,7 @@ function displayConfig() {
     displayInfo(document.querySelector("info"))
     displayRecipes()
     displayFilter(document.querySelector("filter"))
-    navigate(new URL(window.location.href))
+    navigate(new URL(window.location.href), false)
 }
 
 function openDialog(id) {

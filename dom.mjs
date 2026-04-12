@@ -37,6 +37,11 @@ export function n(type, children = [], opts = {}) {
                 el.setAttribute(key, value)
                 el.value = value
             }
+        } else if (key === 'checked') {
+            if (value != undefined) {
+                el.setAttribute(key, value)
+                el.value = value
+            }
         } else if (key.startsWith('$')) {
             el.addEventListener(key.substring(1), value)
         } else if (key == 'class') {
