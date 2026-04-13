@@ -151,6 +151,7 @@ function init() {
         if (tempCfg.materials.length == 0 && tempCfg.recipes.length > 0) {
             synthMaterials(tempCfg)
         }
+        tempCfg.materials.sort((a, b) => a.name.localeCompare(b.name))
         state.config = tempCfg;
         if (state.config.markers.length == 0) {
             state.config.markers = deserialize(localStorage.getItem('craftyMap') ?? '[]')
