@@ -11,18 +11,27 @@ window.openDialog = openDialog
 window.save = save
 window.addRecipe = addRecipe
 window.addFactory = addFactory
+window.addMaterial = addMaterial
 
 const defaultConfig = {
     updated: 0,
     markers: [],
     recipes: [],
     factories: [],
+    materials: [],
     todo: [],
     game: ''
 }
 
 /**
- * Config type definition
+ * Material type definition
+ * @typedef {Object} Material
+ * @property {string} name
+ * @property {number} id
+ */
+
+/**
+ * Factory type definition
  * @typedef {Object} Factory
  * @property {string} name
  * @property {number} heat
@@ -31,10 +40,11 @@ const defaultConfig = {
  */
 
 /**
- * Config type definition
+ * Recipe type definition
  * @typedef {Object} Recipe
  * @property {string} name
  * @property {number} id
+ * @property {number} materialId
  * @property {number} factoryId
  * @property {number} quantity
  * @property {number} time
@@ -53,6 +63,7 @@ const defaultConfig = {
  * @typedef {Object} Config
  * @property {Recipe[]} recipes
  * @property {Factory[]} factories
+ * @property {any[]} materials
  * @property {any[]} markers
  * @property {any[]} todo
  * @property {number} updated
@@ -136,7 +147,11 @@ function init() {
     const fromStorage = localStorage.getItem("crafty")
     if (fromStorage) {
         const [parsedConfig, configName] = deserialize(fromStorage)
-        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
+        const tempCfg = Object.assign(structuredClone(defaultConfig), parsedConfig);
+        if (tempCfg.materials.length == 0 && tempCfg.recipes.length > 0) {
+            synthMaterials(tempCfg)
+        }
+        state.config = tempCfg;
         if (state.config.markers.length == 0) {
             state.config.markers = deserialize(localStorage.getItem('craftyMap') ?? '[]')
         }
@@ -144,6 +159,20 @@ function init() {
     }
     navigate(new URL(window.location.href))
     hookIntoNav()
+}
+
+/**
+ * 
+ * @param {Config} config
+ * @returns 
+ */
+function synthMaterials(config) {
+    for (const recipe of config.recipes) {
+        /**@type Material */
+        const newMat = { name: recipe.name, id: recipe.id }
+        config.materials.push(newMat)
+        recipe.materialId = newMat.id
+    }
 }
 
 function navigate(url, shouldScroll = true) {
@@ -200,6 +229,8 @@ function mainNodeByType(type, id) {
             return id == null ? renderFactoryList() : renderFactory(id)
         case 'recipe':
             return renderRecipe(id)
+        case 'material':
+            return id == null ? renderMaterialList() : renderMaterial(id)
         case 'tree':
             return renderTechTree()
         case 'map':
@@ -352,6 +383,10 @@ function factoryLink(factory) {
     return n('a', [factory.name], { href: '#factory/' + factory.id + '-' + sluggy(factory.name) })
 }
 
+function materialLink(material) {
+    return n('a', [material.name], { href: '#material/' + material.id + '-' + sluggy(material.name) })
+}
+
 function updateScroll() {
     if (!isDragging) return;
 
@@ -364,7 +399,6 @@ function updateScroll() {
     rafId = requestAnimationFrame(updateScroll);
 }
 
-
 let isDragging = false;
 let startX = 0;
 let startY = 0;
@@ -374,6 +408,32 @@ let currentX = 0;
 let currentY = 0;
 let rafId = null;
 let sContainer;
+
+class MapComponent {
+    element;
+    constructor(route, outlet) {
+        this.outlet = outlet
+        route.subscribe((currentFrag) => {
+            if (currentFrag == "map") {
+                this.attach()
+            } else {
+                this.detach()
+            }
+        })
+    }
+    attach() {
+        if (!this.element) {
+            this.element = this.render()
+        }
+        this.outlet.replcaeChildren(this.element)
+    }
+    detach() {
+
+    }
+    render() {
+
+    }
+}
 
 function renderMap() {
 
@@ -711,6 +771,41 @@ function renderTechTree() {
     ])
 }
 
+function renderMaterialList() {
+    const materials = config().materials
+    return n('div', [
+        n('h2', ['Materialien 🪨']),
+        n('table', [
+            n('tr', [
+                n('th', ['Name'], { $click: () => sortTable('materialTbl', 0) }),
+            ]),
+            ...materials.toSorted((a, b) => a.name.localeCompare(b.name)).map(f => n('tr', [
+                n('td', [materialLink(f)]),
+            ]))
+        ], { id: 'materialTbl' })
+    ])
+}
+
+function renderMaterial(id) {
+    const material = materialById(config(), +id)
+    const recipies = materialMadeByRecipes(config(), id)
+    const recipeNodes = []
+    for (const recipie of recipies) {
+        recipeNodes.push(n('br'))
+        recipeNodes.push(recipeLink(recipie))
+    }
+    return n('div', [
+        n('div', [
+            n('h2', [material.name]),
+            n('div', [
+                n('button', ['✏️'], { '$click': () => editMaterial(material), class: 'fab' }),
+                n('button', ['🪣'], { '$click': () => deleteMaterial(material), class: 'fab' }),
+            ], { style: 'display:flex; gap: 10px;' })
+        ], { style: 'display:flex; align-items: center; gap: 50px;' }),
+        n('p', ['Hergestellt von: ', ...recipeNodes])
+    ])
+}
+
 function renderFactoryList() {
     const factories = config().factories
     return n('div', [
@@ -721,7 +816,7 @@ function renderFactoryList() {
                 n('th', ['Strom'], { $click: () => sortTable('factoryTbl', 1) }),
                 n('th', ['Hitze'], { $click: () => sortTable('factoryTbl', 2) })
             ]),
-            ...factories.map(f => n('tr', [
+            ...factories.toSorted((a, b) => a.name.localeCompare(b.name)).map(f => n('tr', [
                 n('td', [factoryLink(f)]),
                 n('td', [f.power], { style: 'color: cyan' }),
                 n('td', [f.heat], { style: 'color: coral' })
@@ -761,7 +856,7 @@ function renderRecipe(id) {
         if (!r) {
             return
         }
-        (r.ingredients ?? []).forEach(i => edge.push({ ...recipeById(config(), i.id), level: r.level + 1, primary: false }));
+        (r.ingredients ?? []).forEach(i => edge.push({ ...materialMadeByRecipes(config(), i.id)[0], level: r.level + 1, primary: false }));
         if (dependantRecipies.find(d => +d.id === +r.id) == undefined) {
             dependantRecipies.push(r);
         }
@@ -784,6 +879,8 @@ function renderRecipe(id) {
                 ], { style: 'display:flex; align-items: center; gap: 50px;' }),
                 n('span', ['Output: ', recipe.quantity, '/', recipe.time, 's', " (", (60 / +recipe.time) * recipe.quantity, '/min)']),
                 n('br'),
+                n('p', ['Erzeugt: ', materialLink(materialById(config(), recipe.materialId))]),
+                n('br'),
                 n('p', ['Hergestellt in: ', factoryLink(recipeFactory)]),
                 n('br'),
                 n('p', ['Verwendet von: ', ...recipeNodes])
@@ -791,8 +888,7 @@ function renderRecipe(id) {
             n('div', [
                 n('h2', ['Zutaten']),
                 ...(recipe.ingredients?.map(i => {
-                    const r = config().recipes.filter(r => r.id == i.id)[0]
-                    return n('div', [recipeLink(r), ' ', i.amount])
+                    return n('div', [materialLink(materialById(config(), i.id)), ' ', i.amount])
                 }) ?? []),
             ]),
         ], { style: 'display:flex; gap: 10px; align-items:start; justify-content: space-between;' }),
@@ -872,7 +968,7 @@ function mergeForm(formData, target) {
 }
 
 function isNameUnique(event, collection) {
-    const inp = event.target.querySelector('[name="name"]')
+    const inp = event?.target?.querySelector('[name="name"]')
     if (!inp) {
         return true
     }
@@ -931,9 +1027,9 @@ function submitRecipe(event) {
 function addIngredient(event, parent, ingredient) {
     const parentDataset = parent.dataset
     const count = parentDataset['count'] ?? 0
-    const recipeChoices = () => config().recipes.map(r => n('option', [r.name], { value: r.id }))
+    const materialChoices = () => config().materials.map(m => n('option', [m.name], { value: m.id }))
     const newIngredient = n('div', [
-        selectFn('Zutat', recipeChoices(), { name: `ingredients.${count}.id`, requierd: true, value: ingredient?.id ?? null }),
+        selectFn('Zutat', materialChoices(), { name: `ingredients.${count}.id`, requierd: true, value: ingredient?.id ?? null }),
         fieldFn('Anzahl', { name: `ingredients.${count}.amount`, requierd: true, value: ingredient?.amount ?? null }),
         n('button', ['🪣'], { '$click': () => parent.removeChild(newIngredient), class: 'fab' }),
     ], { style: "display: flex; align-items:center; gap: 0.5rem" })
@@ -968,6 +1064,7 @@ function factoryForm(factory) {
 
 function recipeForm(recipe) {
     const factoryChoices = () => config().factories.map(f => n('option', [f.name], { value: f.id }))
+    const materialChoices = () => config().materials.map(m => n('option', [m.name], { value: m.id }))
     const ingredientNode = n('div')
 
     const form = n('div', [
@@ -976,6 +1073,9 @@ function recipeForm(recipe) {
             n('div', [
                 fieldFn('Name', { name: "name", requierd: true, value: recipe.name }),
                 selectFn('Factory', factoryChoices(), { name: "factoryId", requierd: true, value: recipe.factoryId })
+            ], { style: "display: flex; gap: 0.5rem" }),
+            n('div', [
+                selectFn('Produziert', materialChoices(), { name: "materialId", requierd: true, value: recipe.materialId })
             ], { style: "display: flex; gap: 0.5rem" }),
             n('div', [
                 fieldFn('Anzahl', { name: "quantity", requierd: true, value: recipe.quantity }),
@@ -996,6 +1096,24 @@ function recipeForm(recipe) {
     for (const ingredient of recipe.ingredients ?? []) {
         addIngredient(null, ingredientNode, ingredient)
     }
+    return form
+}
+
+function materialForm(material) {
+    const form = n('div', [
+        n('h2', ['Material hinzufügen']),
+        n('form', [
+            n('div', [
+                fieldFn('Name', { name: "name", requierd: true, value: material.name }),
+            ], { style: "display: flex; gap: 0.5rem" }),
+            n('div', [
+                n('input', [], { value: material.id, name: 'id', type: 'hidden' }),
+                n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
+                n('button', ['OK'], { type: "submit" })
+            ], { style: "display:flex; justify-content:end; gap:10px;" }),
+        ], { $submit: (event) => submitRecipe(event), class: "formRows", method: "dialog" }),
+        n('br')
+    ])
     return form
 }
 
@@ -1028,7 +1146,7 @@ function calcInner(recipe, amount) {
         factoryId: recipe.factoryId,
         machines: amount / singleRate,
         amount,
-        ingredients: recipe.ingredients?.map(i => calcInner(recipeById(config(), i.id), (amount * +(i.amount) / +(recipe.quantity))))
+        ingredients: recipe.ingredients?.map(i => calcInner(materialMadeByRecipes(config(), i.id)[0], (amount * +(i.amount) / +(recipe.quantity))))
     }
 }
 
@@ -1183,6 +1301,25 @@ function addFactory() {
     displayModal(factoryForm({}))
 }
 
+function editMaterial(material) {
+    displayModal(materialForm(material))
+}
+
+function addMaterial() {
+    displayModal(materialForm({}))
+}
+
+function deleteMaterial(material) {
+    const cfg = config()
+    if (materialMadeByRecipes(cfg, material.id).length > 0) {
+        alert("Material wird verwendet, kann nicht gelöscht werden")
+    } else {
+        // cfg.recipes = cfg.recipes.filter(r => r != recipe)
+        // state.config = cfg
+        console.log('can delete')
+    }
+}
+
 /**
  * @param {Config} config 
  * @param {number} id
@@ -1199,6 +1336,15 @@ function recipeById(config, id) {
  */
 function factoryById(config, id) {
     return config.factories.filter(f => f.id == id)[0]
+}
+
+/**
+ * @param {Config} config 
+ * @param {number} id
+ * @returns {Material}
+ */
+function materialById(config, id) {
+    return config.materials.filter(f => f.id == id)[0]
 }
 
 function filterRecipes(config, recipe, filter) {
@@ -1221,6 +1367,15 @@ function recipeUsedByRecipes(config, id) {
  */
 function factoryMakesRecipes(config, id) {
     return config.recipes.filter(r => r.factoryId == id)
+}
+
+/**
+ * @param {Config} config 
+ * @param {number} id
+ * @returns {Recipe[]}
+ */
+function materialMadeByRecipes(config, id) {
+    return config.recipes.filter(r => r.materialId == id)
 }
 
 function deleteRecipe(recipe) {
