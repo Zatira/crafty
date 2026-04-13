@@ -1411,7 +1411,7 @@ function displayRecipes(filter = "") {
             [n('div', [
                 n('b', [recipe.name]),
                 n('br'),
-                n('span', ['Fabrik: ', factoryById(cfg, recipe.factoryId).name]),
+                n('span', ['Fabrik: ', factoryById(cfg, recipe.factoryId)?.name ?? 'unbekannt']),
                 n('br'),
                 n('span', ['Output: ', recipe.quantity, '/', recipe.time, 's', " (", (60 / +recipe.time) * recipe.quantity, '/min)']),
                 n('br'),
