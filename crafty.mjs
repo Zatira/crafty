@@ -1024,6 +1024,20 @@ function submitRecipe(event) {
     event.target.closest('dialog').close()
 }
 
+function submitMaterial(event) {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const element = mergeForm(formData, {})
+    const collection = config().materials
+    const inserted = upsert(collection, element, event)
+    if (!inserted) {
+        return false
+    }
+    updateLocalConfig(config())
+    saveInternal()
+    event.target.closest('dialog').close()
+}
+
 function addIngredient(event, parent, ingredient) {
     const parentDataset = parent.dataset
     const count = parentDataset['count'] ?? 0
@@ -1111,7 +1125,7 @@ function materialForm(material) {
                 n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
                 n('button', ['OK'], { type: "submit" })
             ], { style: "display:flex; justify-content:end; gap:10px;" }),
-        ], { $submit: (event) => submitRecipe(event), class: "formRows", method: "dialog" }),
+        ], { $submit: (event) => submitMaterial(event), class: "formRows", method: "dialog" }),
         n('br')
     ])
     return form
