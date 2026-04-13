@@ -92,10 +92,15 @@ function updateLocalConfig(config) {
     config.updated = new Date().getTime()
     state.config = config
 }
-
+connection.online.subscribe((online) => {
+    if (online) {
+        updateRtc(serialize(config()))
+    }
+})
 rtcUpdates.subscribe((v) => {
     const des = deserialize(v)
-    if (des.updated > config().updated) {
+    if (config().game === des.game && des.updated > config().updated) {
+        //console.log('in:', des)
         state.config = des
     }
 })
@@ -117,7 +122,7 @@ async function loadFile(event) {
 function readInfo(configContent, name) {
     try {
         const parsedConfig = deserialize(configContent)
-        updateLocalConfig(Object.assign(structuredClone(defaultConfig), parsedConfig))
+        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
         state.configName = name
     } catch (e) {
         console.log(e)
@@ -131,7 +136,7 @@ function init() {
     const fromStorage = localStorage.getItem("crafty")
     if (fromStorage) {
         const [parsedConfig, configName] = deserialize(fromStorage)
-        updateLocalConfig(Object.assign(structuredClone(defaultConfig), parsedConfig))
+        state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
         if (state.config.markers.length == 0) {
             state.config.markers = deserialize(localStorage.getItem('craftyMap') ?? '[]')
         }
@@ -215,19 +220,21 @@ function renderToDo() {
         value: newTodo.title,
         required: true,
         style: "margin: 0; flex-grow: 1"
-    });
+    }, "newTodo");
     const submitButton = n('button', ['✅'], {
-        type: 'button', $click: () => {
+        type: 'submit', $click: () => {
             if (!titleInput.checkValidity()) return
             newTodo.title = titleInput.value
+            titleInput.value = ""
             config().todo.push(newTodo)
             console.log(config().todo)
             updateLocalConfig(config())
+            saveInternal()
         }
     })
-    const newItem = n('div', [
+    const newItem = n('form', [
         titleInput, submitButton
-    ], { style: "display:flex; align-items:center; width: 100%; max-width: 400px; gap: 5px", $click: (ev) => ev.stopPropagation() })
+    ], { style: "display:flex; align-items:center; width: 100%; max-width: 400px; gap: 5px; box-sizing: border-box;", $click: (ev) => ev.stopPropagation(), $submit: (ev) => ev.preventDefault() })
     const list = n('div', [
         n('h2', ['ToDos']),
         ...items,
@@ -466,6 +473,7 @@ function renderMap() {
         if (markerIndex != -1) {
             config().markers.splice(markerIndex, 1)
             renderMarkers()
+            updateLocalConfig(config())
             saveInternal()
         }
     }
@@ -832,9 +840,6 @@ function displayInfo(root) {
 }
 
 function noi(event) {
-    if (1 > 0) { // disabled until rtc is stable
-        return false
-    }
     const formData = new FormData(event.target)
     const newConfig = structuredClone(defaultConfig)
     for (const [key, value] of formData.entries()) {
@@ -906,6 +911,7 @@ function submitFactory(event) {
     }
     updateLocalConfig(config())
     saveInternal()
+    event.target.closest('dialog').close()
 }
 
 function submitRecipe(event) {
@@ -919,6 +925,7 @@ function submitRecipe(event) {
     }
     updateLocalConfig(config())
     saveInternal()
+    event.target.closest('dialog').close()
 }
 
 function addIngredient(event, parent, ingredient) {

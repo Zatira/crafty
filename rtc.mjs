@@ -20,6 +20,7 @@ export function updateRtc(data) {
         return
     }
     if (channel.readyState == 'open') {
+        //console.log('out:', data)
         channel.send(data)
     }
 }
@@ -27,17 +28,23 @@ export function updateRtc(data) {
 export const rtcUpdates = signal()
 let channel
 let ws
+let pc
 
 async function tryConnect() {
-    if (ws) {
+    if (ws && ws.readyState != WebSocket.CLOSED) {
         await ws.close()
     }
+    if (pc) {
+        connection.online.value = false
+        pc.close()
+    }
     ws = new WebSocket(`wss:////${connection.signaling}`);
-    const pc = connection.useStun ? new RTCPeerConnection(connection.stun) : new RTCPeerConnection();
+
+    pc = connection.useStun ? new RTCPeerConnection(connection.stun) : new RTCPeerConnection();
 
     // Create data channel if first peer
     pc.onnegotiationneeded = async () => {
-        const offer = await pc.createOffer();
+        const offer = await pc.createOffer({ iceRestart: true });
         await pc.setLocalDescription(offer);
         ws.send(JSON.stringify({ desc: pc.localDescription }));
     };
@@ -48,12 +55,16 @@ async function tryConnect() {
         connection.online.value = true
         ws.close()
     };
+    pc.connectionState
 
     pc.oniceconnectionstatechange = (event) => {
         console.log(event)
-        if (event?.target?.connectionState == "failed") {
+        const state = event?.target?.connectionState
+        if (state != "connected") {
             connection.online.value = false
-            pc.close()
+            if (state == "disconnected" || state == "failed") {
+                pc.close()
+            }
         }
     }
 
@@ -122,8 +133,14 @@ function connectionDialog() {
             value: connection.signaling
         }),
         n('button', ['connect'], { $click: tryConnect }),
-
-    ]))
+        n('div',
+            [
+                n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() })
+            ], {
+            style: "display: flex; justify-content:end; margin-top:10px;"
+        }
+        )
+    ], { style: "padding:5px; min-width: 300px;" }))
 }
 
 const indicator = n('div', [], { style: "width: 16px; height:16px; border-radius: 20px; background: var(--indicator, green); box-shadow: 0px 0px 5px var(--indicator, green); border: 1px solid white;" })

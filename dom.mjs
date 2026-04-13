@@ -28,9 +28,25 @@ export function r(type, children = [], opts = {}) {
     };
 }
 
-export function n(type, children = [], opts = {}) {
-    const el = document.createElement(type)
-    el.append(...children)
+const staticElements = new Map()
+
+function createEl(type, staticId) {
+    let el
+    if (staticId != "") {
+        el = staticElements.get(staticId)
+        if (!el) {
+            el = document.createElement(type)
+            staticElements.set(staticId, el)
+        }
+    } else {
+        el = document.createElement(type)
+    }
+    return el;
+}
+
+export function n(type, children = [], opts = {}, staticId = "") {
+    const el = createEl(type, staticId)
+    el.replaceChildren(...children)
     for (const [key, value] of Object.entries(opts)) {
         if (key === 'value') {
             if (value != undefined) {
