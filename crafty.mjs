@@ -462,6 +462,7 @@ function renderMap(attachCallbacks) {
     const maxY = 16
     const tileWidth = 256
     const tiles = []
+    let selectedId = null
 
     function markerForm(marker) {
 
@@ -606,6 +607,9 @@ function renderMap(attachCallbacks) {
             )
         }
         map.append(mapMarker)
+        if (selectedId == md.id) {
+            setFocus(map, md)
+        }
     }
 
     const suppress = (event) => {
@@ -613,10 +617,15 @@ function renderMap(attachCallbacks) {
         event.preventDefault()
     }
 
-    function focusMarker(md, map) {
+    function focusMarkerAndScroll(md, map) {
+        selectedId = md.id
         sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
         sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
         removeFocus(map)
+        setFocus(map, md)
+    }
+
+    function setFocus(map, md) {
         const mapMarker = map.querySelector(`#marker-${md.id}`)
         mapMarker.style.backgroundColor = "red"
         mapMarker.classList.toggle("selected")
@@ -698,7 +707,7 @@ function renderMap(attachCallbacks) {
     attachCallbacks.push(
         (id) => {
             if (id === 0 || id) {
-                focusMarker(markerById(config(), id), map)
+                focusMarkerAndScroll(markerById(config(), id), map)
             } else {
                 removeFocus(map)
                 container.scrollTop = 1954
@@ -1579,7 +1588,7 @@ function recipeCard(recipe, cfg) {
 function displayFilter(root) {
     root.innerHTML = ""
     const eh = (event) => displayRecipes(event.target.value)
-    root.append(n('input', [], { placeholder: 'Filter', $change: eh, $input: eh }, "filter-recipes-input"))
+    root.append(n('input', [], { placeholder: 'Filter', $input: eh }, "recipes-filter-input"))
 }
 
 function renderIngredient(ingredient, cfg) {
