@@ -13,6 +13,9 @@ export const signal = (initial) => {
         },
         subscribe(fn) {
             subs.add(fn)
+            if (value) {
+                fn(value)
+            }
             return () => subs.delete(fn)
         }
     }

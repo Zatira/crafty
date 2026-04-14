@@ -312,6 +312,11 @@ a {
   text-decoration: underline;
 }
 
+a.block {
+  font-weight: normal;
+  color: unset;
+}
+
 a:hover {
   filter: brightness(var(--hover-brightness));
 }
@@ -436,6 +441,7 @@ textarea {
 input[type="checkbox"],
 input[type="radio"] {
   display: inline-block;
+  cursor: pointer;
 }
 
 input[type="checkbox"]+label,

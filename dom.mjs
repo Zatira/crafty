@@ -1,5 +1,7 @@
 //@ts-check
 
+import { signal } from "./signals.mjs";
+
 export function r(type, children = [], opts = {}) {
     const el = document.createElement(type)
     return () => {
@@ -71,9 +73,11 @@ export function n(type, children = [], opts = {}, staticId = "") {
 
 
 export function displayModal(content) {
-    const dialog = n('dialog', [content], { $close: () => dialog.remove() })
+    const afterRemove = signal()
+    const dialog = n('dialog', [content], { $close: () => { dialog.remove(); afterRemove.value = true } })
     document.body.append(dialog)
     dialog.showModal()
+    return afterRemove;
 }
 
 export const fieldFn = (label, opts) => n('label', [n('span', [label]), n('input', [], opts)])
