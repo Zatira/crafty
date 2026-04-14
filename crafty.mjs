@@ -64,7 +64,7 @@ const defaultConfig = {
  * @typedef {Object} Config
  * @property {Recipe[]} recipes
  * @property {Factory[]} factories
- * @property {any[]} materials
+ * @property {Material[]} materials
  * @property {any[]} markers
  * @property {any[]} todo
  * @property {number} updated
@@ -186,7 +186,7 @@ function navigate(url, shouldScroll = true) {
     if (hash && hash.startsWith("#")) {
         const sansPound = hash.substring(1)
         if (sansPound.indexOf("/") == -1) {
-            route.value = sansPound
+            route.value = { type: sansPound, id: null }
             renderMain(sansPound, null)
             if (sansPound == 'map') {
                 const root = document.querySelector('outlet')
@@ -198,9 +198,9 @@ function navigate(url, shouldScroll = true) {
         } else {
             const type = sansPound.substring(0, sansPound.indexOf("/"))
             const id = hash.substring(hash.indexOf("/") + 1, hash.indexOf("-"))
-            route.value = type
+            route.value = { type, id }
             renderMain(type, id)
-            if (type == 'recipe' || type == 'factory') {
+            if (type == 'recipe' || type == 'factory' || type == 'map') {
                 const root = document.querySelector('outlet')
                 if (root && shouldScroll) {
                     root.scrollIntoView()
@@ -398,6 +398,10 @@ function materialLink(material) {
     return n('a', [material.name], { href: '#material/' + material.id + '-' + sluggy(material.name) })
 }
 
+function markerLink(marker) {
+    return n('a', [marker.icon, ' - ', marker.text], { href: '#map/' + marker.id + '-' + sluggy(marker.text) })
+}
+
 function updateScroll() {
     if (!isDragging) return;
 
@@ -422,27 +426,31 @@ let sContainer;
 
 class MapComponent {
     element;
+    attached = false;
 
     constructor(route, outlet) {
         this.outlet = outlet
         route.subscribe((currentFrag) => {
-            if (currentFrag == "map") {
-                this.attach()
+            if (currentFrag.type == "map") {
+                this.attach(currentFrag.id)
             } else {
                 this.detach()
             }
         })
     }
     attachCallbacks = []
-    attach() {
-        if (!this.element) {
-            this.element = this.render()
+    attach(id) {
+        if (!this.attached) {
+            if (!this.element) {
+                this.element = this.render()
+            }
+            this.outlet.replaceChildren(this.element)
         }
-        this.outlet.replaceChildren(this.element)
-        this.attachCallbacks.forEach(cb => cb())
+        this.attachCallbacks.forEach(cb => cb(id))
+        this.attached = true
     }
     detach() {
-
+        this.attached = false
     }
     render() {
         return renderMap(this.attachCallbacks)
@@ -580,26 +588,19 @@ function renderMap(attachCallbacks) {
   border-radius: 100%;
   aspect-ratio: 1;
   padding: 1px;
-  cursor: pointer;` })
+  cursor: pointer;`, id: `marker-${md.id}`
+        })
         const shouldDisplay = (md.icon + ' ' + md.text).toLowerCase().indexOf(filter.toLowerCase()) > -1
         if (shouldDisplay) {
             const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
-            const markerLink = n('a', [md.icon, " - ", md.text], {
-                $click: () => {
-                    sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
-                    sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
-                    const selected = map.querySelector(".selected")
-                    if (selected) {
-                        selected.style.backgroundColor = "white"
-                        selected.classList.toggle("selected")
-                    }
-                    mapMarker.style.backgroundColor = "red"
-                    mapMarker.classList.toggle("selected")
-                },
-                style: "display:flex; flex-direction:col; cursor: pointer;"
-            })
+            // const markerLink = n('a', [md.icon, " - ", md.text], {
+            //     $click: () => {
+            //         focusMarker(md, map)
+            //     },
+            //     style: "display:flex; flex-direction:col; cursor: pointer;"
+            // })
 
-            const markerRow = n('div', [markerLink, markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
+            const markerRow = n('div', [markerLink(md), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
             markerList.append(
                 markerRow
             )
@@ -610,6 +611,23 @@ function renderMap(attachCallbacks) {
     const suppress = (event) => {
         event.stopPropagation()
         event.preventDefault()
+    }
+
+    function focusMarker(md, map) {
+        sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
+        sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
+        removeFocus(map)
+        const mapMarker = map.querySelector(`#marker-${md.id}`)
+        mapMarker.style.backgroundColor = "red"
+        mapMarker.classList.toggle("selected")
+    }
+
+    function removeFocus(map) {
+        const selected = map.querySelector(".selected")
+        if (selected) {
+            selected.style.backgroundColor = "white"
+            selected.classList.toggle("selected")
+        }
     }
 
     function createMap(tiles, base = "tiles") {
@@ -678,9 +696,14 @@ function renderMap(attachCallbacks) {
     )
     sContainer = container
     attachCallbacks.push(
-        () => {
-            container.scrollTop = 1954
-            container.scrollLeft = 915
+        (id) => {
+            if (id === 0 || id) {
+                focusMarker(markerById(config(), id), map)
+            } else {
+                removeFocus(map)
+                container.scrollTop = 1954
+                container.scrollLeft = 915
+            }
         }
     )
     const markerFilterInput = n('input', [], {
@@ -820,6 +843,10 @@ function renderMaterial(id) {
         recipeNodes.push(n('br'))
         recipeNodes.push(recipeLink(recipie))
     }
+    const markerNodes = []
+    config().markers.filter(m => m.text == material.name).forEach(m => {
+        markerNodes.push(n('div', [markerLink(m)]))
+    })
     return n('div', [
         n('div', [
             n('h2', [material.name]),
@@ -828,7 +855,9 @@ function renderMaterial(id) {
                 n('button', ['🪣'], { '$click': () => deleteMaterial(material), class: 'fab' }),
             ], { style: 'display:flex; gap: 10px;' })
         ], { style: 'display:flex; align-items: center; gap: 50px;' }),
-        n('p', ['Hergestellt von: ', ...recipeNodes])
+        n('p', ['Hergestellt von: ', ...recipeNodes]),
+        n('br'),
+        n('p', ['Hergestellt bei: ', ...markerNodes]),
     ])
 }
 
@@ -861,8 +890,7 @@ function renderFactory(id) {
     const recipies = factoryMakesRecipes(config(), id)
     const recipeNodes = []
     for (const recipie of recipies) {
-        recipeNodes.push(n('br'))
-        recipeNodes.push(recipeLink(recipie))
+        recipeNodes.push(recipeCard(recipie, config()))
     }
     return n('div', [
         n('div', [
@@ -874,7 +902,7 @@ function renderFactory(id) {
         ], { style: 'display:flex; align-items: center; gap: 50px;' }),
         n('p', ['Hitze: ', factory.heat,], { style: 'color: coral' }),
         n('p', ['Strom: ', factory.power,], { style: 'color: cyan' }),
-        n('p', ['Stellt her: ', ...recipeNodes])
+        n('p', ['Stellt her: ', n('div', recipeNodes, { class: "floaties" })], { style: "max-width: 750px;" })
     ])
 }
 
@@ -922,6 +950,11 @@ function renderRecipe(id) {
         recipeNodes.push(n('br'))
         recipeNodes.push(recipeLink(recipe))
     }
+    const material = materialById(config(), recipe.materialId)
+    const markerNodes = []
+    config().markers.filter(m => m.text == material.name).forEach(m => {
+        markerNodes.push(n('div', [markerLink(m)]))
+    })
     return n('div', [
         n('div', [
             n('div', [
@@ -934,9 +967,11 @@ function renderRecipe(id) {
                 ], { style: 'display:flex; align-items: center; gap: 50px;' }),
                 n('span', ['Output: ', recipe.quantity, '/', recipe.time, 's', " (", (60 / +recipe.time) * recipe.quantity, '/min)']),
                 n('br'),
-                n('p', ['Erzeugt: ', materialLink(materialById(config(), recipe.materialId))]),
+                n('p', ['Erzeugt: ', materialLink(material)]),
                 n('br'),
                 n('p', ['Hergestellt in: ', factoryLink(recipeFactory)]),
+                n('br'),
+                n('p', ['Hergestellt bei: ', ...markerNodes]),
                 n('br'),
                 n('p', ['Verwendet von: ', ...recipeNodes])
             ], { style: 'flex-grow:1' }),
@@ -1326,7 +1361,7 @@ function renderMaterialSummary(data) {
             .toSorted((a, b) => a[0].name.localeCompare(b[0].name))
             .map(([recipe, amount]) => {
                 return n('li', [
-                    recipe.name,
+                    recipeLink(recipe),
                     ' ',
                     amount,
                     '/s'
@@ -1438,6 +1473,15 @@ function materialById(config, id) {
     return config.materials.filter(f => f.id == id)[0]
 }
 
+/**
+ * @param {Config} config 
+ * @param {number} id
+ * @returns {any}
+ */
+function markerById(config, id) {
+    return config.markers.filter(m => m.id == id)[0]
+}
+
 function filterRecipes(config, recipe, filter) {
     return recipe.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0
 }
@@ -1501,33 +1545,35 @@ function displayRecipes(filter = "") {
     const cfg = config()
     cfg.recipes.sort((a, b) => a.name.localeCompare(b.name))
     for (const recipe of cfg.recipes.filter(r => filterRecipes(cfg, r, filter))) {
-        root.appendChild(n('a',
-            [n('div', [
-                n('div', [
-                    n('div', [(60 / +recipe.time) * recipe.quantity, '/min']),
-                    n('div', [recipe.quantity, '/', recipe.time, 's']),
-                ], { style: "float:right; text-align:right;" }),
-                n('div', [
-                    n('div', [
-                        n('b', [recipe.name], { style: "color: var(--color-link); hyphens: auto;" }),
-                    ]),
-
-                ], {
-                    style: "display:flex; justify-content: space-between;"
-                }),
-                n('span', [factoryById(cfg, recipe.factoryId)?.name ?? 'unbekannt']),
-                n('br'),
-                ...(recipe.ingredients?.map(i => {
-                    return renderIngredient(i, cfg)
-                }) ?? [])
-            ], { "class": "recipe-card" })],
-            {
-                "href": "#recipe/" + recipe.id + '-' + sluggy(recipe.name),
-                "class": "block"
-            }
-        )
-        )
+        root.appendChild(recipeCard(recipe, cfg))
     }
+}
+
+function recipeCard(recipe, cfg) {
+    return n('a',
+        [n('div', [
+            n('div', [
+                n('div', [(60 / +recipe.time) * recipe.quantity, '/min']),
+                n('div', [recipe.quantity, '/', recipe.time, 's']),
+            ], { style: "float:right; text-align:right; margin-left:2px;" }),
+            n('div', [
+                n('div', [
+                    n('b', [recipe.name], { style: "color: var(--color-link); hyphens: auto;" }),
+                ]),
+            ], {
+                style: "display:flex; justify-content: space-between;"
+            }),
+            n('span', [factoryById(cfg, recipe.factoryId)?.name ?? 'unbekannt']),
+            n('br'),
+            ...(recipe.ingredients?.map(i => {
+                return renderIngredient(i, cfg)
+            }) ?? [])
+        ], { "class": "recipe-card" })],
+        {
+            "href": "#recipe/" + recipe.id + '-' + sluggy(recipe.name),
+            "class": "block"
+        }
+    )
 }
 
 function displayFilter(root) {

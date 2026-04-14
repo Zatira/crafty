@@ -56,10 +56,21 @@ fab-container {
     border-radius: 4px;
 }
 
+.recipe-card:hover {
+    border-color: var(--color-link);
+}
+
 .block {
     display: block;
 }
 
 button.active {
     border: 2px solid yellow;
+}
+
+.floaties>* {
+    float: left;
+    min-width: 246px;
+    max-width: 246px;
+    margin: 2px;
 }
