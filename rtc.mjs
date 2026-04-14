@@ -135,7 +135,7 @@ function connectionDialog() {
         n('button', ['connect'], { $click: tryConnect }),
         n('div',
             [
-                n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() })
+                n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() })
             ], {
             style: "display: flex; justify-content:end; margin-top:10px;"
         }

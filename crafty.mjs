@@ -300,7 +300,7 @@ function renderItem(todo) {
         ephemeral.editing = { todo, item }
         const titleInput = n('input', [], { value: todo.title, required: true, style: "margin:0; flex-grow: 1", $keydown: (key) => { key.keyCode == 13 ? submitButton.click() : false } });
         const submitButton = n('button', ['✅'], {
-            type: 'button', $click: () => {
+            $click: () => {
                 if (!titleInput.checkValidity()) return
                 todo.title = titleInput.value
                 delete ephemeral.editing
@@ -309,7 +309,7 @@ function renderItem(todo) {
             }
         })
         const deleteButton = n('button', ['🪣'], {
-            type: 'button', $click: () => {
+            $click: () => {
                 item.remove()
                 config().todo = config().todo.filter(i => i != todo)
                 updateLocalConfig(config())
@@ -468,7 +468,7 @@ function renderMap(attachCallbacks) {
 
         const deleteBtn = n('div', [
             n('button', ['Löschen 🪣'], {
-                type: "button", $click: (event) => {
+                $click: (event) => {
                     removeMarker(marker)
                     event.target.closest('dialog').close()
                 }
@@ -487,7 +487,7 @@ function renderMap(attachCallbacks) {
                     n('input', [], { value: marker.x, name: 'x', type: 'hidden' }),
                     n('input', [], { value: marker.y, name: 'y', type: 'hidden' }),
                     n('input', [], { value: marker.id, name: 'id', type: 'hidden' }),
-                    n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
+                    n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
                     n('button', ['OK'], { type: "submit" })
                 ], { style: "display:flex; justify-content:end; gap:10px;" }),
             ], { $submit: (event) => submitMarker(event), class: "formRows", method: "dialog" }),
@@ -512,7 +512,7 @@ function renderMap(attachCallbacks) {
                     fieldFn('Datei', { name: "markerFile", type: 'file', requierd: true })
                 ], { style: "display: flex; gap: 0.5rem" }),
                 n('div', [
-                    n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
+                    n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
                     n('button', ['OK'], { type: "submit" })
                 ], { style: "display:flex; justify-content:end; gap:10px;" }),
             ], { $submit: async (event) => await submitImportMarker(event), class: "formRows", method: "dialog" }),
@@ -594,13 +594,6 @@ function renderMap(attachCallbacks) {
         const shouldDisplay = (md.icon + ' ' + md.text).toLowerCase().indexOf(filter.toLowerCase()) > -1
         if (shouldDisplay) {
             const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
-            // const markerLink = n('a', [md.icon, " - ", md.text], {
-            //     $click: () => {
-            //         focusMarker(md, map)
-            //     },
-            //     style: "display:flex; flex-direction:col; cursor: pointer;"
-            // })
-
             const markerRow = n('div', [markerLink(md), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
             markerList.append(
                 markerRow
@@ -729,8 +722,8 @@ function renderMap(attachCallbacks) {
 
     const markerFilter = n('div', [markerFilterInput])
     const markerActions = n('div', [
-        n('button', ['Marker Import'], { type: 'button', $click: () => importMarkers() }),
-        n('button', ['Marker Export'], { type: 'button', $click: () => exportMarkers() })
+        n('button', ['Marker Import'], { $click: () => importMarkers() }),
+        n('button', ['Marker Export'], { $click: () => exportMarkers() })
     ], { style: 'display:flex; gap:10px' })
     const makerListContainer = n('div', [markerFilter, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 90vh; width: 250px' })
     return n('div', [
@@ -830,7 +823,7 @@ function renderMaterialList() {
         n('h2', ['Materialien 🪨']),
         n('table', [
             n('tr', [
-                n('th', ['Name'], { $click: () => sortTable('materialTbl', 0) }),
+                n('th', ['Name'], { $click: () => sortTable('materialTbl', 0), style: "cursor:pointer;" }),
             ]),
             ...materials.toSorted((a, b) => a.name.localeCompare(b.name)).map(f => n('tr', [
                 n('td', [materialLink(f)]),
@@ -876,9 +869,9 @@ function renderFactoryList() {
         n('h2', ['Fabriken 🏭']),
         n('table', [
             n('tr', [
-                n('th', ['Name'], { $click: () => sortTable('factoryTbl', 0) }),
-                n('th', ['Strom'], { $click: () => sortTable('factoryTbl', 1) }),
-                n('th', ['Hitze'], { $click: () => sortTable('factoryTbl', 2) })
+                n('th', ['Name'], { $click: () => sortTable('factoryTbl', 0), style: "cursor:pointer;" }),
+                n('th', ['Strom'], { $click: () => sortTable('factoryTbl', 1), style: "cursor:pointer;" }),
+                n('th', ['Hitze'], { $click: () => sortTable('factoryTbl', 2), style: "cursor:pointer;" })
             ]),
             ...factories.toSorted((a, b) => a.name.localeCompare(b.name)).map(f => n('tr', [
                 n('td', [factoryLink(f)]),
@@ -921,9 +914,9 @@ function renderRecipeList() {
         n('h2', ['Rezepte 📄']),
         n('table', [
             n('tr', [
-                n('th', ['Name'], { $click: () => sortTable('recipeTbl', 0) }),
-                n('th', ['Produziert'], { $click: () => sortTable('recipeTbl', 1) }),
-                n('th', ['Fabrik'], { $click: () => sortTable('recipeTbl', 2) })
+                n('th', ['Name'], { $click: () => sortTable('recipeTbl', 0), style: "cursor:pointer;" }),
+                n('th', ['Produziert'], { $click: () => sortTable('recipeTbl', 1), style: "cursor:pointer;" }),
+                n('th', ['Fabrik'], { $click: () => sortTable('recipeTbl', 2), style: "cursor:pointer;" })
             ]),
             ...recipes.toSorted((a, b) => a.name.localeCompare(b.name)).map(r => n('tr', [
                 n('td', [recipeLink(r)]),
@@ -1102,6 +1095,7 @@ function upsert(collection, element, event) {
 
 function submitFactory(event) {
     event.preventDefault()
+    //event.stopPropagation()
     const formData = new FormData(event.target)
     const element = mergeForm(formData, {})
     const collection = config().factories
@@ -1174,7 +1168,7 @@ function factoryForm(factory) {
             ], { style: "display: flex; gap: 0.5rem" }),
             n('div', [
                 n('input', [], { value: factory.id, name: 'id', type: 'hidden' }),
-                n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
+                n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
                 n('button', ['OK'], { type: "submit" })
             ], { style: "display:flex; justify-content:end; gap:10px;" }),
         ], { $submit: (event) => submitFactory(event), class: "formRows", method: "dialog" }),
@@ -1218,11 +1212,11 @@ function recipeForm(recipe) {
             ], { style: "display: flex; gap: 0.5rem" }),
             ingredientNode,
             n('div', [
-                n('button', ['neue Zutat'], { type: "button", $click: (event) => addIngredient(event, ingredientNode) })
+                n('button', ['neue Zutat'], { $click: (event) => addIngredient(event, ingredientNode) })
             ]),
             n('div', [
                 n('input', [], { value: recipe.id, name: 'id', type: 'hidden' }),
-                n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
+                n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
                 n('button', ['OK'], { type: "submit" })
             ], { style: "display:flex; justify-content:end; gap:10px;" }),
         ], { $submit: (event) => submitRecipe(event), class: "formRows", method: "dialog" }),
@@ -1243,7 +1237,7 @@ function materialForm(material) {
             ], { style: "display: flex; gap: 0.5rem" }),
             n('div', [
                 n('input', [], { value: material.id, name: 'id', type: 'hidden' }),
-                n('button', ['Abbrechen'], { type: "button", $click: (event) => event.target.closest('dialog').close() }),
+                n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
                 n('button', ['OK'], { type: "submit" })
             ], { style: "display:flex; justify-content:end; gap:10px;" }),
         ], { $submit: (event) => submitMaterial(event), class: "formRows", method: "dialog" }),
@@ -1258,13 +1252,13 @@ function displayCalc(id) {
             n('input', [], { type: 'hidden', value: id, name: 'ingredient' }),
             n('label', ['Output: ', n('input', [], { name: 'amount', style: 'display:inline-block' }), ' pro Sekunde'], { style: 'display:inline-block' }),
             ' ',
-            n('button', ['Go!'])
+            n('button', ['Go!'], { type: 'submit' })
         ], { $submit: (event) => calculate(event) }),
         n('form', [
             n('input', [], { type: 'hidden', value: id, name: 'ingredient' }),
             n('label', ['Fabriken: ', n('input', [], { name: 'factories', style: 'display:inline-block' })], { style: 'display:inline-block' }),
             ' ',
-            n('button', ['Go!'])
+            n('button', ['Go!'], { type: 'submit' })
         ], { $submit: (event) => calculate(event) }),
         n('result')
     ])

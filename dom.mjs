@@ -49,6 +49,9 @@ function createEl(type, staticId) {
 export function n(type, children = [], opts = {}, staticId = "") {
     const el = createEl(type, staticId)
     el.replaceChildren(...children)
+    if (type === "button" && !opts.type) {
+        opts.type = "button"
+    }
     for (const [key, value] of Object.entries(opts)) {
         if (key === 'value') {
             if (value != undefined) {
