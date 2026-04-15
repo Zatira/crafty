@@ -1,3 +1,15 @@
+/**
+ * @template T
+ * @typedef {Object} Signal
+ * @property {T} value
+ * @property {any} subscribe
+ */
+
+/**
+ * @template T
+ * @param {T} [initial] 
+ * @returns {Signal<T|null>}
+ */
 export const signal = (initial) => {
     let value = initial
     const subs = new Set()
@@ -33,15 +45,3 @@ export const computed = (fn) => {
         }
     }
 }
-
-const count = signal(1)
-const doubleCount = computed(() => count.value * 2)
-const plusOne = computed(() => doubleCount.value + 1)
-
-count.subscribe((n) => console.log("changed", n))
-
-// Update the signal…
-count.value = 5
-
-console.log(doubleCount.value) // 10
-console.log(plusOne.value) // 11

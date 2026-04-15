@@ -4,7 +4,11 @@ import { connection, rtcUpdates, updateRtc } from "./rtc.mjs"
 import { deserialize, serialize } from "./ser.mjs"
 import { signal } from "./signals.mjs"
 
-console.log(connection)
+/**
+ * @template T
+ * @typedef {import('./signals.mjs').Signal<T>} Signal
+ */
+
 window.loadFile = loadFile
 window.init = init
 window.noi = noi
@@ -23,6 +27,12 @@ const defaultConfig = {
     todo: [],
     game: ''
 }
+
+/**
+ * @typedef {Object} Route
+ * @property {string} type
+ * @property {number|null} id
+ */
 
 /**
  * Material type definition
@@ -84,44 +94,44 @@ const state = {
     _config: structuredClone(defaultConfig),
     configName: null,
     set config(config) {
-        this._config = config
-        if (connection.online) {
-            updateRtc(serialize(config))
-        }
+        this._config = { ...config }
         displayConfig()
-        configSignal.value = config
+        configSignal.value = this._config
     },
     get config() {
         return this._config
     }
 }
-const ephemeral = {
-
-}
-const configSignal = signal()
-window.state = state
-let markerList = null
 
 function updateLocalConfig(config) {
     config.updated = new Date().getTime()
     state.config = config
 }
+
+function config() {
+    return state.config
+}
+
+const configSignal = signal()
+configSignal.subscribe((cfg) => {
+    saveInternal(cfg)
+    if (connection.online) {
+        updateRtc(serialize(cfg))
+    }
+})
+
 connection.online.subscribe((online) => {
     if (online) {
         updateRtc(serialize(config()))
     }
 })
+
 rtcUpdates.subscribe((v) => {
     const des = deserialize(v)
     if (config().game === des.game && des.updated > config().updated) {
-        //console.log('in:', des)
         state.config = des
     }
 })
-
-function config() {
-    return state.config
-}
 
 async function loadFile(event) {
     const formData = new FormData(event.target)
@@ -143,7 +153,6 @@ function readInfo(configContent, name) {
         alert("failed to read config")
         return
     }
-    saveInternal()
 }
 
 function init() {
@@ -158,9 +167,6 @@ function init() {
         tempCfg.factories.sort((a, b) => a.name.localeCompare(b.name))
         tempCfg.recipes.sort((a, b) => a.name.localeCompare(b.name))
         state.config = tempCfg;
-        if (state.config.markers.length == 0) {
-            state.config.markers = deserialize(localStorage.getItem('craftyMap') ?? '[]')
-        }
         state.configName = configName
     }
     hookIntoNav()
@@ -245,75 +251,121 @@ function mainNodeByType(type, id) {
         case 'tree':
             return renderTechTree()
         case 'map':
-            //return renderMap()
             break;
         case 'todo':
-            return renderToDo()
+            break;
         default:
             return renderOops()
     }
 }
 
-function renderToDo() {
-    const items = config().todo.toSorted(i => i.done ? 1 : 0).map(todo => {
-        return renderItem(todo)
-    })
-    const newTodo = {}
+class TodoComponent {
+    element;
+    attached = false;
+    /**
+     * 
+     * @param {Signal<Route>} route
+     * @param {Element} outlet
+     */
+    constructor(route, outlet) {
+        this.outlet = outlet
+        route.subscribe((route) => {
+            if (route.type == "todo") {
+                this.attach(route)
+            } else {
+                this.detach()
+            }
+        })
+
+    }
+    attachCallbacks = []
+    attach(route) {
+        if (!this.attached) {
+            if (!this.element) {
+                this.element = this.render()
+            }
+            this.outlet.replaceChildren(this.element)
+        }
+        this.attachCallbacks.forEach(cb => cb(route.id))
+        this.attached = true
+    }
+    detachCallbacks = []
+    detach() {
+        this.detachCallbacks.forEach(cb => cb())
+        this.attached = false
+    }
+    render() {
+        return renderToDo(this.detachCallbacks)
+    }
+}
+
+function renderToDo(detachCallbacks) {
+    detachCallbacks.push(
+        () => editingSignal.value = null
+    )
+    const editingSignal = signal({})
     const titleInput = n('input', [], {
-        value: newTodo.title,
+        value: "",
         required: true,
         style: "margin: 0; flex-grow: 1"
-    }, "newTodo");
+    });
     const submitButton = n('button', ['✅'], {
-        type: 'submit', $click: () => {
-            if (!titleInput.checkValidity()) return
-            newTodo.title = titleInput.value
-            titleInput.value = ""
-            config().todo.push(newTodo)
-            updateLocalConfig(config())
-            saveInternal()
-        }
+        type: 'submit'
     })
+    /** @type {HTMLFormElement} */
     const newItem = n('form', [
         titleInput, submitButton
-    ], { style: "display:flex; align-items:center; width: 100%; max-width: 400px; gap: 5px; box-sizing: border-box;", $click: (ev) => ev.stopPropagation(), $submit: (ev) => ev.preventDefault() })
+    ], {
+        style: "display:flex; align-items:center; width: 100%; max-width: 400px; gap: 5px; box-sizing: border-box;", $click: (ev) => ev.stopPropagation(), $submit: (ev) => {
+            ev.preventDefault()
+            if (!titleInput.checkValidity()) return
+            config().todo.push({ title: titleInput.value })
+            updateLocalConfig(config())
+            newItem.reset()
+        }
+    })
+    const itemContainer = n('div', [])
+    configSignal.subscribe((cfg) => {
+        console.log(cfg)
+        itemContainer.replaceChildren(...cfg.todo.toSorted(i => i.done ? 1 : 0).map(todo => {
+            return renderItem(todo, editingSignal)
+        }))
+    })
+    editingSignal.subscribe(() => {
+        itemContainer.replaceChildren(...configSignal.value.todo.toSorted(i => i.done ? 1 : 0).map(todo => {
+            return renderItem(todo, editingSignal)
+        }))
+    })
     const list = n('div', [
         n('h2', ['ToDos']),
-        ...items,
+        itemContainer,
         newItem
     ], {
         style: "height:100%", $click: () => {
-            if (ephemeral.editing) {
-                const prev = ephemeral.editing
-                delete ephemeral.editing
-                prev.item.replaceWith(renderItem(prev.todo))
-            }
+            editingSignal.value = null
         }
     })
     return list;
 }
 
-function renderItem(todo) {
+function renderItem(todo, ephemeralSignal) {
     const children = []
     const item = n('div', children, { style: "display:flex; justify-content:space-between; align-items:center; width: 100%; max-width: 400px; gap: 5px; border: 1px solid var(--color-link); margin-bottom: 5px; padding:5px; box-sizing:border-box", $click: (ev) => ev.stopPropagation() })
-    if (ephemeral.editing?.todo == todo) {
-        ephemeral.editing = { todo, item }
+    if (ephemeralSignal.value?.todo == todo) {
         const titleInput = n('input', [], { value: todo.title, required: true, style: "margin:0; flex-grow: 1", $keydown: (key) => { key.keyCode == 13 ? submitButton.click() : false } });
         const submitButton = n('button', ['✅'], {
             $click: () => {
                 if (!titleInput.checkValidity()) return
                 todo.title = titleInput.value
-                delete ephemeral.editing
+                ephemeralSignal.value = null
                 updateLocalConfig(config())
-                saveInternal()
             }
         })
         const deleteButton = n('button', ['🪣'], {
             $click: () => {
-                item.remove()
                 config().todo = config().todo.filter(i => i != todo)
+                ephemeralSignal.value = null
                 updateLocalConfig(config())
-                saveInternal()
             }
         })
         children.push(titleInput, submitButton, deleteButton)
@@ -321,13 +373,7 @@ function renderItem(todo) {
         const title = n('div', [todo.title], {
             $click: () => {
                 if (todo.done) return
-                if (ephemeral.editing) {
-                    const prev = ephemeral.editing
-                    delete ephemeral.editing
-                    prev.item.replaceWith(renderItem(prev.todo))
-                }
-                ephemeral.editing = { todo, item }
-                item.replaceWith(renderItem(todo))
+                ephemeralSignal.value = { todo }
             },
             style: "flex-grow:1;" + (todo.done ? '' : "cursor: pointer;")
         });
@@ -335,7 +381,6 @@ function renderItem(todo) {
             type: 'checkbox', $change: (ev) => {
                 todo.done = ev.target.checked
                 updateLocalConfig(config())
-                saveInternal()
             },
             checked: todo.done ? true : undefined,
             style: "margin:0"
@@ -402,359 +447,366 @@ function markerLink(marker) {
     return n('a', [marker.icon, ' - ', marker.text], { href: '#map/' + marker.id + '-' + sluggy(marker.text) })
 }
 
-function updateScroll() {
-    if (!isDragging) return;
-
-    const dx = currentX - startX;
-    const dy = currentY - startY;
-
-    sContainer.scrollLeft = startScrollLeft - dx;
-    sContainer.scrollTop = startScrollTop - dy;
-
-    rafId = requestAnimationFrame(updateScroll);
-}
-
-let isDragging = false;
-let startX = 0;
-let startY = 0;
-let startScrollLeft = 0;
-let startScrollTop = 0;
-let currentX = 0;
-let currentY = 0;
-let rafId = null;
-let sContainer;
-
 class MapComponent {
     element;
     attached = false;
-
+    /**
+     * 
+     * @param {Signal<Route>} route
+     * @param {Element} outlet
+     */
     constructor(route, outlet) {
         this.outlet = outlet
-        route.subscribe((currentFrag) => {
-            if (currentFrag.type == "map") {
-                this.attach(currentFrag.id)
+        route.subscribe((route) => {
+            if (route.type == "map") {
+                this.attach(route)
             } else {
                 this.detach()
             }
         })
     }
     attachCallbacks = []
-    attach(id) {
+    attach(route) {
         if (!this.attached) {
             if (!this.element) {
                 this.element = this.render()
             }
             this.outlet.replaceChildren(this.element)
         }
-        this.attachCallbacks.forEach(cb => cb(id))
+        this.attachCallbacks.forEach(cb => cb(route.id))
         this.attached = true
     }
     detach() {
         this.attached = false
     }
     render() {
-        return renderMap(this.attachCallbacks)
-    }
-}
-
-function renderMap(attachCallbacks) {
-    const maxX = 16
-    const maxY = 16
-    const tileWidth = 256
-    const tiles = []
-    let selectedId = null
-
-    function markerForm(marker) {
-
-        const deleteBtn = n('div', [
-            n('button', ['Löschen 🪣'], {
-                $click: (event) => {
-                    removeMarker(marker)
-                    event.target.closest('dialog').close()
-                }
-            }),
-        ], { style: "display:flex; justify-content:end; gap:10px; margin-bottom: 10px" })
-
-        const form = n('div', [
-            n('h2', ['Marker']),
-            n('form', [
-                n('div', [
-                    fieldFn('Icon', { name: "icon", requierd: true, value: marker.icon, size: 1, maxLength: 10 }),
-                    fieldFn('Text', { name: "text", requierd: true, value: marker.text })
-                ], { style: "display: flex; gap: 0.5rem" }),
-                ...(marker.id != undefined ? [deleteBtn] : []),
-                n('div', [
-                    n('input', [], { value: marker.x, name: 'x', type: 'hidden' }),
-                    n('input', [], { value: marker.y, name: 'y', type: 'hidden' }),
-                    n('input', [], { value: marker.id, name: 'id', type: 'hidden' }),
-                    n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
-                    n('button', ['OK'], { type: "submit" })
-                ], { style: "display:flex; justify-content:end; gap:10px;" }),
-            ], { $submit: (event) => submitMarker(event), class: "formRows", method: "dialog" }),
-            n('br')
-        ])
-        return form
+        return this.renderMap(this.attachCallbacks)
     }
 
-    function editMarker(marker) {
-        displayModal(markerForm(marker))
-    }
+    renderMap(attachCallbacks) {
+        const maxX = 16
+        const maxY = 16
+        const tileWidth = 256
+        let selectedId = null
+        // Map Specifics
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let startScrollLeft = 0;
+        let startScrollTop = 0;
+        let currentX = 0;
+        let currentY = 0;
+        let rafId = null;
+        let sContainer;
 
-    function importMarkers() {
-        displayModal(markerImportForm())
-    }
+        function updateScroll() {
+            if (!isDragging) return;
 
-    function markerImportForm() {
-        const form = n('div', [
-            n('h2', ['Marker Import']),
-            n('form', [
-                n('div', [
-                    fieldFn('Datei', { name: "markerFile", type: 'file', requierd: true })
-                ], { style: "display: flex; gap: 0.5rem" }),
-                n('div', [
-                    n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
-                    n('button', ['OK'], { type: "submit" })
-                ], { style: "display:flex; justify-content:end; gap:10px;" }),
-            ], { $submit: async (event) => await submitImportMarker(event), class: "formRows", method: "dialog" }),
-            n('br')
-        ])
-        return form
-    }
+            const dx = currentX - startX;
+            const dy = currentY - startY;
 
-    async function submitImportMarker(event) {
-        const formData = new FormData(event.target)
-        const filehandle = formData.get("markerFile")
-        if (!filehandle || typeof filehandle === "string") {
-            return
+            sContainer.scrollLeft = startScrollLeft - dx;
+            sContainer.scrollTop = startScrollTop - dy;
+
+            this.rafId = requestAnimationFrame(updateScroll);
         }
-        const content = await filehandle.text()
-        readMarkerInfo(content)
-    }
 
-    function readMarkerInfo(markerContent) {
-        try {
-            const parsedMarkers = deserialize(markerContent)
-            config().markers = parsedMarkers
-            renderMarkers()
-            saveInternal()
-        } catch (e) {
-            console.log(e)
-            alert("failed to read markers")
-            return
+        function markerForm(marker) {
+
+            const deleteBtn = n('div', [
+                n('button', ['Löschen 🪣'], {
+                    $click: (event) => {
+                        removeMarker(marker)
+                        event.target.closest('dialog').close()
+                    }
+                }),
+            ], { style: "display:flex; justify-content:end; gap:10px; margin-bottom: 10px" })
+
+            const form = n('div', [
+                n('h2', ['Marker']),
+                n('form', [
+                    n('div', [
+                        fieldFn('Icon', { name: "icon", requierd: true, value: marker.icon, size: 1, maxLength: 10 }),
+                        fieldFn('Text', { name: "text", requierd: true, value: marker.text })
+                    ], { style: "display: flex; gap: 0.5rem" }),
+                    ...(marker.id != undefined ? [deleteBtn] : []),
+                    n('div', [
+                        n('input', [], { value: marker.x, name: 'x', type: 'hidden' }),
+                        n('input', [], { value: marker.y, name: 'y', type: 'hidden' }),
+                        n('input', [], { value: marker.id, name: 'id', type: 'hidden' }),
+                        n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
+                        n('button', ['OK'], { type: "submit" })
+                    ], { style: "display:flex; justify-content:end; gap:10px;" }),
+                ], { $submit: (event) => submitMarker(event), class: "formRows", method: "dialog" }),
+                n('br')
+            ])
+            return form
         }
-    }
 
-    function exportMarkers() {
-        const stringified = serialize(config().markers)
-        const fileName = "CraftyMarkers-" + sluggy(config().game) + '-' + new Date().getTime() + '.json'
-        download(stringified, fileName, 'application/json')
-    }
+        function editMarker(marker) {
+            displayModal(markerForm(marker))
+        }
 
-    function removeMarker(marker) {
-        const markerIndex = config().markers.findIndex(m => m.id == marker.id)
-        if (markerIndex != -1) {
-            config().markers.splice(markerIndex, 1)
-            renderMarkers()
+        function importMarkers() {
+            displayModal(markerImportForm())
+        }
+
+        function markerImportForm() {
+            const form = n('div', [
+                n('h2', ['Marker Import']),
+                n('form', [
+                    n('div', [
+                        fieldFn('Datei', { name: "markerFile", type: 'file', requierd: true })
+                    ], { style: "display: flex; gap: 0.5rem" }),
+                    n('div', [
+                        n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
+                        n('button', ['OK'], { type: "submit" })
+                    ], { style: "display:flex; justify-content:end; gap:10px;" }),
+                ], { $submit: async (event) => await submitImportMarker(event), class: "formRows", method: "dialog" }),
+                n('br')
+            ])
+            return form
+        }
+
+        async function submitImportMarker(event) {
+            const formData = new FormData(event.target)
+            const filehandle = formData.get("markerFile")
+            if (!filehandle || typeof filehandle === "string") {
+                return
+            }
+            const content = await filehandle.text()
+            readMarkerInfo(content)
+        }
+
+        function readMarkerInfo(markerContent) {
+            try {
+                const parsedMarkers = deserialize(markerContent)
+                config().markers = parsedMarkers
+                updateLocalConfig(config())
+            } catch (e) {
+                console.log(e)
+                alert("failed to read markers")
+                return
+            }
+        }
+
+        function exportMarkers() {
+            const stringified = serialize(config().markers)
+            const fileName = "CraftyMarkers-" + sluggy(config().game) + '-' + new Date().getTime() + '.json'
+            download(stringified, fileName, 'application/json')
+        }
+
+        function removeMarker(marker) {
+            const markerIndex = config().markers.findIndex(m => m.id == marker.id)
+            if (markerIndex != -1) {
+                config().markers.splice(markerIndex, 1)
+                updateLocalConfig(config())
+            }
+        }
+
+        function submitMarker(event) {
+            event.preventDefault()
+            const formData = new FormData(event.target)
+            const element = mergeForm(formData, {})
+            const collection = config().markers
+            const inserted = upsert(collection, element, event)
+            if (!inserted) {
+                return false
+            }
             updateLocalConfig(config())
-            saveInternal()
+            event.target.closest('dialog').close()
         }
-    }
 
-    function submitMarker(event) {
-        event.preventDefault()
-        const formData = new FormData(event.target)
-        const element = mergeForm(formData, {})
-        const collection = config().markers
-        const inserted = upsert(collection, element, event)
-        if (!inserted) {
-            return false
+        function renderMarkers() {
+            [...(markerLayer.querySelectorAll('span.mapMarker'))].forEach(node => node.remove())
+            config().markers.forEach(m => renderMarker(m))
         }
-        renderMarkers()
-        updateLocalConfig(config())
-        saveInternal()
-        event.target.closest('dialog').close()
-    }
 
-    function renderMarkers() {
-        const filter = markerFilterInput.value
-        markerList.innerHTML = '';
-        [...(map.querySelectorAll('span.mapMarker'))].forEach(node => node.remove())
-        config().markers.forEach(m => renderMarker(m, map, filter))
-    }
+        function renderMarkerList(filter = "") {
+            markerList.innerHTML = '';
+            config().markers.forEach(md => {
+                const shouldDisplay = (md.icon + ' ' + md.text).toLowerCase().indexOf(filter.toLowerCase()) > -1
+                if (shouldDisplay) {
+                    const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
+                    const markerRow = n('div', [markerLink(md), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
+                    markerList.append(
+                        markerRow
+                    )
+                }
+            })
+        }
 
-    const renderMarker = (md, map, filter = "") => {
-        const mapMarker = n('span', [md.icon], {
-            class: "mapMarker", title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem; transform: translate(-50%, -50%); background-color: white;
+        const renderMarker = (md) => {
+            const mapMarker = n('span', [md.icon], {
+                class: "mapMarker", title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem; transform: translate(-50%, -50%); background-color: white;
   border: 1px solid black;
   border-radius: 100%;
   aspect-ratio: 1;
   padding: 1px;
   cursor: pointer;`, id: `marker-${md.id}`
-        })
-        const shouldDisplay = (md.icon + ' ' + md.text).toLowerCase().indexOf(filter.toLowerCase()) > -1
-        if (shouldDisplay) {
-            const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
-            const markerRow = n('div', [markerLink(md), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
-            markerList.append(
-                markerRow
-            )
-        }
-        map.append(mapMarker)
-        if (selectedId == md.id) {
-            setFocus(map, md)
-        }
-    }
-
-    const suppress = (event) => {
-        event.stopPropagation()
-        event.preventDefault()
-    }
-
-    function focusMarkerAndScroll(md, map) {
-        selectedId = md.id
-        sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
-        sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
-        removeFocus(map)
-        setFocus(map, md)
-    }
-
-    function setFocus(map, md) {
-        const mapMarker = map.querySelector(`#marker-${md.id}`)
-        mapMarker.style.backgroundColor = "red"
-        mapMarker.classList.toggle("selected")
-    }
-
-    function removeFocus(map) {
-        const selected = map.querySelector(".selected")
-        if (selected) {
-            selected.style.backgroundColor = "white"
-            selected.classList.toggle("selected")
-        }
-    }
-
-    function createMap(tiles, base = "tiles") {
-        tiles = []
-        for (let xi = 0; xi < maxX; xi++) {
-            for (let yi = 0; yi < maxY; yi++) {
-                tiles.push(n('img', [], { src: `./${base}/${yi}_${xi}.webp`, $click: suppress, style: "pointer-events:none; user-select:none" }))
-            }
-        }
-        return n('div', tiles, { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: relative; cursor: all-scroll;` })
-    }
-
-    let map = createMap(tiles)
-    markerList = n('div', [], { style: "overflow:auto; padding: 0px 5px; flex-grow: 1; display:flex; flex-direction: column; gap: 5px;" })
-    const container = n(
-        'div',
-        [map],
-        {
-            style: "overflow: auto; height: 90vh;",
-            $click: (event) => {
-                event.stopPropagation()
-                event.preventDefault()
-            },
-            $mousedown: (e) => {
-                if (e.button !== 0) return;
-
-                e.preventDefault();
-                isDragging = true;
-
-                sContainer.classList.add('dragging');
-
-                startX = currentX = e.clientX;
-                startY = currentY = e.clientY;
-                startScrollLeft = sContainer.scrollLeft;
-                startScrollTop = sContainer.scrollTop;
-
-                rafId = requestAnimationFrame(updateScroll);
-            },
-            $mouseup: (e) => {
-                if (!isDragging) return;
-
-                isDragging = false;
-                sContainer.classList.remove('dragging');
-
-                cancelAnimationFrame(rafId);
-            },
-            $mousemove: (e) => {
-                if (!isDragging) return;
-                currentX = e.clientX;
-                currentY = e.clientY;
-            },
-            $contextmenu: (event) => {
-                if (event.target.nodeName.toLowerCase() == "span") {
-                    event.preventDefault()
-                    return
-                }
-                event.stopPropagation()
-                event.preventDefault()
-                const md = {
-                    x: event.layerX,
-                    y: event.layerY
-                }
-                editMarker(md)
-            }
-        }
-    )
-    sContainer = container
-    attachCallbacks.push(
-        (id) => {
-            if (id === 0 || id) {
-                focusMarkerAndScroll(markerById(config(), id), map)
-            } else {
-                removeFocus(map)
-                container.scrollTop = 1954
-                container.scrollLeft = 915
-            }
-        }
-    )
-    const markerFilterInput = n('input', [], {
-        placeholder: 'Marker Filter', $input: () => {
-            renderMarkers()
-        }
-    }, "marker-filter-input")
-
-    renderMarkers()
-
-    configSignal.subscribe((config) => {
-        renderMarkers()
-    })
-
-    const markerFilter = n('div', [markerFilterInput])
-    const markerActions = n('div', [
-        n('button', ['Marker Import'], { $click: () => importMarkers() }),
-        n('button', ['Marker Export'], { $click: () => exportMarkers() })
-    ], { style: 'display:flex; gap:10px' })
-    const makerListContainer = n('div', [markerFilter, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 90vh; width: 250px' })
-    return n('div', [
-        n('h2', ['Map']),
-        n('div', [
-            n('span', ['Marker können mit Rechtsklick hinzugefügt werden.']),
-            n('div', [], { style: "flex-grow:1" }),
-            n('button', ['Mit Strahlung'], {
-                $click: (event) => {
-                    const newMap = createMap(tiles, "tiles_rad")
-                    map.replaceWith(newMap)
-                    map = newMap
-                    renderMarkers()
-                    event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
-                    event.target.classList.add("active")
-                }
-            }),
-            n('button', ['Ohne Strahlung'], {
-                $click: (event) => {
-                    const newMap = createMap(tiles, "tiles")
-                    map.replaceWith(newMap)
-                    map = newMap
-                    renderMarkers()
-                    event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
-                    event.target.classList.add("active")
-                },
-                class: "active"
             })
-        ], { style: "display:flex; gap:10px; align-items:center;" }),
-        n('div', [container, makerListContainer], { style: "display: grid; gap: 10px; grid-template-columns: 1fr 250px" })
-    ], { style: "display:flex; gap:5px; flex-direction:column;" })
+
+            markerLayer.append(mapMarker)
+            if (selectedId == md.id) {
+                setFocus(markerLayer, md)
+            }
+        }
+
+        const suppress = (event) => {
+            event.stopPropagation()
+            event.preventDefault()
+        }
+
+        function focusMarkerAndScroll(md, markerLayer) {
+            selectedId = md.id
+            sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
+            sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
+            removeFocus(markerLayer)
+            setFocus(markerLayer, md)
+        }
+
+        function setFocus(markerLayer, md) {
+            const mapMarker = markerLayer.querySelector(`#marker-${md.id}`)
+            mapMarker.style.backgroundColor = "red"
+            mapMarker.classList.toggle("selected")
+        }
+
+        function removeFocus(markerLayer) {
+            const selected = markerLayer.querySelector(".selected")
+            if (selected) {
+                selected.style.backgroundColor = "white"
+                selected.classList.toggle("selected")
+            }
+        }
+
+        function createMap(base = "tiles") {
+            return n('div', createTiles(base), { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll;` })
+        }
+
+        const map = createMap()
+        const markerLayer = n('div', [], { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll;` })
+        const markerList = n('div', [], { style: "overflow:auto; padding: 0px 5px; flex-grow: 1; display:flex; flex-direction: column; gap: 5px;" })
+        const container = n(
+            'div',
+            [map, markerLayer],
+            {
+                style: "overflow: auto; height: 90vh; position: relative;",
+                $click: (event) => {
+                    event.stopPropagation()
+                    event.preventDefault()
+                },
+                $mousedown: (e) => {
+                    if (e.button !== 0) return;
+
+                    e.preventDefault();
+                    isDragging = true;
+
+                    sContainer.classList.add('dragging');
+
+                    startX = currentX = e.clientX;
+                    startY = currentY = e.clientY;
+                    startScrollLeft = sContainer.scrollLeft;
+                    startScrollTop = sContainer.scrollTop;
+
+                    rafId = requestAnimationFrame(updateScroll);
+                },
+                $mouseup: (e) => {
+                    if (!isDragging) return;
+
+                    isDragging = false;
+                    sContainer.classList.remove('dragging');
+
+                    cancelAnimationFrame(rafId);
+                },
+                $mousemove: (e) => {
+                    if (!isDragging) return;
+                    currentX = e.clientX;
+                    currentY = e.clientY;
+                },
+                $contextmenu: (event) => {
+                    if (event.target.nodeName.toLowerCase() == "span") {
+                        event.preventDefault()
+                        return
+                    }
+                    event.stopPropagation()
+                    event.preventDefault()
+                    const md = {
+                        x: event.layerX,
+                        y: event.layerY
+                    }
+                    editMarker(md)
+                }
+            }
+        )
+        sContainer = container
+        attachCallbacks.push(
+            (id) => {
+                if (id === 0 || id) {
+                    focusMarkerAndScroll(markerById(config(), id), markerLayer)
+                } else {
+                    removeFocus(map)
+                    container.scrollTop = 1954
+                    container.scrollLeft = 915
+                }
+            }
+        )
+        const markerFilterSignal = signal("")
+        markerFilterSignal.subscribe((filter) => {
+            renderMarkerList(filter)
+        })
+        const markerFilterInput = n('input', [], {
+            placeholder: 'Marker Filter', $input: (ev) => {
+                markerFilterSignal.value = ev.target.value
+            }
+        }, "marker-filter-input")
+
+        configSignal.subscribe(() => {
+            renderMarkers()
+            renderMarkerList(markerFilterSignal.value)
+        })
+
+        const markerFilter = n('div', [markerFilterInput])
+        const markerActions = n('div', [
+            n('button', ['Marker Import'], { $click: () => importMarkers() }),
+            n('button', ['Marker Export'], { $click: () => exportMarkers() })
+        ], { style: 'display:flex; gap:10px' })
+        const makerListContainer = n('div', [markerFilter, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 90vh; width: 250px' })
+        return n('div', [
+            n('h2', ['Map']),
+            n('div', [
+                n('span', ['Marker können mit Rechtsklick hinzugefügt werden.']),
+                n('div', [], { style: "flex-grow:1" }),
+                n('button', ['Mit Strahlung'], {
+                    $click: (event) => {
+                        if (event.target.classList.contains("active")) return
+                        map.replaceChildren(...createTiles("tiles_rad"))
+                        event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
+                        event.target.classList.add("active")
+                    }
+                }),
+                n('button', ['Ohne Strahlung'], {
+                    $click: (event) => {
+                        if (event.target.classList.contains("active")) return
+                        map.replaceChildren(...createTiles("tiles"))
+                        event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
+                        event.target.classList.add("active")
+                    },
+                    class: "active"
+                })
+            ], { style: "display:flex; gap:10px; align-items:center;" }),
+            n('div', [container, makerListContainer], { style: "display: grid; gap: 10px; grid-template-columns: 1fr 250px" })
+        ], { style: "display:flex; gap:5px; flex-direction:column;" })
+
+        function createTiles(base) {
+            const tiles = []
+            for (let xi = 0; xi < maxX; xi++) {
+                for (let yi = 0; yi < maxY; yi++) {
+                    tiles.push(n('img', [], { src: `./${base}/${yi}_${xi}.webp`, $click: suppress, style: "pointer-events:none; user-select:none" }))
+                }
+            }
+            return tiles
+        }
+    }
 }
 
 function renderTechTree() {
@@ -989,12 +1041,16 @@ function renderRecipe(id) {
     ], { style: 'max-width: 1000px' })
 }
 
+/**@type Signal<Route> */
 const route = signal()
 
 function hookIntoNav() {
     const rootElementName = 'outlet'
     const root = document.querySelector(rootElementName)
-    new MapComponent(route, root)
+    if (root) {
+        new MapComponent(route, root)
+        new TodoComponent(route, root)
+    }
     // @ts-ignore
     navigation.addEventListener("navigate", (event) => {
         const url = new URL(event.destination.url);
@@ -1002,9 +1058,8 @@ function hookIntoNav() {
     });
 }
 
-function saveInternal() {
-    localStorage.setItem("crafty", serialize([config(), sluggy(config().game)]))
-    localStorage.setItem("craftyMap", serialize(config().markers))
+function saveInternal(cfg) {
+    localStorage.setItem("crafty", serialize([cfg, sluggy(cfg.game)]))
 }
 
 function save() {
@@ -1042,7 +1097,6 @@ function noi(event) {
     const configName = slug
     updateLocalConfig(newConfig)
     state.configName = configName
-    saveInternal()
     return true
 }
 
@@ -1105,7 +1159,6 @@ function submitFactory(event) {
     }
     collection.sort((a, b) => a.name.localeCompare(b.name))
     updateLocalConfig(config())
-    saveInternal()
     event.target.closest('dialog').close()
 }
 
@@ -1120,7 +1173,6 @@ function submitRecipe(event) {
     }
     collection.sort((a, b) => a.name.localeCompare(b.name))
     updateLocalConfig(config())
-    saveInternal()
     event.target.closest('dialog').close()
 }
 
@@ -1135,7 +1187,6 @@ function submitMaterial(event) {
     }
     collection.sort((a, b) => a.name.localeCompare(b.name))
     updateLocalConfig(config())
-    saveInternal()
     event.target.closest('dialog').close()
 }
 
@@ -1410,7 +1461,6 @@ function deleteFactory(factory) {
     } else {
         cfg.factories = cfg.factories.filter(f => f != factory)
         updateLocalConfig(cfg)
-        saveInternal()
     }
 }
 
@@ -1445,7 +1495,6 @@ function deleteMaterial(material) {
     } else {
         cfg.materials = cfg.materials.filter(m => m != material)
         updateLocalConfig(cfg)
-        saveInternal()
     }
 }
 
@@ -1523,7 +1572,6 @@ function deleteRecipe(recipe) {
     } else {
         cfg.recipes = cfg.recipes.filter(r => r != recipe)
         updateLocalConfig(cfg)
-        saveInternal()
     }
 }
 
