@@ -59,7 +59,7 @@ export function n(type, children = [], opts = {}, staticId = "") {
                 el.value = value
             }
         } else if (key === 'checked') {
-            if (value != undefined) {
+            if (value != undefined && value != false) {
                 el.setAttribute(key, value)
                 el.value = value
             }

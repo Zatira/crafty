@@ -508,7 +508,7 @@ class MapComponent {
             sContainer.scrollLeft = startScrollLeft - dx;
             sContainer.scrollTop = startScrollTop - dy;
 
-            this.rafId = requestAnimationFrame(updateScroll);
+            rafId = requestAnimationFrame(updateScroll);
         }
 
         function markerForm(marker) {
@@ -563,7 +563,14 @@ class MapComponent {
                         n('button', ['OK'], { type: "submit" })
                     ], { style: "display:flex; justify-content:end; gap:10px;" }),
                 ], { $submit: async (event) => await submitImportMarker(event), class: "formRows", method: "dialog" }),
-                n('br')
+                n('br'),
+                n('p', [
+                    "Save Game Locations:",
+                    n('br'),
+                    'Client: C:\\Program Files (x86)\\Steam\\userdata\\[RandomNumber]\\1631270\\remote\\Saved\\SaveGames',
+                    n('br'),
+                    'Server: StarRupture\\Saved\\SaveGames'
+                ])
             ])
             return form
         }
@@ -574,8 +581,179 @@ class MapComponent {
             if (!filehandle || typeof filehandle === "string") {
                 return
             }
-            const content = await filehandle.text()
-            readMarkerInfo(content)
+            let content = ""
+            if (filehandle.name.endsWith(".sav")) {
+                const buffer = (await filehandle.arrayBuffer()).slice(4);
+                const ds = new DecompressionStream("deflate")
+                const writer = ds.writable.getWriter()
+                writer.write(buffer)
+                writer.close()
+                content = await new Response(ds.readable).text()
+            } else {
+                content = await filehandle.text()
+            }
+            console.log(JSON.parse(content))
+            const itemData = JSON.parse(content).itemData
+
+            const excludes = [
+                "ForgottenEngine", "Foundations", "Interiors", "Modular",
+                "Cooler", "WindPowerGenerator", "DroneConnections", "Foundable",
+                "Antena", "ResourceRedistributor", "Exporter",
+                "Turret_Tier1", "SolarPowerGenerator", "SolarPowerGeneratorTier2"]
+            const buildings = Object.entries(itemData.Mass.entities).filter(([key, entry]) => {
+                const path = entry.spawnData.entityConfigDataPath
+                return path.indexOf("Buildings") >= 0 && excludes.every(e => path.indexOf(e) == -1)
+            })
+            const connections = Object.entries(itemData.CrPackageTransportReplicator.senderConnections).map(([key, val]) => {
+                return {
+                    from: key,
+                    to: `(ID=${val.receiver.iD})`
+                }
+            })
+            const paths = new Set()
+            buildings.forEach(b => paths.add(b[1].spawnData.entityConfigDataPath))
+            const includes = []
+            const strData = []
+            const buildStr = () => {
+                const fb = buildings.filter(b => includes.indexOf(b[1].spawnData.entityConfigDataPath) >= 0)
+                strData.length = 0
+                const fs = fb.map(b => {
+                    return {
+                        id: b[0],
+                        path: b[1].spawnData.entityConfigDataPath.split("/").slice(-2, -1).pop(),
+                        mainInventoryContainer: b[1].fragmentValues.map(v => {
+                            const marr = v.match(/MainInventoryContainer.*ItemDataBase=\"([^,]*)\"/)
+                            if (marr) {
+                                return marr[1].split("'").join("").split("/").pop()
+                            } else {
+                                return null
+                            }
+                        }).filter(Boolean).pop(),
+                        itemTypeFilter: b[1].fragmentValues.map(v => {
+                            const marr = v.match(/ItemTypeFilter=\(\"([^,]*)\"/)
+                            if (marr) {
+                                return marr[1].split("'").join("").split("/").pop()
+                            } else {
+                                return null
+                            }
+                        }).filter(Boolean).pop(),
+                        currentRecipe: b[1].fragmentValues.map(v => {
+                            const marr = v.match(/CurrentRecipe=\"([^,]*)\"/)
+                            if (marr) {
+                                return marr[1].split("'").join("").split("/").pop()
+                            } else {
+                                return null
+                            }
+                        }).filter(Boolean).pop(),
+                        translation: b[1].spawnData.transform.translation,
+                    }
+                })
+                fs.forEach(n => strData.push(n))
+                console.log(strData)
+            }
+            console.log(paths)
+            console.log(buildings)
+            console.log(strData)
+            const opt = {
+                mx: 350000,
+                my: 300000,
+                rx: 2385,
+                ry: 2048,
+                ox: 3273,
+                oy: 2593,
+                ct: 50,
+                ds: 0
+            }
+            const render = (opt) => {
+                buildStr()
+                markerLayer.replaceChildren()
+                const ratiox = opt.mx / opt.rx
+                const ratioy = opt.my / opt.ry
+                strData.forEach(s => {
+                    s.x = (s.translation.x / ratiox) + opt.ox
+                    s.y = (s.translation.y / ratioy) + opt.oy
+                })
+                function combineLocations(nodes, threshold = 50) {
+                    const remaining = nodes.map(n => ({ ...n }))
+                    let merged = true
+                    while (merged) {
+                        merged = false
+                        for (let i = 0; i < remaining.length; i++) {
+                            for (let j = i + 1; j < remaining.length; j++) {
+                                if (remaining[i].currentRecipe != undefined
+                                    && remaining[j].currentRecipe != undefined
+                                    && remaining[i].currentRecipe == remaining[j].currentRecipe) {
+                                    const dx = remaining[i].x - remaining[j].x
+                                    const dy = remaining[i].y - remaining[j].y
+                                    const d = Math.sqrt(dx * dx + dy * dy)
+                                    if (d < threshold) {
+                                        remaining[i].x = (remaining[i].x + remaining[j].x) / 2
+                                        remaining[i].y = (remaining[i].y + remaining[j].y) / 2
+                                        remaining.splice(j, 1)
+                                        merged = true
+                                        break
+                                    }
+                                }
+                            }
+                            if (merged) break
+                        }
+                    }
+                    return remaining
+                }
+                const combined = combineLocations(strData, opt.ct)
+                strData.length = 0
+                strData.push(...combined)
+                for (const s of strData) {
+                    renderMarker({ id: s.id, icon: "", text: (s.currentRecipe ?? s.itemTypeFilter ?? s.mainInventoryContainer) + " - " + s.path, x: s.x, y: s.y }, opt.ds)
+                }
+                const canvas = connectionLayer
+                const ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                function getRandomColor() {
+                    var letters = '0123456789ABCDEF';
+                    var color = '#';
+                    for (var i = 0; i < 6; i++) {
+                        color += letters[Math.floor(Math.random() * 16)];
+                    }
+                    return color;
+                }
+                connections.forEach(element => {
+                    const from = strData.find(e => e.id === element.from)
+                    const to = strData.find(e => e.id === element.to)
+                    if (!from || !to) {
+                        console.log('skip', element)
+                        return
+                    }
+                    ctx.strokeStyle = getRandomColor();
+                    ctx.beginPath(); // Start a new path
+                    ctx.moveTo(from.x, from.y); // Move the pen to (30, 50)
+                    ctx.lineTo(to.x, to.y); // Draw a line to (150, 100)
+                    ctx.stroke(); // Render the path
+                });
+            }
+            render(opt)
+            const bx = n('div', [
+                fieldFn('Dot Size', { $input: (ev) => { opt.ds = +ev.target.value; render(opt) }, value: opt.ds, type: "number" }),
+                fieldFn('Combine Threshold', { $input: (ev) => { opt.ct = +ev.target.value; render(opt) }, value: opt.ct, type: "number" }),
+                fieldFn('Map max x', { $input: (ev) => { opt.mx = +ev.target.value; render(opt) }, value: opt.mx, type: "number" }),
+                fieldFn('Map max y', { $input: (ev) => { opt.my = +ev.target.value; render(opt) }, value: opt.my, type: "number" }),
+                fieldFn('Map ratio x', { $input: (ev) => { opt.rx = +ev.target.value; render(opt) }, value: opt.rx, type: "number" }),
+                fieldFn('Map ratio y', { $input: (ev) => { opt.ry = +ev.target.value; render(opt) }, value: opt.ry, type: "number" }),
+                fieldFn('Map offset x', { $input: (ev) => { opt.ox = +ev.target.value; render(opt) }, value: opt.ox, type: "number" }),
+                fieldFn('Map offset y', { $input: (ev) => { opt.oy = +ev.target.value; render(opt) }, value: opt.oy, type: "number" }),
+                ...[...paths.values()].map(p => n('label', [n('input', [], {
+                    type: "checkbox", checked: includes.indexOf(p) >= 0, $click: (ev) => {
+                        if (ev.target.checked) {
+                            includes.push(p)
+                        } else {
+                            includes.splice(includes.indexOf(p), 1)
+                        }
+                        render(opt)
+                    }
+                }), p.split("/")[p.split("/").length - 2]]))
+            ], { style: "position:fixed; top:0;left:0; display:flex;flex-direction:column; max-width: 300px; max-height: 100vh; overflow:auto; background: #333c" })
+            document.body.appendChild(bx)
+            //readMarkerInfo(content)
         }
 
         function readMarkerInfo(markerContent) {
@@ -636,9 +814,10 @@ class MapComponent {
             })
         }
 
-        const renderMarker = (md) => {
+        const renderMarker = (md, ds = 0) => {
             const mapMarker = n('span', [md.icon], {
                 class: "mapMarker", title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem; transform: translate(-50%, -50%); background-color: white;
+                min-width:${ds}px;min-height:${ds}px;
   border: 1px solid black;
   border-radius: 100%;
   aspect-ratio: 1;
@@ -685,10 +864,11 @@ class MapComponent {
 
         const map = createMap()
         const markerLayer = n('div', [], { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll;` })
+        const connectionLayer = n('canvas', [], { width: maxX * tileWidth, height: maxX * tileWidth, style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll; pointer-events:none` })
         const markerList = n('div', [], { style: "overflow:auto; padding: 0px 5px; flex-grow: 1; display:flex; flex-direction: column; gap: 5px;" })
         const container = n(
             'div',
-            [map, markerLayer],
+            [map, markerLayer, connectionLayer],
             {
                 style: "overflow: auto; height: 90vh; position: relative;",
                 $click: (event) => {
