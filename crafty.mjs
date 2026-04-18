@@ -149,7 +149,7 @@ function readInfo(configContent, name) {
         state.config = Object.assign(structuredClone(defaultConfig), parsedConfig)
         state.configName = name
     } catch (e) {
-        console.log(e)
+        console.error(e)
         alert("failed to read config")
         return
     }
@@ -224,7 +224,7 @@ function renderMain(type, id) {
     const rootElementName = 'outlet'
     const root = document.querySelector(rootElementName)
     if (!root) {
-        console.log("missing root node", rootElementName)
+        console.error("missing root node", rootElementName)
         alert("failed render")
         return
     }
@@ -326,7 +326,6 @@ function renderToDo(detachCallbacks) {
     })
     const itemContainer = n('div', [])
     configSignal.subscribe((cfg) => {
-        console.log(cfg)
         itemContainer.replaceChildren(...cfg.todo.toSorted(i => i.done ? 1 : 0).map(todo => {
             return renderItem(todo, editingSignal)
         }))
@@ -444,7 +443,7 @@ function materialLink(material) {
 }
 
 function markerLink(marker) {
-    return n('a', [marker.icon, ' - ', marker.text], { href: '#map/' + marker.id + '-' + sluggy(marker.text) })
+    return n('a', [n('div', [], { class: marker.icon, style: 'display:inline-block; min-height: 1rem; min-width:1rem;' }), marker.text], { href: '#map/' + marker.id + '-' + sluggy(marker.text), style: "display:flex; align-items:center; gap:5px;" })
 }
 
 class MapComponent {
@@ -498,6 +497,11 @@ class MapComponent {
         let currentY = 0;
         let rafId = null;
         let sContainer;
+        let leafmap;
+        let markers = []
+        let lps = []
+        const entities = new Map()
+        const focused = []
 
         function updateScroll() {
             if (!isDragging) return;
@@ -592,14 +596,61 @@ class MapComponent {
             } else {
                 content = await filehandle.text()
             }
-            console.log(JSON.parse(content))
+            //console.debug(JSON.parse(content))
             const itemData = JSON.parse(content).itemData
+            const translation = new Map([
+                ["CR_TitaniumOreImpure_MechanicalDrill", "Titan 1/s"],
+                ["CR_WolframOreImpure_MechanicalDrill", "Wolfram 1/s"],
+                ["CR_CalciumOreImpure_MechanicalDrill", "Kalzium 1/s"],
+                ["CR_TitaniumOre_MechanicalDrill", "Titan 2/s"],
+                ["CR_WolframOre_MechanicalDrill", "Wolfram 2/s"],
+                ["CR_CalciumOre_MechanicalDrill", "Kalzium 2/s"],
+                ["CR_TitaniumOrePure_MechanicalDrill", "Titan 4/s"],
+                ["CR_WolframOrePure_MechanicalDrill", "Wolfram 4/s"],
+                ["CR_CalciumOrePure_MechanicalDrill", "Kalzium 4/s"],
+                ["CR_BasicBuildingMaterial", "Material Grau"],
+                ["CR_IntermediateBuildingMaterial", "Material Gelb"],
+                ["CR_GoethiteOre_LaserDrill", "Göthit"]
+            ])
+            const fb = Object.entries(itemData.Mass.entities)
+            const itemSet = new Set()
+            fb.map(b => {
+                return {
+                    item: b[1].fragmentValues.map(v => {
+                        const marr = v.match(/ItemDataBase=\"([^,]*)\"/)
+                        if (marr) {
+                            const i = marr[1].split("'").join("").split("/").pop()
+                            itemSet.add(i)
+                            return i
+                        } else {
+                            return null
+                        }
+                    }).filter(Boolean).pop()
+                }
+            })
+            console.debug(itemSet)
+            const recipeSet = new Set()
+            fb.map(b => {
+                return {
+                    item: b[1].fragmentValues.map(v => {
+                        const marr = v.match(/CurrentRecipe=\"([^,]*)\"/)
+                        if (marr) {
+                            const i = marr[1].split("'").join("").split("/").pop().split("\.").pop()
+                            recipeSet.add(i)
+                            return i
+                        } else {
+                            return null
+                        }
+                    }).filter(Boolean).pop()
+                }
+            })
+            console.debug(recipeSet)
 
             const excludes = [
                 "ForgottenEngine", "Foundations", "Interiors", "Modular",
                 "Cooler", "WindPowerGenerator", "DroneConnections", "Foundable",
                 "Antena", "ResourceRedistributor", "Exporter",
-                "Turret_Tier1", "SolarPowerGenerator", "SolarPowerGeneratorTier2"]
+                "Turret_Tier1", "Turret_Tier2", "SolarPowerGenerator", "SolarPowerGeneratorTier2"]
             const buildings = Object.entries(itemData.Mass.entities).filter(([key, entry]) => {
                 const path = entry.spawnData.entityConfigDataPath
                 return path.indexOf("Buildings") >= 0 && excludes.every(e => path.indexOf(e) == -1)
@@ -612,19 +663,26 @@ class MapComponent {
             })
             const paths = new Set()
             buildings.forEach(b => paths.add(b[1].spawnData.entityConfigDataPath))
-            const includes = []
+            const includes = [
+                "BaseCore", "Crafter", "Teleporter"
+            ]
             const strData = []
+            const shortenAndTranslate = (marr) => {
+                const key = marr[1].split("'").join("").split("/").pop().split("\.").pop()
+                return translation.get(key) ?? key;
+            }
             const buildStr = () => {
-                const fb = buildings.filter(b => includes.indexOf(b[1].spawnData.entityConfigDataPath) >= 0)
+                const fb = buildings//.filter(b => includes.indexOf(b[1].spawnData.entityConfigDataPath) >= 0)
                 strData.length = 0
                 const fs = fb.map(b => {
                     return {
                         id: b[0],
                         path: b[1].spawnData.entityConfigDataPath.split("/").slice(-2, -1).pop(),
+                        name: itemData.CrBuildingCustomNameSubsystem.customNames[b[0]],
                         mainInventoryContainer: b[1].fragmentValues.map(v => {
                             const marr = v.match(/MainInventoryContainer.*ItemDataBase=\"([^,]*)\"/)
                             if (marr) {
-                                return marr[1].split("'").join("").split("/").pop()
+                                return shortenAndTranslate(marr)
                             } else {
                                 return null
                             }
@@ -632,7 +690,7 @@ class MapComponent {
                         itemTypeFilter: b[1].fragmentValues.map(v => {
                             const marr = v.match(/ItemTypeFilter=\(\"([^,]*)\"/)
                             if (marr) {
-                                return marr[1].split("'").join("").split("/").pop()
+                                return shortenAndTranslate(marr)
                             } else {
                                 return null
                             }
@@ -640,7 +698,7 @@ class MapComponent {
                         currentRecipe: b[1].fragmentValues.map(v => {
                             const marr = v.match(/CurrentRecipe=\"([^,]*)\"/)
                             if (marr) {
-                                return marr[1].split("'").join("").split("/").pop()
+                                return shortenAndTranslate(marr)
                             } else {
                                 return null
                             }
@@ -649,11 +707,11 @@ class MapComponent {
                     }
                 })
                 fs.forEach(n => strData.push(n))
-                console.log(strData)
+                // console.debug(strData)
             }
-            console.log(paths)
-            console.log(buildings)
-            console.log(strData)
+            // console.debug(paths)
+            // console.debug(buildings)
+            // console.debug(strData)
             const opt = {
                 mx: 350000,
                 my: 300000,
@@ -661,12 +719,11 @@ class MapComponent {
                 ry: 2048,
                 ox: 3273,
                 oy: 2593,
-                ct: 50,
+                ct: 0,
                 ds: 0
             }
             const render = (opt) => {
                 buildStr()
-                markerLayer.replaceChildren()
                 const ratiox = opt.mx / opt.rx
                 const ratioy = opt.my / opt.ry
                 strData.forEach(s => {
@@ -675,6 +732,9 @@ class MapComponent {
                 })
                 function combineLocations(nodes, threshold = 50) {
                     const remaining = nodes.map(n => ({ ...n }))
+                    if (threshold == 0) {
+                        return remaining
+                    }
                     let merged = true
                     while (merged) {
                         merged = false
@@ -703,33 +763,34 @@ class MapComponent {
                 const combined = combineLocations(strData, opt.ct)
                 strData.length = 0
                 strData.push(...combined)
+                for (const m of markers) {
+                    m.remove()
+                }
                 for (const s of strData) {
-                    renderMarker({ id: s.id, icon: "", text: (s.currentRecipe ?? s.itemTypeFilter ?? s.mainInventoryContainer) + " - " + s.path, x: s.x, y: s.y }, opt.ds)
+                    const label = s.name ?? (s.currentRecipe ?? s.itemTypeFilter ?? s.mainInventoryContainer)
+                    const type = s.path
+                    const text = label ? [label, type].join(' - ') : type;
+                    s.text = text
+                    s.icon = machineIcons.get(s.path) ?? 'b-icon'
+                    s.target = connections.find((c) => c.from == s.id)
+                    renderMarker({ id: s.id, icon: s.icon, text: s.text, x: s.x, y: s.y }, opt.ds, entities)
                 }
-                const canvas = connectionLayer
-                const ctx = canvas.getContext("2d");
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                function getRandomColor() {
-                    var letters = '0123456789ABCDEF';
-                    var color = '#';
-                    for (var i = 0; i < 6; i++) {
-                        color += letters[Math.floor(Math.random() * 16)];
-                    }
-                    return color;
-                }
+                renderMarkerList("", entities)
+                lps.forEach(lp => lp.remove())
                 connections.forEach(element => {
                     const from = strData.find(e => e.id === element.from)
                     const to = strData.find(e => e.id === element.to)
                     if (!from || !to) {
-                        console.log('skip', element)
                         return
                     }
-                    ctx.strokeStyle = getRandomColor();
-                    ctx.beginPath(); // Start a new path
-                    ctx.moveTo(from.x, from.y); // Move the pen to (30, 50)
-                    ctx.lineTo(to.x, to.y); // Draw a line to (150, 100)
-                    ctx.stroke(); // Render the path
+                    const lp = L.polygon([
+                        asLeafletCoord(from),
+                        asLeafletCoord(to)
+                    ]).addTo(leafmap);
+                    lps.push(lp)
                 });
+                config().markers = strData
+                updateLocalConfig(config())
             }
             render(opt)
             const bx = n('div', [
@@ -752,8 +813,7 @@ class MapComponent {
                     }
                 }), p.split("/")[p.split("/").length - 2]]))
             ], { style: "position:fixed; top:0;left:0; display:flex;flex-direction:column; max-width: 300px; max-height: 100vh; overflow:auto; background: #333c" })
-            document.body.appendChild(bx)
-            //readMarkerInfo(content)
+            //document.body.appendChild(bx)
         }
 
         function readMarkerInfo(markerContent) {
@@ -762,7 +822,7 @@ class MapComponent {
                 config().markers = parsedMarkers
                 updateLocalConfig(config())
             } catch (e) {
-                console.log(e)
+                console.error(e)
                 alert("failed to read markers")
                 return
             }
@@ -796,10 +856,17 @@ class MapComponent {
         }
 
         function renderMarkers() {
-            [...(markerLayer.querySelectorAll('span.mapMarker'))].forEach(node => node.remove())
-            config().markers.forEach(m => renderMarker(m))
+            for (const m of markers) {
+                m.remove()
+            }
+            config().markers.forEach(m => renderMarker(m, 0, entities))
         }
 
+        /**
+         * 
+         * @param {*} filter 
+         * @param {Map} entities 
+         */
         function renderMarkerList(filter = "") {
             markerList.innerHTML = '';
             config().markers.forEach(md => {
@@ -814,21 +881,55 @@ class MapComponent {
             })
         }
 
-        const renderMarker = (md, ds = 0) => {
-            const mapMarker = n('span', [md.icon], {
-                class: "mapMarker", title: md.text, style: `position: absolute; top: ${md.y}px; left: ${md.x}px; font-size: 1rem; line-height: 1rem; transform: translate(-50%, -50%); background-color: white;
-                min-width:${ds}px;min-height:${ds}px;
-  border: 1px solid black;
-  border-radius: 100%;
-  aspect-ratio: 1;
-  padding: 1px;
-  cursor: pointer;`, id: `marker-${md.id}`
-            })
+        function clearConnections() {
+            lps.forEach(lp => lp.remove())
+        }
 
-            markerLayer.append(mapMarker)
-            if (selectedId == md.id) {
-                setFocus(markerLayer, md)
+        function renderConntecions() {
+            clearConnections()
+            const markers = config().markers
+            markers.forEach(md => {
+                if (md.target) {
+                    const from = markerById(config(), md.target.from);;
+                    const to = markerById(config(), md.target.to);
+                    if (!to || !from) {
+                        console.log(md.target)
+                        return
+                    }
+                    const lp = L.polygon([
+                        asLeafletCoord(from),
+                        asLeafletCoord(to)
+                    ]).addTo(leafmap);
+                    lps.push(lp)
+                }
+            });
+        }
+
+        const machineIcons = new Map([
+            ["PackageSender", "sender-icon"],
+            ["PackageReceiver", "receiver-icon"],
+            ["BaseCore", "core-icon"],
+            ["Teleporter", "tp-icon"],
+        ])
+        function asLeafletCoord(s) {
+            return [(s.y / 16) * -1, s.x / 16]
+        }
+
+        const iconContent = new Map([
+
+        ])
+
+        const renderMarker = (md, ds = 0, entries = undefined) => {
+            const di = L.divIcon({ className: md.icon, html: iconContent.get(md.icon) ?? "" })
+            const marker = L.marker(asLeafletCoord(md), { title: md.text, icon: di })
+            markers.push(marker.addTo(leafmap));
+            if (entries) {
+                entries.set(md.id, { marker, meta: md })
             }
+            // TODO: focus
+            // if (selectedId == md.id) {
+            //     setFocus(markerLayer, md)
+            // }
         }
 
         const suppress = (event) => {
@@ -836,12 +937,21 @@ class MapComponent {
             event.preventDefault()
         }
 
-        function focusMarkerAndScroll(md, markerLayer) {
+        function focusMarkerAndScroll(md, map) {
             selectedId = md.id
             sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
             sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
-            removeFocus(markerLayer)
-            setFocus(markerLayer, md)
+            setTimeout(() => {
+                focused.forEach(m => m?.getElement()?.classList.remove("highlight"))
+                focused.length = 0
+                const marker = entities.get(md.id).marker
+                marker.getElement().classList.add("highlight")
+                focused.push(marker)
+                leafmap.panTo(marker.getLatLng(), { animate: true, duration: 1 })
+            }, 200);
+            // TODO: focus
+            // removeFocus(markerLayer)
+            // setFocus(markerLayer, md)
         }
 
         function setFocus(markerLayer, md) {
@@ -859,70 +969,78 @@ class MapComponent {
         }
 
         function createMap(base = "tiles") {
-            return n('div', createTiles(base), { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll;` })
-        }
+            // return n('div', createTiles(base), {style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll;` })
+            const mp = n('div', [], { style: "width: 100%; height: 100%;" })
+            setTimeout(() => {
+                mp.width = mp.getBoundingClientRect().width
+                mp.height = mp.getBoundingClientRect().height
+                setTimeout(() => {
+                    const L = window.L
+                    leafmap = L.map(mp, {
+                        crs: L.CRS.Simple,
+                        minZoom: 0,
+                        maxZoom: 5,
+                        zoomSnap: 0,
+                        zoomDelta: 0.25,
+                    })
 
+                    L.tileLayer('/tiles/{z}/{x}_{y}.webp', {
+                        noWrap: true
+                    }).addTo(leafmap);
+
+                    leafmap.setView([-128, 128], 5);
+
+                    const Legend = L.Control.extend({
+                        onAdd() {
+                            const container = L.DomUtil.create('div');
+                            container.style.background = 'rgba(255,255,255,0.5)';
+                            container.style.textAlign = 'right';
+                            container.style.padding = "2px"
+                            container.style.display = "flex"
+                            container.style.flexDirection = "column"
+                            container.style.gap = "2px";
+                            [...machineIcons.entries()].forEach(([k, v]) => container.append(n('div', [n('div', [], { class: v, style: "min-width: 1rem; min-height: 1rem" }), k], { style: "color:black;display: flex;  gap: 5px;  flex-wrap: owrap;  align-items: center;" })))
+                            return container;
+                        }
+                    });
+
+                    const zoomViewerControl = (new Legend()).addTo(leafmap);
+
+                    markerFilterSignal.subscribe((filter) => {
+                        renderMarkerList(filter, entities)
+                    })
+                    connectionsSignal.subscribe((active) => {
+                        if (active) {
+                            renderConntecions()
+                        } else {
+                            clearConnections()
+                        }
+                    })
+
+                    configSignal.subscribe(() => {
+                        setTimeout(() => {
+                            renderMarkers()
+                        }, 30)
+                        renderMarkerList(markerFilterSignal.value, entities)
+                    })
+                }, 10);
+            }, 10)
+            return mp;
+        }
         const map = createMap()
-        const markerLayer = n('div', [], { style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll;` })
-        const connectionLayer = n('canvas', [], { width: maxX * tileWidth, height: maxX * tileWidth, style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll; pointer-events:none` })
         const markerList = n('div', [], { style: "overflow:auto; padding: 0px 5px; flex-grow: 1; display:flex; flex-direction: column; gap: 5px;" })
         const container = n(
             'div',
-            [map, markerLayer, connectionLayer],
+            [map],
             {
-                style: "overflow: auto; height: 90vh; position: relative;",
-                $click: (event) => {
-                    event.stopPropagation()
-                    event.preventDefault()
-                },
-                $mousedown: (e) => {
-                    if (e.button !== 0) return;
-
-                    e.preventDefault();
-                    isDragging = true;
-
-                    sContainer.classList.add('dragging');
-
-                    startX = currentX = e.clientX;
-                    startY = currentY = e.clientY;
-                    startScrollLeft = sContainer.scrollLeft;
-                    startScrollTop = sContainer.scrollTop;
-
-                    rafId = requestAnimationFrame(updateScroll);
-                },
-                $mouseup: (e) => {
-                    if (!isDragging) return;
-
-                    isDragging = false;
-                    sContainer.classList.remove('dragging');
-
-                    cancelAnimationFrame(rafId);
-                },
-                $mousemove: (e) => {
-                    if (!isDragging) return;
-                    currentX = e.clientX;
-                    currentY = e.clientY;
-                },
-                $contextmenu: (event) => {
-                    if (event.target.nodeName.toLowerCase() == "span") {
-                        event.preventDefault()
-                        return
-                    }
-                    event.stopPropagation()
-                    event.preventDefault()
-                    const md = {
-                        x: event.layerX,
-                        y: event.layerY
-                    }
-                    editMarker(md)
-                }
+                style: "height: 90vh; position: relative;"
             }
         )
         sContainer = container
         attachCallbacks.push(
             (id) => {
                 if (id === 0 || id) {
-                    focusMarkerAndScroll(markerById(config(), id), markerLayer)
+                    focusMarkerAndScroll(markerById(config(), id), leafmap)
                 } else {
                     removeFocus(map)
                     container.scrollTop = 1954
@@ -930,50 +1048,55 @@ class MapComponent {
                 }
             }
         )
+
         const markerFilterSignal = signal("")
-        markerFilterSignal.subscribe((filter) => {
-            renderMarkerList(filter)
-        })
         const markerFilterInput = n('input', [], {
             placeholder: 'Marker Filter', $input: (ev) => {
                 markerFilterSignal.value = ev.target.value
             }
         }, "marker-filter-input")
+        const connectionsSignal = signal(false)
+        const connectionsInput = fieldFn("Verbindungen", {
+            checked: connectionsSignal.value,
+            type: "checkbox", $click: (ev) => {
+                if (ev.target.checked) {
+                    connectionsSignal.value = true
+                } else {
+                    connectionsSignal.value = false
+                }
+            }
+        }, "connections-input")
 
-        configSignal.subscribe(() => {
-            renderMarkers()
-            renderMarkerList(markerFilterSignal.value)
-        })
 
         const markerFilter = n('div', [markerFilterInput])
         const markerActions = n('div', [
             n('button', ['Marker Import'], { $click: () => importMarkers() }),
             n('button', ['Marker Export'], { $click: () => exportMarkers() })
         ], { style: 'display:flex; gap:10px' })
-        const makerListContainer = n('div', [markerFilter, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 90vh; width: 250px' })
+        const makerListContainer = n('div', [markerFilter, connectionsInput, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 90vh; width: 250px' })
         return n('div', [
             n('h2', ['Map']),
-            n('div', [
-                n('span', ['Marker können mit Rechtsklick hinzugefügt werden.']),
-                n('div', [], { style: "flex-grow:1" }),
-                n('button', ['Mit Strahlung'], {
-                    $click: (event) => {
-                        if (event.target.classList.contains("active")) return
-                        map.replaceChildren(...createTiles("tiles_rad"))
-                        event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
-                        event.target.classList.add("active")
-                    }
-                }),
-                n('button', ['Ohne Strahlung'], {
-                    $click: (event) => {
-                        if (event.target.classList.contains("active")) return
-                        map.replaceChildren(...createTiles("tiles"))
-                        event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
-                        event.target.classList.add("active")
-                    },
-                    class: "active"
-                })
-            ], { style: "display:flex; gap:10px; align-items:center;" }),
+            // n('div', [
+            //     n('span', ['Marker können mit Rechtsklick hinzugefügt werden.']),
+            //     n('div', [], { style: "flex-grow:1" }),
+            //     n('button', ['Mit Strahlung'], {
+            //         $click: (event) => {
+            //             if (event.target.classList.contains("active")) return
+            //             map.replaceChildren(...createTiles("tiles_rad"))
+            //             event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
+            //             event.target.classList.add("active")
+            //         }
+            //     }),
+            //     n('button', ['Ohne Strahlung'], {
+            //         $click: (event) => {
+            //             if (event.target.classList.contains("active")) return
+            //             map.replaceChildren(...createTiles("tiles"))
+            //             event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
+            //             event.target.classList.add("active")
+            //         },
+            //         class: "active"
+            //     })
+            // ], { style: "display:flex; gap:10px; align-items:center;" }),
             n('div', [container, makerListContainer], { style: "display: grid; gap: 10px; grid-template-columns: 1fr 250px" })
         ], { style: "display:flex; gap:5px; flex-direction:column;" })
 
@@ -1012,7 +1135,7 @@ function renderTechTree() {
                         slot.append(techtree(options, config().recipes))
                         textSpanDistance.innerText = `Abstand (${options.distance})`
                     } catch (e) {
-                        console.log("That's a bust", e)
+                        console.error("That's a bust", e)
                     }
                 },
                 type: 'range',
@@ -1031,7 +1154,7 @@ function renderTechTree() {
                         slot.append(techtree(options, config().recipes))
                         textSpanForce.innerText = `Kraft (${options.strength})`
                     } catch (e) {
-                        console.log("That's a bust", e)
+                        console.error("That's a bust", e)
                     }
                 },
                 type: 'range',
@@ -1496,9 +1619,9 @@ function displayCalc(id) {
 }
 
 /**
- * @param {Recipe} recipe 
- * @param {number} amount 
- */
+ * @param {Recipe} recipe
+                            * @param {number} amount
+                            */
 function calcInner(recipe, amount) {
     const singleRate = (+(recipe.quantity) / +(recipe.time))
     return {
@@ -1679,37 +1802,37 @@ function deleteMaterial(material) {
 }
 
 /**
- * @param {Config} config 
- * @param {number} id
- * @returns {Recipe}
- */
+ * @param {Config} config
+                            * @param {number} id
+                            * @returns {Recipe}
+                            */
 function recipeById(config, id) {
     return config.recipes.filter(r => r.id == id)[0]
 }
 
 /**
- * @param {Config} config 
- * @param {number} id
- * @returns {Factory}
- */
+ * @param {Config} config
+                            * @param {number} id
+                            * @returns {Factory}
+                            */
 function factoryById(config, id) {
     return config.factories.filter(f => f.id == id)[0]
 }
 
 /**
- * @param {Config} config 
- * @param {number} id
- * @returns {Material}
- */
+ * @param {Config} config
+                            * @param {number} id
+                            * @returns {Material}
+                            */
 function materialById(config, id) {
     return config.materials.filter(f => f.id == id)[0]
 }
 
 /**
- * @param {Config} config 
- * @param {number} id
- * @returns {any}
- */
+ * @param {Config} config
+                            * @param {number} id
+                            * @returns {any}
+                            */
 function markerById(config, id) {
     return config.markers.filter(m => m.id == id)[0]
 }
@@ -1719,19 +1842,19 @@ function filterRecipes(config, recipe, filter) {
 }
 
 /**
- * @param {Config} config 
- * @param {number} id
- * @returns {Recipe[]}
- */
+ * @param {Config} config
+                            * @param {number} id
+                            * @returns {Recipe[]}
+                            */
 function recipeUsedByRecipes(config, id) {
     return config.recipes.filter(r => (r.ingredients ?? []).filter(i => +i.id == +id).length > 0)
 }
 
 /**
- * @param {Config} config 
- * @param {number} id
- * @returns {Recipe[]}
- */
+ * @param {Config} config
+                            * @param {number} id
+                            * @returns {Recipe[]}
+                            */
 function factoryMakesRecipes(config, id) {
     return config.recipes.filter(r => r.factoryId == id)
 }
@@ -1757,9 +1880,9 @@ function deleteRecipe(recipe) {
 
 /**
  * @param {string} text
- */
+                            */
 function sluggy(text) {
-    return text.toLowerCase() // TODO make this better
+    return text?.toLowerCase() ?? "" // TODO make this better
 }
 
 function displayRecipes(filter = "") {
@@ -1880,17 +2003,17 @@ function techtree(options, recipes) {
         .attr("viewBox", [-width / 2, -height / 2, width, height])
         .attr("style", "max-width: 100%; height: auto; background:#cacaca")
     svg.append('defs').html(`
-        <marker
-            id="arrow"
-            viewBox="0 0 10 10"
-            refX="10"
-            refY="5"
-            markerWidth="10"
-            markerHeight="10"
-            orient="auto-start-reverse">
-            <path d="M 0 2 L 10 5 L 0 8 z" />
-        </marker>
-            `);
+                            <marker
+                                id="arrow"
+                                viewBox="0 0 10 10"
+                                refX="10"
+                                refY="5"
+                                markerWidth="10"
+                                markerHeight="10"
+                                orient="auto-start-reverse">
+                                <path d="M 0 2 L 10 5 L 0 8 z" />
+                            </marker>
+                            `);
 
     // Add a line for each link, and a text for each node.
     const link = svg.append("g")

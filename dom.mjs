@@ -83,4 +83,4 @@ export function displayModal(content) {
     return afterRemove;
 }
 
-export const fieldFn = (label, opts) => n('label', [n('span', [label]), n('input', [], opts)])
+export const fieldFn = (label, opts, staticId = "") => n('label', [n('span', [label]), n('input', [], opts, staticId)])
