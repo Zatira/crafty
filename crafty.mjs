@@ -984,7 +984,7 @@ class MapComponent {
                         zoomDelta: 0.25,
                     })
 
-                    L.tileLayer('/tiles/{z}/{x}_{y}.webp', {
+                    L.tileLayer('./tiles/{z}/{x}_{y}.webp', {
                         noWrap: true
                     }).addTo(leafmap);
 
