@@ -15,11 +15,11 @@ export const connection = {
 window.rtcc = connection
 
 export function updateRtc(data) {
-    if (!channel || !connection.online.value) {
+    if (!channel || !connection.online) {
+        connection.online.value = false
         return
     }
     if (channel.readyState == 'open') {
-        //console.log('out:', data)
         channel.send(data)
     }
 }
@@ -27,47 +27,33 @@ export function updateRtc(data) {
 export const rtcUpdates = signal()
 let channel
 let ws
-let pc
 
 async function tryConnect() {
-    if (window.location.href.indexOf("localhost") > -1) {
-        return
-    }
-    if (ws && ws.readyState != WebSocket.CLOSED) {
+    if (ws) {
         await ws.close()
     }
-    if (pc) {
-        connection.online.value = false
-        pc.close()
-    }
     ws = new WebSocket(`wss:////${connection.signaling}`);
-
-    pc = connection.useStun ? new RTCPeerConnection(connection.stun) : new RTCPeerConnection();
+    const pc = connection.useStun ? new RTCPeerConnection(connection.stun) : new RTCPeerConnection();
 
     // Create data channel if first peer
     pc.onnegotiationneeded = async () => {
-        const offer = await pc.createOffer({ iceRestart: true });
+        const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
         ws.send(JSON.stringify({ desc: pc.localDescription }));
     };
 
     pc.ondatachannel = (event) => {
-        console.log(event)
         channel = event.channel;
         setupChannel(channel);
         connection.online.value = true
         ws.close()
     };
-    pc.connectionState
 
     pc.oniceconnectionstatechange = (event) => {
         console.log(event)
-        const state = event?.target?.connectionState
-        if (state != "connected") {
+        if (event?.target?.connectionState == "failed") {
             connection.online.value = false
-            if (state == "disconnected" || state == "failed") {
-                pc.close()
-            }
+            pc.close()
         }
     }
 
