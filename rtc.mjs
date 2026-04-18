@@ -15,8 +15,7 @@ export const connection = {
 window.rtcc = connection
 
 export function updateRtc(data) {
-    if (!channel || !connection.online) {
-        connection.online.value = false
+    if (!channel || !connection.online.value) {
         return
     }
     if (channel.readyState == 'open') {
