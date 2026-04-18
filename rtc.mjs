@@ -31,6 +31,9 @@ let ws
 let pc
 
 async function tryConnect() {
+    if (window.location.href.indexOf("localhost") > -1) {
+        return
+    }
     if (ws && ws.readyState != WebSocket.CLOSED) {
         await ws.close()
     }
@@ -50,6 +53,7 @@ async function tryConnect() {
     };
 
     pc.ondatachannel = (event) => {
+        console.log(event)
         channel = event.channel;
         setupChannel(channel);
         connection.online.value = true

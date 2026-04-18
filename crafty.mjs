@@ -156,7 +156,7 @@ function readInfo(configContent, name) {
 }
 
 function init() {
-    const fromStorage = localStorage.getItem("crafty")
+    const fromStorage = localStorage.getItem(key())
     if (fromStorage) {
         const [parsedConfig, configName] = deserialize(fromStorage)
         const tempCfg = Object.assign(structuredClone(defaultConfig), parsedConfig);
@@ -1361,8 +1361,12 @@ function hookIntoNav() {
     });
 }
 
+function key() {
+    return window.location.href.indexOf("localhost") > -1 ? "local:crafty" : "crafty"
+}
+
 function saveInternal(cfg) {
-    localStorage.setItem("crafty", serialize([cfg, sluggy(cfg.game)]))
+    localStorage.setItem(key(), serialize([cfg, sluggy(cfg.game)]))
 }
 
 function save() {
