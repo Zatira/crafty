@@ -49,6 +49,36 @@ const machineMeta = new Map([
     ["ZiplineVariants", { icon: "b-icon zip-icon", name: "Zipline" }],
 ])
 
+const translation = new Map([
+    ["CR_TitaniumOreImpure_MechanicalDrill", "Titan 1/s"],
+    ["CR_WolframOreImpure_MechanicalDrill", "Wolfram 1/s"],
+    ["CR_CalciumOreImpure_MechanicalDrill", "Kalzium 1/s"],
+    ["CR_TitaniumOre_MechanicalDrill", "Titan 2/s"],
+    ["CR_WolframOre_MechanicalDrill", "Wolfram 2/s"],
+    ["CR_CalciumOre_MechanicalDrill", "Kalzium 2/s"],
+    ["CR_TitaniumOrePure_MechanicalDrill", "Titan 4/s"],
+    ["CR_WolframOrePure_MechanicalDrill", "Wolfram 4/s"],
+    ["CR_CalciumOrePure_MechanicalDrill", "Kalzium 4/s"],
+    ["CR_BasicBuildingMaterial", "Material Grau"],
+    ["CR_IntermediateBuildingMaterial", "Material Gelb"],
+    ["CR_GoethiteOre_LaserDrill", "Göthit"],
+
+    ["CR_CalciumPowder", "Kalziumpulver"],
+    ["CR_WolframBar", "Wolframbarren"],
+    ["CR_SulphurOre", "Schwefel"],
+    ["CR_Ceramics", "Keramik"],
+
+    ["AcidExtractor", "Extraktor"],
+    ["MechanicalDrill", "Bergwerk"],
+    ["BaseCore", "Basis"],
+    ["PackageSender", "Sender"],
+    ["PackageReveiver", "Empfänger"],
+    ["ZipRail", "Zipline"],
+    ["ZiplineVariants", "Zipline"],
+    ["Furnace", "Schmelzhütte"],
+    ["Smelter", "Schmelzofen"]
+])
+
 /**
  * @typedef {Object} Route
  * @property {string} type
@@ -59,6 +89,7 @@ const machineMeta = new Map([
  * Material type definition
  * @typedef {Object} Material
  * @property {string} name
+ * @property {string} [internalId]
  * @property {number} id
  */
 
@@ -66,6 +97,7 @@ const machineMeta = new Map([
  * Factory type definition
  * @typedef {Object} Factory
  * @property {string} name
+ * @property {string} [internalId]
  * @property {number} heat
  * @property {number} power
  * @property {number} id
@@ -116,12 +148,23 @@ const state = {
     configName: null,
     set config(config) {
         this._config = { ...config }
+        updateTranslations(this._config)
+        //console.log(new Set(this._config.markers.map(markerText).filter(t => t.indexOf("CR_") == 0)))
         displayConfig()
         configSignal.value = this._config
     },
     get config() {
         return this._config
     }
+}
+
+/**
+ * 
+ * @param {Config} config 
+ */
+function updateTranslations(config) {
+    config.materials.filter(m => m.internalId).forEach(m => translation.set(m.internalId, m.name))
+    config.factories.filter(m => m.internalId).forEach(m => translation.set(m.internalId, m.name))
 }
 
 function updateLocalConfig(config) {
@@ -465,8 +508,18 @@ function materialLink(material) {
 
 function markerLink(marker) {
     const icon = n('div', [], { class: machineMeta.get(marker.path)?.icon ?? 'b-icon', style: 'display:inline-block; min-height: 1rem; min-width:1rem;' })
-    const text = machineMeta.get(marker.text)?.name ?? marker.text;
+    const text = markerText(marker);
     return n('a', [icon, text], { href: '#map/' + marker.id + '-' + sluggy(text), style: "display:flex; align-items:center; gap:5px;" })
+}
+
+function translate(key) {
+    return translation.get(key) ?? key;
+}
+
+function markerText(marker) {
+    const l = translate(marker.name ?? marker.currentRecipe ?? marker.label)
+    const t = translate(marker.type ?? marker.path)
+    return l ? [l, t].join(' - ') : t
 }
 
 class MapComponent {
@@ -599,21 +652,7 @@ class MapComponent {
             }
             //console.debug(JSON.parse(content))
             const itemData = JSON.parse(content).itemData
-            const translation = new Map([
-                ["CR_TitaniumOreImpure_MechanicalDrill", "Titan 1/s"],
-                ["CR_WolframOreImpure_MechanicalDrill", "Wolfram 1/s"],
-                ["CR_CalciumOreImpure_MechanicalDrill", "Kalzium 1/s"],
-                ["CR_TitaniumOre_MechanicalDrill", "Titan 2/s"],
-                ["CR_WolframOre_MechanicalDrill", "Wolfram 2/s"],
-                ["CR_CalciumOre_MechanicalDrill", "Kalzium 2/s"],
-                ["CR_TitaniumOrePure_MechanicalDrill", "Titan 4/s"],
-                ["CR_WolframOrePure_MechanicalDrill", "Wolfram 4/s"],
-                ["CR_CalciumOrePure_MechanicalDrill", "Kalzium 4/s"],
-                ["CR_BasicBuildingMaterial", "Material Grau"],
-                ["CR_IntermediateBuildingMaterial", "Material Gelb"],
-                ["CR_GoethiteOre_LaserDrill", "Göthit"],
-                ["MechanicalDrill", "Bergwerk"]
-            ])
+
             const fb = Object.entries(itemData.Mass.entities)
             const itemSet = new Set()
             fb.map(b => {
@@ -666,12 +705,12 @@ class MapComponent {
             const paths = new Set()
             buildings.forEach(b => paths.add(b[1].spawnData.entityConfigDataPath))
             const strData = []
-            const shortenAndTranslate = (marr) => {
+            const shorten = (marr) => {
                 if (!marr) {
                     return marr
                 }
                 const key = marr[1].split("'").join("").split("/").pop().split("\.").pop()
-                return translation.get(key) ?? key;
+                return key;
             }
             const buildStr = () => {
                 const fb = buildings
@@ -682,13 +721,13 @@ class MapComponent {
                         path: b[1].spawnData.entityConfigDataPath.split("/").slice(-2, -1).pop(),
                         name: itemData.CrBuildingCustomNameSubsystem.customNames[b[0]],
                         mainInventoryContainer: b[1].fragmentValues.map(v => {
-                            return shortenAndTranslate(v.match(/MainInventoryContainer.*ItemDataBase=\"([^,]*)\"/))
+                            return shorten(v.match(/MainInventoryContainer.*ItemDataBase=\"([^,]*)\"/))
                         }).filter(Boolean).pop(),
                         itemTypeFilter: b[1].fragmentValues.map(v => {
-                            return shortenAndTranslate(v.match(/ItemTypeFilter=\(\"([^,]*)\"/))
+                            return shorten(v.match(/ItemTypeFilter=\(\"([^,]*)\"/))
                         }).filter(Boolean).pop(),
                         currentRecipe: b[1].fragmentValues.map(v => {
-                            return shortenAndTranslate(v.match(/CurrentRecipe=\"([^,]*)\"/))
+                            return shorten(v.match(/CurrentRecipe=\"([^,]*)\"/))
                         }).filter(Boolean).pop(),
                         translation: b[1].spawnData.transform.translation,
                     }
@@ -758,9 +797,10 @@ class MapComponent {
                     const type = s.path
                     const text = label ? [label, type].join(' - ') : type;
                     s.text = text
+                    s.type = type
                     s.icon = machineMeta.get(s.path) ?? 'b-icon'
                     s.target = connections.find((c) => c.from == s.id)
-                    renderMarker({ id: s.id, path: type, icon: s.icon, text: s.text, x: s.x, y: s.y }, opt.ds, entities)
+                    renderMarker(s, opt.ds, entities)
                 }
                 renderMarkerList("")
                 lps.forEach(lp => lp.remove())
@@ -834,7 +874,7 @@ class MapComponent {
         function renderMarkerList(filter = "") {
             markerList.innerHTML = '';
             config().markers.forEach(md => {
-                const text = machineMeta.get(md.text)?.name ?? md.text;
+                const text = markerText(md);
                 const shouldDisplay = (text).toLowerCase().indexOf((filter ?? "").toLowerCase()) > -1
                 if (shouldDisplay) {
                     const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
@@ -882,7 +922,7 @@ class MapComponent {
          */
         const renderMarker = (md, ds = 0, entries = undefined) => {
             const di = L.divIcon({ className: machineMeta.get(md.path)?.icon ?? 'b-icon' })
-            const marker = L.marker(asLeafletCoord(md), { title: machineMeta.get(md.path)?.name ?? md.text, icon: di })
+            const marker = L.marker(asLeafletCoord(md), { title: markerText(md), icon: di })
             markers.push(marker.addTo(leafmap));
             if (entries) {
                 entries.set(md.id, { marker, meta: md })
@@ -1168,7 +1208,7 @@ function renderMaterial(id) {
         recipeNodes.push(recipeLink(recipie))
     }
     const markerNodes = []
-    config().markers.filter(m => m.text == material.name).forEach(m => {
+    config().markers.filter(m => translate(m.currentRecipe) == material.name).forEach(m => {
         markerNodes.push(n('div', [markerLink(m)]))
     })
     return n('div', [
@@ -1276,7 +1316,7 @@ function renderRecipe(id) {
     }
     const material = materialById(config(), recipe.materialId)
     const markerNodes = []
-    config().markers.filter(m => m.text == material.name).forEach(m => {
+    config().markers.filter(m => translate(m.currentRecipe) == material.name).forEach(m => {
         markerNodes.push(n('div', [markerLink(m)]))
     })
     return n('div', [
@@ -1291,13 +1331,19 @@ function renderRecipe(id) {
                 ], { style: 'display:flex; align-items: center; gap: 50px;' }),
                 n('span', ['Output: ', recipe.quantity, '/', recipe.time, 's', " (", (60 / +recipe.time) * recipe.quantity, '/min)']),
                 n('br'),
-                n('p', ['Erzeugt: ', materialLink(material)]),
-                n('br'),
-                n('p', ['Hergestellt in: ', factoryLink(recipeFactory)]),
-                n('br'),
-                n('p', ['Hergestellt bei: ', ...markerNodes]),
-                n('br'),
-                n('p', ['Verwendet von: ', ...recipeNodes])
+                n('div', [
+                    n('div', [
+                        n('p', ['Erzeugt: ', materialLink(material)]),
+                        n('br'),
+                        n('p', ['Hergestellt in: ', factoryLink(recipeFactory)]),
+                        n('br'),
+                        n('p', ['Verwendet von: ', ...recipeNodes])
+                    ]),
+                    n('div', [
+                        n('p', ['Hergestellt bei: ', ...markerNodes]),
+                    ]),
+                ], { style: "display:grid; grid-template-columns:1fr 1fr;" }),
+
             ], { style: 'flex-grow:1' }),
             n('div', [
                 n('h2', ['Zutaten']),
@@ -1378,7 +1424,7 @@ function noi(event) {
 function mergeForm(formData, target) {
     for (const [key, value] of formData.entries()) {
         if (key.indexOf('.') == -1) {
-            target[key] = value
+            target[key] = typeof value == "string" ? value.trim() : value
         } else {
             const [parentKey, index, subkey] = key.split('.')
             if (!target[parentKey]) {
@@ -1489,6 +1535,9 @@ function factoryForm(factory) {
                 fieldFn('Name', { name: "name", requierd: true, value: factory.name })
             ], { style: "display: flex; gap: 0.5rem" }),
             n('div', [
+                fieldFn('Interne Id (optional)', { name: "internalId", requierd: false, value: factory.internalId }),
+            ], { style: "display: flex; gap: 0.5rem" }),
+            n('div', [
                 fieldFn('Strom', { name: "power", requierd: true, value: factory.power }),
                 fieldFn('Hitze', { name: "heat", requierd: true, value: factory.heat })
             ], { style: "display: flex; gap: 0.5rem" }),
@@ -1560,6 +1609,9 @@ function materialForm(material) {
         n('form', [
             n('div', [
                 fieldFn('Name', { name: "name", requierd: true, value: material.name }),
+            ], { style: "display: flex; gap: 0.5rem" }),
+            n('div', [
+                fieldFn('Interne Id (optional)', { name: "internalId", requierd: false, value: material.internalId }),
             ], { style: "display: flex; gap: 0.5rem" }),
             n('div', [
                 n('input', [], { value: material.id, name: 'id', type: 'hidden' }),
