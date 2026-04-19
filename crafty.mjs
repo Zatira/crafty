@@ -107,6 +107,7 @@ const translation = new Map([
  * Recipe type definition
  * @typedef {Object} Recipe
  * @property {string} name
+ * @property {string} [internalId]
  * @property {number} id
  * @property {number} materialId
  * @property {number} factoryId
@@ -218,7 +219,8 @@ function readInfo(configContent, name) {
         return
     }
 }
-
+let mapTipMap;
+let mapTipElement;
 function init() {
     const fromStorage = localStorage.getItem(key())
     if (fromStorage) {
@@ -235,6 +237,24 @@ function init() {
     }
     hookIntoNav()
     navigate(new URL(window.location.href))
+    mapTipElement = n('div', [], { id: 'maptip-map', width: 200, height: 200, style: "position:absolute; opacity:0; top:0; left:0; width:200px; height:200px;" })
+    document.body.append(mapTipElement)
+    mapTipMap = L.map('maptip-map', {
+        crs: L.CRS.Simple,
+        minZoom: 4,
+        maxZoom: 4,
+        zoomControl: false
+    })
+    setTimeout(() => {
+        mapTipElement.style.display = "none"
+        mapTipElement.style.opacity = 1
+    }, 100);
+
+    L.tileLayer('./tiles/{z}/{x}_{y}.webp', {
+        noWrap: true
+    }).addTo(mapTipMap);
+
+    mapTipMap.setView([-140, 70], 4);
 }
 
 /**
@@ -506,10 +526,60 @@ function materialLink(material) {
     return n('a', [material.name], { href: '#material/' + material.id + '-' + sluggy(material.name) })
 }
 
-function markerLink(marker) {
+let hoveredlink;
+let hovermarker;
+document.body.addEventListener("mouseover", (event) => {
+    if (event.target != hoveredlink) {
+        mapTipLeave()
+    }
+})
+function markerLink(marker, hovermap = true) {
     const icon = n('div', [], { class: machineMeta.get(marker.path)?.icon ?? 'b-icon', style: 'display:inline-block; min-height: 1rem; min-width:1rem;' })
     const text = markerText(marker);
-    return n('a', [icon, text], { href: '#map/' + marker.id + '-' + sluggy(text), style: "display:flex; align-items:center; gap:5px;" })
+    return n('a', [icon, text], {
+        href: '#map/' + marker.id + '-' + sluggy(text), style: "display:inline-flex; align-items:center; gap:5px;", class: "maptiptarget",
+        $mouseenter: (ev) => hovermap && mapTipEnter(marker, ev),
+        $mousemove: (ev) => hovermap && mapTipOver(ev),
+        $mouseleave: () => hovermap && mapTipLeave(),
+    })
+}
+function mapTipEnter(md, event) {
+    if (event.target == hoveredlink) {
+        return
+    }
+    hoveredlink = event.target
+    mapTipElement.style.display = "block"
+    if (hovermarker) {
+        hovermarker.remove()
+    }
+    const di = L.divIcon({ className: machineMeta.get(md.path)?.icon ?? 'b-icon' })
+    hovermarker = L.marker(asLeafletCoord(md), { title: markerText(md), icon: di })
+    hovermarker.addTo(mapTipMap);
+    mapTipMap.panTo(hovermarker.getLatLng())
+    mapTipElement.style.top = event.pageY + 10 + "px"
+    mapTipElement.style.left = event.pageX + 10 + "px"
+}
+
+function asLeafletCoord(s) {
+    return [(s.y / 16) * -1, s.x / 16]
+}
+function mapTipOver(event) {
+    if (event.target == hoveredlink) {
+        mapTipElement.style.top = event.pageY + 10 + "px"
+        mapTipElement.style.left = event.pageX + 10 + "px"
+    }
+}
+function mapTipLeave() {
+    if (hoveredlink) {
+        hoveredlink = undefined
+        if (hovermarker) {
+            hovermarker.remove()
+            hovermarker = undefined
+        }
+        mapTipElement.style.display = "none"
+        mapTipElement.style.top = 0
+        mapTipElement.style.left = 0
+    }
 }
 
 function translate(key) {
@@ -878,7 +948,7 @@ class MapComponent {
                 const shouldDisplay = (text).toLowerCase().indexOf((filter ?? "").toLowerCase()) > -1
                 if (shouldDisplay) {
                     const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
-                    const markerRow = n('div', [markerLink(md), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
+                    const markerRow = n('div', [markerLink(md, false), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
                     markerList.append(
                         markerRow
                     )
@@ -910,9 +980,6 @@ class MapComponent {
             });
         }
 
-        function asLeafletCoord(s) {
-            return [(s.y / 16) * -1, s.x / 16]
-        }
 
         /**
          * 
@@ -1316,9 +1383,38 @@ function renderRecipe(id) {
     }
     const material = materialById(config(), recipe.materialId)
     const markerNodes = []
-    config().markers.filter(m => translate(m.currentRecipe) == material.name).forEach(m => {
+    const relevantMarkers = config().markers.filter(m => translate(m.currentRecipe) == material.name).toSorted((a, b) => (a.x + a.y) - (b.x + b.y))
+    relevantMarkers.forEach(m => {
         markerNodes.push(n('div', [markerLink(m)]))
     })
+    const minimap = (markerNodes) => {
+        const minimapElement = n('div', [], { id: 'minimap', width: 256, height: 256, style: "width:256px; height:256px;" })
+        setTimeout(() => {
+            const minimapMap = L.map('minimap', {
+                crs: L.CRS.Simple,
+                minZoom: 0,
+                maxZoom: 0,
+                zoomControl: false,
+                dragging: false
+            })
+
+            L.tileLayer('./tiles/{z}/{x}_{y}.webp', {
+                noWrap: true
+            }).addTo(minimapMap);
+
+            minimapMap.setView([-128, 128], 5);
+
+            setTimeout(() => {
+                markerNodes.forEach((md) => {
+                    const di = L.divIcon({ className: machineMeta.get(md.path)?.icon ?? 'b-icon' })
+                    hovermarker = L.marker(asLeafletCoord(md), { title: markerText(md), icon: di })
+                    hovermarker.addTo(minimapMap);
+                    hovermarker.getElement().addEventListener("click", () => window.location.href = '#map/' + md.id + "-")
+                })
+            }, 100);
+        }, 100);
+        return minimapElement
+    }
     return n('div', [
         n('div', [
             n('div', [
@@ -1340,7 +1436,7 @@ function renderRecipe(id) {
                         n('p', ['Verwendet von: ', ...recipeNodes])
                     ]),
                     n('div', [
-                        n('p', ['Hergestellt bei: ', ...markerNodes]),
+                        n('p', ['Hergestellt bei: ', minimap(relevantMarkers), n('div', markerNodes, { style: "max-height: 250px; overflow:auto; overscroll-behavior: contain;" })]),
                     ]),
                 ], { style: "display:grid; grid-template-columns:1fr 1fr;" }),
 
@@ -1573,6 +1669,7 @@ function recipeForm(recipe) {
                 })
             ], { style: "display: flex; gap: 0.5rem; align-items: center;" }),
             n('div', [
+                fieldFn('Interne Id (optional)', { name: "internalId", requierd: false, value: recipe.internalId }),
                 materialSelect,
                 n('button', ["+ 🪨"], {
                     $click: () => {
