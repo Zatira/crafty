@@ -2,6 +2,9 @@
 import { displayModal, fieldFn, n } from "./dom.mjs";
 import { signal } from "./signals.mjs";
 
+
+const MAX_CHUNK_SIZE = 262144;
+
 export const connection = {
     online: signal(false),
     signaling: "zeus-olympus.fly.dev",
@@ -14,13 +17,23 @@ export const connection = {
 }
 window.rtcc = connection
 
-export function updateRtc(data) {
+export async function updateRtc(data) {
     if (!channel || !connection.online) {
         connection.online.value = false
         return
     }
     if (channel.readyState == 'open') {
-        channel.send(data)
+        try {
+            const encoded = new TextEncoder().encode(data);
+            const cs = new CompressionStream("deflate")
+            const writer = cs.writable.getWriter()
+            writer.write(encoded)
+            writer.close()
+            const blb = await new Response(cs.readable).blob()
+            console.log('bytes sent', blb.size)
+        } catch (e) {
+            console.log('send error', e)
+        }
     }
 }
 
@@ -43,6 +56,7 @@ async function tryConnect() {
     };
 
     pc.ondatachannel = (event) => {
+        console.log('max msg size', pc?.sctp?.maxMessageSize)
         channel = event.channel;
         setupChannel(channel);
         connection.online.value = true
@@ -58,9 +72,18 @@ async function tryConnect() {
     }
 
     function setupChannel(channel) {
-        channel.onmessage = (e) => {
-            //console.log(e)
-            rtcUpdates.value = e.data
+        channel.onmessage = async (e) => {
+            try {
+                console.log('bytes received', e.data.size)
+                const ds = new DecompressionStream("deflate")
+                const writer = ds.writable.getWriter()
+                writer.write(e.data)
+                writer.close()
+                const content = await new Response(ds.readable).text()
+                rtcUpdates.value = content
+            } catch (e) {
+                console.log('receive error', e)
+            }
         };
     }
 
