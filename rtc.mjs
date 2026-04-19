@@ -2,9 +2,6 @@
 import { displayModal, fieldFn, n } from "./dom.mjs";
 import { signal } from "./signals.mjs";
 
-
-const MAX_CHUNK_SIZE = 262144;
-
 export const connection = {
     online: signal(false),
     peerState: signal('offline'),
@@ -17,6 +14,7 @@ export const connection = {
     },
     roomId: ""
 }
+//@ts-ignore
 window.rtcc = connection
 
 export async function updateRtc(data) {
@@ -115,7 +113,6 @@ async function tryConnect() {
             connection.peerState.value = "ready"
             console.log("ready")
             ws.send(JSON.stringify({ roomId: connection.roomId, type: "confirm" }))
-            connection.peerState.value = "signaling"
         }
         if (msg.type == "confirm") {
             connection.peerState.value = "ready"
@@ -147,9 +144,6 @@ async function tryConnect() {
 
     // Start connection when WebSocket opens
     ws.onopen = () => {
-        // Try to become initiator
-        // channel = pc.createDataChannel("sync");
-        // setupChannel(channel);
         ws.send(JSON.stringify({ roomId: connection.roomId, type: "ready" }))
         connection.peerState.value = "signaling"
     };

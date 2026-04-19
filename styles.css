@@ -76,8 +76,8 @@ button.active {
 }
 
 .b-icon {
-    max-height: 1rem;
-    max-width: 1rem;
+    max-height: 0.5rem;
+    max-width: 0.5rem;
     font-size: 1rem;
     line-height: 1rem;
     background-color: white;
@@ -90,59 +90,26 @@ button.active {
 }
 
 .sender-icon {
-    max-height: 1rem;
-    max-width: 1rem;
-    font-size: 1rem;
-    line-height: 1rem;
     background-color: red;
-    min-width: 2px;
-    min-height: 2px;
-    border: 1px solid black;
-    border-radius: 100%;
-    aspect-ratio: 1;
-    padding: 1px;
 }
 
 .receiver-icon {
-    max-height: 1rem;
-    max-width: 1rem;
-    font-size: 1rem;
-    line-height: 1rem;
     background-color: blue;
-    min-width: 2px;
-    min-height: 2px;
-    border: 1px solid black;
-    border-radius: 100%;
-    aspect-ratio: 1;
-    padding: 1px;
 }
 
 .tp-icon {
-    max-height: 1rem;
-    max-width: 1rem;
-    font-size: 1rem;
-    line-height: 1rem;
     background-color: yellow;
-    min-width: 2px;
-    min-height: 2px;
-    border: 1px solid black;
-    border-radius: 100%;
-    aspect-ratio: 1;
-    padding: 1px;
 }
 
 .core-icon {
-    max-height: 1rem;
-    max-width: 1rem;
-    font-size: 1rem;
-    line-height: 1rem;
     background-color: hotpink;
-    min-width: 2px;
-    min-height: 2px;
-    border: 1px solid black;
-    border-radius: 100%;
-    aspect-ratio: 1;
-    padding: 1px;
+}
+
+.zip-icon {
+    max-height: 0.33rem;
+    max-width: 0.33rem;
+    background-color: cyan;
+    padding: 0px;
 }
 
 .highlight {

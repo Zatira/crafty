@@ -9,14 +9,25 @@ import { signal } from "./signals.mjs"
  * @typedef {import('./signals.mjs').Signal<T>} Signal
  */
 
+//@ts-ignore
 window.loadFile = loadFile
+//@ts-ignore
 window.init = init
+//@ts-ignore
 window.noi = noi
+//@ts-ignore
 window.openDialog = openDialog
+//@ts-ignore
 window.save = save
+//@ts-ignore
 window.addRecipe = addRecipe
+//@ts-ignore
 window.addFactory = addFactory
+//@ts-ignore
 window.addMaterial = addMaterial
+
+//@ts-ignore
+const L = window.L
 
 const defaultConfig = {
     updated: 0,
@@ -27,6 +38,16 @@ const defaultConfig = {
     todo: [],
     game: ''
 }
+
+
+const machineMeta = new Map([
+    ["PackageSender", { icon: "b-icon sender-icon", name: "Sender" }],
+    ["PackageReceiver", { icon: "b-icon receiver-icon", name: "Empfänger" }],
+    ["BaseCore", { icon: "b-icon core-icon", name: "Basis" }],
+    ["Teleporter", { icon: "b-icon tp-icon", name: "Teleporter" }],
+    ["ZipRail", { icon: "b-icon zip-icon", name: "Zipline" }],
+    ["ZiplineVariants", { icon: "b-icon zip-icon", name: "Zipline" }],
+])
 
 /**
  * @typedef {Object} Route
@@ -443,7 +464,9 @@ function materialLink(material) {
 }
 
 function markerLink(marker) {
-    return n('a', [n('div', [], { class: marker.icon, style: 'display:inline-block; min-height: 1rem; min-width:1rem;' }), marker.text], { href: '#map/' + marker.id + '-' + sluggy(marker.text), style: "display:flex; align-items:center; gap:5px;" })
+    const icon = n('div', [], { class: machineMeta.get(marker.path)?.icon ?? 'b-icon', style: 'display:inline-block; min-height: 1rem; min-width:1rem;' })
+    const text = machineMeta.get(marker.text)?.name ?? marker.text;
+    return n('a', [icon, text], { href: '#map/' + marker.id + '-' + sluggy(text), style: "display:flex; align-items:center; gap:5px;" })
 }
 
 class MapComponent {
@@ -485,35 +508,13 @@ class MapComponent {
     renderMap(attachCallbacks) {
         const maxX = 16
         const maxY = 16
-        const tileWidth = 256
         let selectedId = null
-        // Map Specifics
-        let isDragging = false;
-        let startX = 0;
-        let startY = 0;
-        let startScrollLeft = 0;
-        let startScrollTop = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let rafId = null;
         let sContainer;
         let leafmap;
         let markers = []
         let lps = []
         const entities = new Map()
         const focused = []
-
-        function updateScroll() {
-            if (!isDragging) return;
-
-            const dx = currentX - startX;
-            const dy = currentY - startY;
-
-            sContainer.scrollLeft = startScrollLeft - dx;
-            sContainer.scrollTop = startScrollTop - dy;
-
-            rafId = requestAnimationFrame(updateScroll);
-        }
 
         function markerForm(marker) {
 
@@ -610,7 +611,8 @@ class MapComponent {
                 ["CR_CalciumOrePure_MechanicalDrill", "Kalzium 4/s"],
                 ["CR_BasicBuildingMaterial", "Material Grau"],
                 ["CR_IntermediateBuildingMaterial", "Material Gelb"],
-                ["CR_GoethiteOre_LaserDrill", "Göthit"]
+                ["CR_GoethiteOre_LaserDrill", "Göthit"],
+                ["MechanicalDrill", "Bergwerk"]
             ])
             const fb = Object.entries(itemData.Mass.entities)
             const itemSet = new Set()
@@ -649,7 +651,7 @@ class MapComponent {
             const excludes = [
                 "ForgottenEngine", "Foundations", "Interiors", "Modular",
                 "Cooler", "WindPowerGenerator", "DroneConnections", "Foundable",
-                "Antena", "ResourceRedistributor", "Exporter",
+                "Antena", "ResourceRedistributor", "Exporter", "StartingPrinter", "Hub",
                 "Turret_Tier1", "Turret_Tier2", "SolarPowerGenerator", "SolarPowerGeneratorTier2"]
             const buildings = Object.entries(itemData.Mass.entities).filter(([key, entry]) => {
                 const path = entry.spawnData.entityConfigDataPath
@@ -663,16 +665,16 @@ class MapComponent {
             })
             const paths = new Set()
             buildings.forEach(b => paths.add(b[1].spawnData.entityConfigDataPath))
-            const includes = [
-                "BaseCore", "Crafter", "Teleporter"
-            ]
             const strData = []
             const shortenAndTranslate = (marr) => {
+                if (!marr) {
+                    return marr
+                }
                 const key = marr[1].split("'").join("").split("/").pop().split("\.").pop()
                 return translation.get(key) ?? key;
             }
             const buildStr = () => {
-                const fb = buildings//.filter(b => includes.indexOf(b[1].spawnData.entityConfigDataPath) >= 0)
+                const fb = buildings
                 strData.length = 0
                 const fs = fb.map(b => {
                     return {
@@ -680,28 +682,13 @@ class MapComponent {
                         path: b[1].spawnData.entityConfigDataPath.split("/").slice(-2, -1).pop(),
                         name: itemData.CrBuildingCustomNameSubsystem.customNames[b[0]],
                         mainInventoryContainer: b[1].fragmentValues.map(v => {
-                            const marr = v.match(/MainInventoryContainer.*ItemDataBase=\"([^,]*)\"/)
-                            if (marr) {
-                                return shortenAndTranslate(marr)
-                            } else {
-                                return null
-                            }
+                            return shortenAndTranslate(v.match(/MainInventoryContainer.*ItemDataBase=\"([^,]*)\"/))
                         }).filter(Boolean).pop(),
                         itemTypeFilter: b[1].fragmentValues.map(v => {
-                            const marr = v.match(/ItemTypeFilter=\(\"([^,]*)\"/)
-                            if (marr) {
-                                return shortenAndTranslate(marr)
-                            } else {
-                                return null
-                            }
+                            return shortenAndTranslate(v.match(/ItemTypeFilter=\(\"([^,]*)\"/))
                         }).filter(Boolean).pop(),
                         currentRecipe: b[1].fragmentValues.map(v => {
-                            const marr = v.match(/CurrentRecipe=\"([^,]*)\"/)
-                            if (marr) {
-                                return shortenAndTranslate(marr)
-                            } else {
-                                return null
-                            }
+                            return shortenAndTranslate(v.match(/CurrentRecipe=\"([^,]*)\"/))
                         }).filter(Boolean).pop(),
                         translation: b[1].spawnData.transform.translation,
                     }
@@ -771,11 +758,11 @@ class MapComponent {
                     const type = s.path
                     const text = label ? [label, type].join(' - ') : type;
                     s.text = text
-                    s.icon = machineIcons.get(s.path) ?? 'b-icon'
+                    s.icon = machineMeta.get(s.path) ?? 'b-icon'
                     s.target = connections.find((c) => c.from == s.id)
-                    renderMarker({ id: s.id, icon: s.icon, text: s.text, x: s.x, y: s.y }, opt.ds, entities)
+                    renderMarker({ id: s.id, path: type, icon: s.icon, text: s.text, x: s.x, y: s.y }, opt.ds, entities)
                 }
-                renderMarkerList("", entities)
+                renderMarkerList("")
                 lps.forEach(lp => lp.remove())
                 connections.forEach(element => {
                     const from = strData.find(e => e.id === element.from)
@@ -802,30 +789,8 @@ class MapComponent {
                 fieldFn('Map ratio y', { $input: (ev) => { opt.ry = +ev.target.value; render(opt) }, value: opt.ry, type: "number" }),
                 fieldFn('Map offset x', { $input: (ev) => { opt.ox = +ev.target.value; render(opt) }, value: opt.ox, type: "number" }),
                 fieldFn('Map offset y', { $input: (ev) => { opt.oy = +ev.target.value; render(opt) }, value: opt.oy, type: "number" }),
-                ...[...paths.values()].map(p => n('label', [n('input', [], {
-                    type: "checkbox", checked: includes.indexOf(p) >= 0, $click: (ev) => {
-                        if (ev.target.checked) {
-                            includes.push(p)
-                        } else {
-                            includes.splice(includes.indexOf(p), 1)
-                        }
-                        render(opt)
-                    }
-                }), p.split("/")[p.split("/").length - 2]]))
             ], { style: "position:fixed; top:0;left:0; display:flex;flex-direction:column; max-width: 300px; max-height: 100vh; overflow:auto; background: #333c" })
             //document.body.appendChild(bx)
-        }
-
-        function readMarkerInfo(markerContent) {
-            try {
-                const parsedMarkers = deserialize(markerContent)
-                config().markers = parsedMarkers
-                updateLocalConfig(config())
-            } catch (e) {
-                console.error(e)
-                alert("failed to read markers")
-                return
-            }
         }
 
         function exportMarkers() {
@@ -864,13 +829,13 @@ class MapComponent {
 
         /**
          * 
-         * @param {*} filter 
-         * @param {Map} entities 
+         * @param {String|null} [filter]
          */
         function renderMarkerList(filter = "") {
             markerList.innerHTML = '';
             config().markers.forEach(md => {
-                const shouldDisplay = (md.icon + ' ' + md.text).toLowerCase().indexOf(filter.toLowerCase()) > -1
+                const text = machineMeta.get(md.text)?.name ?? md.text;
+                const shouldDisplay = (text).toLowerCase().indexOf((filter ?? "").toLowerCase()) > -1
                 if (shouldDisplay) {
                     const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
                     const markerRow = n('div', [markerLink(md), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
@@ -905,23 +870,19 @@ class MapComponent {
             });
         }
 
-        const machineIcons = new Map([
-            ["PackageSender", "sender-icon"],
-            ["PackageReceiver", "receiver-icon"],
-            ["BaseCore", "core-icon"],
-            ["Teleporter", "tp-icon"],
-        ])
         function asLeafletCoord(s) {
             return [(s.y / 16) * -1, s.x / 16]
         }
 
-        const iconContent = new Map([
-
-        ])
-
+        /**
+         * 
+         * @param {*} md 
+         * @param {*} ds 
+         * @param {Map} [entries]
+         */
         const renderMarker = (md, ds = 0, entries = undefined) => {
-            const di = L.divIcon({ className: md.icon, html: iconContent.get(md.icon) ?? "" })
-            const marker = L.marker(asLeafletCoord(md), { title: md.text, icon: di })
+            const di = L.divIcon({ className: machineMeta.get(md.path)?.icon ?? 'b-icon' })
+            const marker = L.marker(asLeafletCoord(md), { title: machineMeta.get(md.path)?.name ?? md.text, icon: di })
             markers.push(marker.addTo(leafmap));
             if (entries) {
                 entries.set(md.id, { marker, meta: md })
@@ -937,7 +898,7 @@ class MapComponent {
             event.preventDefault()
         }
 
-        function focusMarkerAndScroll(md, map) {
+        function focusMarkerAndScroll(md, map, instant = false) {
             selectedId = md.id
             sContainer.scrollTop = md.y - (sContainer.clientHeight / 2)
             sContainer.scrollLeft = md.x - (sContainer.clientWidth / 2)
@@ -947,7 +908,7 @@ class MapComponent {
                 const marker = entities.get(md.id).marker
                 marker.getElement().classList.add("highlight")
                 focused.push(marker)
-                leafmap.panTo(marker.getLatLng(), { animate: true, duration: 1 })
+                leafmap.panTo(marker.getLatLng(), instant ? {} : { animate: true, duration: 1 })
             }, 200);
             // TODO: focus
             // removeFocus(markerLayer)
@@ -968,14 +929,12 @@ class MapComponent {
             }
         }
 
-        function createMap(base = "tiles") {
-            // return n('div', createTiles(base), {style: `width: ${maxX * tileWidth}px; height: ${maxY * tileWidth}px; font-size: 0; line-height: 0; position: absolute; top: 0; left: 0; cursor: all-scroll;` })
+        function createMap() {
             const mp = n('div', [], { style: "width: 100%; height: 100%;" })
             setTimeout(() => {
                 mp.width = mp.getBoundingClientRect().width
                 mp.height = mp.getBoundingClientRect().height
                 setTimeout(() => {
-                    const L = window.L
                     leafmap = L.map(mp, {
                         crs: L.CRS.Simple,
                         minZoom: 0,
@@ -988,7 +947,7 @@ class MapComponent {
                         noWrap: true
                     }).addTo(leafmap);
 
-                    leafmap.setView([-128, 128], 5);
+                    leafmap.setView([-140, 70], 5);
 
                     const Legend = L.Control.extend({
                         onAdd() {
@@ -999,7 +958,14 @@ class MapComponent {
                             container.style.display = "flex"
                             container.style.flexDirection = "column"
                             container.style.gap = "2px";
-                            [...machineIcons.entries()].forEach(([k, v]) => container.append(n('div', [n('div', [], { class: v, style: "min-width: 1rem; min-height: 1rem" }), k], { style: "color:black;display: flex;  gap: 5px;  flex-wrap: owrap;  align-items: center;" })))
+                            [...machineMeta.entries()].forEach(([k, v]) => {
+                                if (k == "ZiplineVariants") {
+                                    return
+                                }
+                                const icon = n('div', [], { class: v.icon, style: "min-width: 1rem; min-height: 1rem" })
+                                container.append(n('div', [icon, v.name], { style: "color:black;display: flex;  gap: 5px;  flex-wrap: owrap;  align-items: center;" }))
+                            }
+                            )
                             return container;
                         }
                     });
@@ -1007,7 +973,7 @@ class MapComponent {
                     const zoomViewerControl = (new Legend()).addTo(leafmap);
 
                     markerFilterSignal.subscribe((filter) => {
-                        renderMarkerList(filter, entities)
+                        renderMarkerList(filter)
                     })
                     connectionsSignal.subscribe((active) => {
                         if (active) {
@@ -1021,7 +987,7 @@ class MapComponent {
                         setTimeout(() => {
                             renderMarkers()
                         }, 30)
-                        renderMarkerList(markerFilterSignal.value, entities)
+                        renderMarkerList(markerFilterSignal.value)
                     })
                 }, 10);
             }, 10)
@@ -1040,11 +1006,12 @@ class MapComponent {
         attachCallbacks.push(
             (id) => {
                 if (id === 0 || id) {
-                    focusMarkerAndScroll(markerById(config(), id), leafmap)
+                    focusMarkerAndScroll(markerById(config(), id), leafmap, !leafmap)
                 } else {
                     removeFocus(map)
-                    container.scrollTop = 1954
-                    container.scrollLeft = 915
+                    if (leafmap) {
+                        leafmap.setView([-140, 70], 5);
+                    }
                 }
             }
         )
@@ -1362,7 +1329,8 @@ function hookIntoNav() {
 }
 
 function key() {
-    return window.location.href.indexOf("localhost") > -1 ? "local:crafty" : "crafty"
+    return "crafty"
+    // return window.location.href.indexOf("localhost") > -1 ? "local:crafty" : "crafty"
 }
 
 function saveInternal(cfg) {
