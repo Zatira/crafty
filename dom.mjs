@@ -48,7 +48,11 @@ function createEl(type, staticId) {
 
 export function n(type, children = [], opts = {}, staticId = "") {
     const el = createEl(type, staticId)
-    el.replaceChildren(...children)
+    if (Array.isArray(children)) {
+        el.replaceChildren(...children)
+    } else {
+        el.replaceChildren(children)
+    }
     if (type === "button" && !opts.type) {
         opts.type = "button"
     }

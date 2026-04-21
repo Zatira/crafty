@@ -1,0 +1,7113 @@
+[
+  {
+    "type": "factory",
+    "internalId": "DA_AcidExtractor",
+    "recipes": [
+      "CR_SulphurOre"
+    ],
+    "power": 40,
+    "powerType": "Consumer",
+    "heat": 60,
+    "icon": "UI/Buildings/Icons/T_AcidExtractor_Icon",
+    "name": "Schwefel-Extraktor",
+    "description": "Wird verwendet, um Schwefel abzubauen. Kann nur auf Schwefel-Vorkommen platziert werden und nicht in Anwesenheit ätzender Gase."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Assembler",
+    "recipes": [
+      "CR_Accumulator",
+      "CR_Generator",
+      "CR_Electromagnet",
+      "CR_PressureTank",
+      "CR_Resonator",
+      "CR_Condenser",
+      "CR_LaserEmitter",
+      "CR_Scanner",
+      "CR_Uberfilament",
+      "CR_OnboardInstruments",
+      "CR_Grenade",
+      "CR_PseudorubberInsulator",
+      "CR_PlasticDust"
+    ],
+    "power": 60,
+    "powerType": "Consumer",
+    "heat": 150,
+    "icon": "UI/Buildings/Icons/T_Assembler_Icon",
+    "name": "Montierer",
+    "description": "Eine konventionelle Produktionsanlage. Verwendet Nanobereichsdruck, um Produkte herzustellen."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Crafter",
+    "recipes": [
+      "CR_BasicBuildingMaterial",
+      "CR_PistolAmmoItem",
+      "CR_TitaniumRod",
+      "CR_WolframWire",
+      "CR_CalciteSheets",
+      "CR_TitaniumBeam",
+      "CR_TitaniumSheet",
+      "CR_WolframPlate",
+      "CR_Rotor",
+      "CR_Tube",
+      "CR_Gyroscope",
+      "CR_Stator",
+      "CR_Syringe"
+    ],
+    "power": 10,
+    "powerType": "Consumer",
+    "heat": 5,
+    "icon": "UI/Buildings/Icons/T_Crafter_Icon",
+    "name": "Fabrikator",
+    "description": "Eine einfache Produktionsanlage. Verwendet Nanobereichsdruck, um Produkte herzustellen."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_CrafterTier2",
+    "recipes": [
+      "CR_TitaniumRod_v2",
+      "CR_TitaniumSheet_v2",
+      "CR_WolframPlate_v2",
+      "CR_WolframWire_v2",
+      "CR_Rotor_v2",
+      "CR_Tube_v2",
+      "CR_Stator_v2"
+    ],
+    "power": 25,
+    "powerType": "Consumer",
+    "heat": 8,
+    "icon": "UI/Buildings/Icons/T_CrafterT2_Icon",
+    "name": "Fabrikator V. 2",
+    "description": "Eine verbesserte einfache Produktionsanlage. Verwendet Nanobereichsdruck, um Produkte herzustellen. Bietet optimierte Anleitungen für eine höhere Produktionsausbeute."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Exporter",
+    "power": 10,
+    "powerType": "Consumer",
+    "heat": 5,
+    "icon": "Buildings/Exporter/T_Exporter_Icon",
+    "name": "Orbitaler Frachttransporter",
+    "description": "Schickt bereitgestellte Gegenstände zu den Konzernen. Jedes gesendete Produkt erhöht deinen Wert und deine Reputation beim ausgewählten Unternehmen."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_ExporterTier2",
+    "power": 40,
+    "powerType": "Consumer",
+    "heat": 20,
+    "icon": "UI/Buildings/Icons/T_ExporterTier2_Icon",
+    "name": "Orbitaler Frachttransporter V. 2",
+    "description": "Schickt Gegenstände zu den Konzernen. Jedes gesendete Produkt erhöht deinen Wert und deine Reputation beim ausgewählten Unternehmen. Ermöglicht den Versand optimierter Produkte an die Konzerne."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Factory",
+    "recipes": [
+      "CR_Scafolding",
+      "CR_QuantumTranqualizer",
+      "CR_Anti-RadiationCovers",
+      "CR_Nanosyringe",
+      "CR_Airlock",
+      "CR_CarbonSonar",
+      "CR_RTSC",
+      "CR_RNAStabilizer",
+      "CR_IonThrusters",
+      "CR_RocketFuel"
+    ],
+    "power": 700,
+    "powerType": "Consumer",
+    "heat": 500,
+    "icon": "UI/Buildings/Icons/T_Factory_Icon",
+    "name": "Konstruktisator",
+    "description": "Eine fortschrittliche Produktionsanlage. Verwendet Nanobereichsdruck, um Produkte herzustellen."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_FactoryTier2",
+    "recipes": [
+      "CR_Condenser_v2",
+      "CR_IonInjector_v2",
+      "CR_LaserEmitter_v2",
+      "CR_Scanner_v2",
+      "CR_Superconductor_v2"
+    ],
+    "power": 700,
+    "powerType": "Consumer",
+    "heat": 500,
+    "icon": "UI/Buildings/Icons/T_FactoryTier2_Icon",
+    "name": "Konstruktisator V. 2",
+    "description": "Eine verbesserte fortschrittliche Produktionsanlage. Verwendet Nanobereichsdruck, um Produkte herzustellen. Bietet optimierte Anleitungen für eine höhere Produktionsausbeute."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Forge",
+    "recipes": [
+      "CR_GoethiteIngot",
+      "CR_UberWolfram",
+      "CR_UberTitanium"
+    ],
+    "power": 200,
+    "powerType": "Consumer",
+    "heat": 180,
+    "icon": "UI/Buildings/Icons/T_Forge_Icon",
+    "name": "Pyroschmiede",
+    "description": "Raffiniert Goethit in seiner natürlichen Form zu Produkten."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Furnace",
+    "recipes": [
+      "CR_WolframPowder",
+      "CR_CalciumPowder",
+      "CR_Ceramics",
+      "CR_TitaniumHousing",
+      "CR_Glass",
+      "CR_Coil",
+      "CR_HeatResistantSheet",
+      "CR_SilicaSand",
+      "CR_Electronics",
+      "CR_Explosive",
+      "CR_HardeningAgent",
+      "CR_Supermagnet"
+    ],
+    "power": 20,
+    "powerType": "Consumer",
+    "heat": 8,
+    "icon": "UI/Buildings/Icons/T_Furnace_Icon",
+    "name": "Schmelzhütte",
+    "description": "Eine einfache Produktionsanlage. Nutzt Hitze, um Produkte herzustellen."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_FurnaceTier2",
+    "recipes": [
+      "CR_CalciumPowder_v2",
+      "CR_WolframPowder_v2",
+      "CR_Ceramics_v2",
+      "CR_Explosive_v2",
+      "CR_Glass_v2",
+      "CR_HeatResistantSheet_v2",
+      "CR_HardeningAgent_v2"
+    ],
+    "power": 50,
+    "powerType": "Consumer",
+    "heat": 14,
+    "icon": "UI/Buildings/Icons/T_FurnaceTier2_Icon",
+    "name": "Schmelzhütte V. 2",
+    "description": "Eine verbesserte einfache Produktionsanlage. Nutzt Hitze, um Produkte herzustellen. Bietet optimierte Anleitungen für eine höhere Produktionsausbeute."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_GasExtractor",
+    "recipes": [
+      "CR_Helium"
+    ],
+    "power": 15,
+    "powerType": "Consumer",
+    "heat": 60,
+    "icon": "UI/Buildings/Icons/T_GasExtractor_Icon",
+    "name": "Helium-3-Extraktor",
+    "description": "Wird verwendet, um Helium-3 zu extrahieren. Kann nur auf Helium-3-Vorkommen platziert werden."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Hammer",
+    "recipes": [
+      "CR_IntermediateBuildingMaterial",
+      "CR_StandardAmmo",
+      "CR_ShotgunAmmo",
+      "CR_HeavyAmmo",
+      "CR_Impeller",
+      "CR_Nozzle",
+      "CR_Battery",
+      "CR_Turbine",
+      "CR_Valve",
+      "CR_ElectromagneticCoil",
+      "CR_Pump",
+      "CR_ReinforcedFrame",
+      "CR_ReinforcedHousing",
+      "CR_GoethiteLattice",
+      "CR_HeatShield",
+      "CR_IonStabilizer"
+    ],
+    "power": 30,
+    "powerType": "Consumer",
+    "heat": 15,
+    "icon": "UI/Buildings/Icons/T_Hammer_Icon",
+    "name": "Megapresse",
+    "description": "Eine konventionelle Produktionsanlage. Verwendet Hochgeschwindigkeitsmaschinen, um Produkte herzustellen."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_LaserDrill",
+    "recipes": [
+      "CR_GoethiteOre_LaserDrill"
+    ],
+    "power": 250,
+    "powerType": "Consumer",
+    "heat": 200,
+    "icon": "UI/Buildings/Icons/T_LaserDrill_Icon",
+    "name": "Laserbohrer",
+    "description": "Wird verwendet, um komplexere Erze abzubauen. Kann nur auf Goethit-Vorkommen platziert werden."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_LiquidExtractor",
+    "recipes": [
+      "CR_MagicOilOre"
+    ],
+    "power": 400,
+    "powerType": "Consumer",
+    "heat": 300,
+    "icon": "UI/Buildings/Icons/T_LiquidExtractor_Icon",
+    "name": "Öl-Extraktor",
+    "description": "Wird verwendet, um Fortudium abzubauen. Kann nur auf Fortudium-Vorkommen platziert werden."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_MechanicalDrill",
+    "recipes": [
+      "CR_WolframOre_MechanicalDrill",
+      "CR_CalciumOre_MechanicalDrill",
+      "CR_TitaniumOre_MechanicalDrill"
+    ],
+    "power": 5,
+    "powerType": "Consumer",
+    "heat": 3,
+    "icon": "UI/Buildings/Icons/T_MechanicalDrill_Icon",
+    "name": "Erzschürfer",
+    "description": "In der Frühphase der Mission von entscheidender Bedeutung. Wird verwendet, um einfache Erze abzubauen. Kann nur auf Vorkommen von Titan, Wolfram und Calcium platziert werden."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_MechanicalDrillTier2",
+    "recipes": [
+      "CR_WolframOre_MechanicalDrillTier2",
+      "CR_CalciumOre_MechanicalDrillTier2",
+      "CR_TitaniumOre_MechanicalDrillTier2"
+    ],
+    "power": 30,
+    "powerType": "Consumer",
+    "heat": 18,
+    "icon": "UI/Buildings/Icons/T_MechanicalDrillT2_Icon",
+    "name": "Erzschürfer V. 2",
+    "description": "Eine verbesserte Version des Erzschürfers mit einer erhöhten Abbaugeschwindigkeit. Kann nur auf Vorkommen von Titan, Wolfram und Calcium platziert werden."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_MilitaryAssembler",
+    "recipes": [
+      "CR_Biofilament",
+      "CR_Converter",
+      "CR_Cyclotrone",
+      "CR_RocketEngine",
+      "CR_TrackingDevice",
+      "CR_Dome",
+      "CR_IonBomb",
+      "CR_RTSCGenerator",
+      "CR_SatelliteBody",
+      "CR_SyntheticDNA"
+    ],
+    "power": 850,
+    "powerType": "Consumer",
+    "heat": 650,
+    "icon": "UI/Buildings/Icons/T_MilitaryAssembler_Icon",
+    "name": "Fakturator",
+    "description": "Eine fortschrittliche Produktionsanlage. Verwendet Hochgeschwindigkeitsmaschinen, um Produkte herzustellen."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Pressurizer",
+    "recipes": [
+      "CR_RefinedOil"
+    ],
+    "power": 150,
+    "powerType": "Consumer",
+    "heat": 100,
+    "icon": "UI/Buildings/Icons/T_Pressurizer_icon",
+    "name": "Raffinerie",
+    "description": "Raffiniert Fortudium in seiner natürlichen Form zu Produkten."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Refinery",
+    "recipes": [
+      "CR_SulphuricAcid",
+      "CR_PressurizedHelium"
+    ],
+    "power": 40,
+    "powerType": "Consumer",
+    "heat": 60,
+    "icon": "UI/Buildings/Icons/T_RefineryIcon",
+    "name": "Druckhalter",
+    "description": "Raffiniert Helium und Schwefel zu Produkten."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Smelter",
+    "recipes": [
+      "CR_TitaniumBar",
+      "CR_WolframBar",
+      "CR_CalciumBlock"
+    ],
+    "power": 5,
+    "powerType": "Consumer",
+    "heat": 3,
+    "icon": "UI/Buildings/Icons/T_Smelter_Icon",
+    "name": "Schmelzofen",
+    "description": "Raffiniert Titan, Wolfram und Calcium in ihrer natürlichen Form zu Produkten."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_SynthetizerTier2",
+    "recipes": [
+      "CR_PressurizedHelium_v2",
+      "CR_SulphuricAcid_v2",
+      "CR_LiquidHelium_v2",
+      "CR_SyntheticResin_v2"
+    ],
+    "power": 180,
+    "powerType": "Consumer",
+    "heat": 250,
+    "icon": "UI/Buildings/Icons/T_SynthetizerTier2_Icon",
+    "name": "Aufbereiter V. 2",
+    "description": "Eine verbesserte konventionelle Produktionsanlage. Nutzt chemische Reaktionen, um Produkte herzustellen. Bietet optimierte Anleitungen für eine höhere Produktionsausbeute."
+  },
+  {
+    "type": "factory",
+    "internalId": "DA_Synthetizer",
+    "recipes": [
+      "CR_SyntheticResin",
+      "CR_LiquidHelium",
+      "CR_Lens",
+      "CR_Nanofibre",
+      "CR_IonInjector",
+      "CR_Superconductor",
+      "CR_GoethitePowder",
+      "CR_Epoxy",
+      "CR_SubstanceFHS-135-493",
+      "CR_UberOil",
+      "CR_BasicFuel",
+      "CR_OrganicCompound",
+      "CR_Aerogel",
+      "CR_SyntheticProtein"
+    ],
+    "power": 60,
+    "powerType": "Consumer",
+    "heat": 150,
+    "icon": "UI/Buildings/Icons/T_Synthetizer_Icon",
+    "name": "Aufbereiter",
+    "description": "Eine konventionelle Produktionsanlage. Nutzt chemische Reaktionen, um Produkte herzustellen."
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Accumulator",
+    "icon": "UI/ItemIcons/T_Accumulator_Icon",
+    "name": "Akkumulator",
+    "quantity": 1,
+    "output": "I_Accumulator",
+    "time": 5,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Electronics",
+        "amount": 2
+      },
+      {
+        "id": "I_Stator",
+        "amount": 1
+      },
+      {
+        "id": "I_Battery",
+        "amount": 1
+      }
+    ],
+    "level": 7
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Aerogel",
+    "icon": "UI/ItemIcons/T_Aerogel_Icon",
+    "name": "Aerogel",
+    "quantity": 2,
+    "output": "I_Aerogel",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_GoethitePowder",
+        "amount": 4
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 6
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GoethitePowder",
+        "amount": 600
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 1000
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Airlock",
+    "icon": "UI/ItemIcons/T_Airlock_Icon",
+    "name": "Luftschleuse",
+    "quantity": 1,
+    "output": "I_Airlock",
+    "time": 12,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Scafolding",
+        "amount": 1
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 1
+      },
+      {
+        "id": "I_Uberfilament",
+        "amount": 1
+      },
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 200
+      },
+      {
+        "id": "I_Scafolding",
+        "amount": 600
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 300
+      },
+      {
+        "id": "I_Uberfilament",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 12
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Anti-RadiationCovers",
+    "icon": "UI/ItemIcons/T_Anti-RadiationCovers_Icon",
+    "name": "Strahlenschutzabdeckung",
+    "quantity": 1,
+    "output": "I_Anti-RadiationCovers",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 2
+      },
+      {
+        "id": "I_ReinforcedFrame",
+        "amount": 1
+      },
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 1
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Anti-RadiationCoversBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 500
+      },
+      {
+        "id": "I_ReinforcedFrame",
+        "amount": 500
+      },
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 11
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_AntimatterGenerator",
+    "icon": "UI/ItemIcons/T_AntimatterGenerator_Icon",
+    "name": "Antimateriegenerator",
+    "quantity": 1,
+    "output": "I_AntimatterGenerator",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_RTSC",
+        "amount": 2
+      },
+      {
+        "id": "I_Cyclotrone",
+        "amount": 1
+      },
+      {
+        "id": "I_Anti-RadiationCovers",
+        "amount": 2
+      },
+      {
+        "id": "I_Rotor",
+        "amount": 2
+      },
+      {
+        "id": "I_Stator",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_AntimatterGeneratorBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 14,
+    "faction": "MoonCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ArcReactor",
+    "icon": "UI/ItemIcons/T_ArcReactor_Icon",
+    "name": "ARC-Reaktor",
+    "quantity": 1,
+    "output": "I_ArcReactor",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_RTSCGenerator",
+        "amount": 1
+      },
+      {
+        "id": "I_AntimatterGenerator",
+        "amount": 1
+      },
+      {
+        "id": "I_ContainmentVessel",
+        "amount": 1
+      },
+      {
+        "id": "I_ReinforcedFrame",
+        "amount": 2
+      },
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ArcReactorBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1200
+      }
+    ],
+    "level": 15,
+    "faction": "MoonCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ArcReactorMaxLvl",
+    "icon": "UI/ItemIcons/T_ArcReactor_Icon",
+    "name": "ARC-Reaktor",
+    "quantity": 1,
+    "output": "I_ArcReactor",
+    "time": 5,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_RTSCGenerator",
+        "amount": 1
+      },
+      {
+        "id": "I_AntimatterGenerator",
+        "amount": 1
+      },
+      {
+        "id": "I_ContainmentVessel",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ArcReactor",
+        "amount": 1
+      }
+    ],
+    "level": 10,
+    "faction": "MoonCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ArmoryToken_ItemPrinter",
+    "icon": "UI/ItemIcons/T_GriffithsCorpWhite_Icon",
+    "name": "Kriegsanleihen",
+    "quantity": 100,
+    "output": "I_ArmoryToken",
+    "time": 0,
+    "description": "Wird verwendet, um neue Waffen und Mods in der Verbesserungsstation für Ausrüstung freizuschalten.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_BasicBuildingMaterial",
+    "icon": "UI/ItemIcons/T_BasicBuildingMaterial",
+    "name": "Einfaches Baumaterial",
+    "quantity": 10,
+    "output": "I_BasicBuildingMaterial",
+    "time": 2,
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung einfacher Konstruktionen.",
+    "ingredients": [
+      {
+        "id": "I_WolframOre",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumOre",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 100
+      },
+      {
+        "id": "I_MeteorCore",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_BasicBuildingMaterial_ItemPrinter",
+    "icon": "UI/ItemIcons/T_BasicBuildingMaterial",
+    "name": "Einfaches Baumaterial",
+    "quantity": 10,
+    "output": "I_BasicBuildingMaterial",
+    "time": 0,
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung einfacher Konstruktionen.",
+    "ingredients": [
+      {
+        "id": "I_WolframOre",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumOre",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_BasicBuildingMaterial_ItemPrinterELM",
+    "icon": "UI/ItemIcons/T_BasicBuildingMaterial_Recipe_Icon",
+    "name": "Einfaches Baumaterial",
+    "quantity": 1,
+    "output": "I_BasicBuildingMaterial",
+    "time": 0,
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung einfacher Konstruktionen.",
+    "ingredients": [
+      {
+        "id": "I_ElementaryBuildingMaterial",
+        "amount": 10
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ElementaryBuildingMaterial",
+        "amount": 2000
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_BasicBuildingMaterial_MaterialCrafter",
+    "icon": "UI/ItemIcons/T_BasicBuildingMaterial",
+    "name": "Einfaches Baumaterial",
+    "quantity": 10,
+    "output": "I_BasicBuildingMaterial",
+    "time": 5,
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung einfacher Konstruktionen.",
+    "ingredients": [
+      {
+        "id": "I_WolframOre",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumOre",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_BasicCoolant",
+    "icon": "WhiteSquareTexture",
+    "quantity": 5,
+    "output": "I_CoolantBasic",
+    "time": 10,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_CleanWater",
+        "amount": 5
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_BasicFuel",
+    "icon": "UI/ItemIcons/T_BasicFuel_Icon",
+    "name": "Einfacher Treibstoff",
+    "quantity": 1,
+    "output": "I_BasicFuel",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_WolframPowder",
+        "amount": 4
+      },
+      {
+        "id": "I_GoethitePowder",
+        "amount": 2
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 4
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_WolframPowder",
+        "amount": 800
+      },
+      {
+        "id": "I_GoethitePowder",
+        "amount": 600
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Battery",
+    "icon": "UI/ItemIcons/T_Battery_Icon",
+    "name": "Batterie",
+    "quantity": 1,
+    "output": "I_Battery",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Coil",
+        "amount": 2
+      },
+      {
+        "id": "I_Electronics",
+        "amount": 1
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Electronics",
+        "amount": 200
+      },
+      {
+        "id": "I_Coil",
+        "amount": 300
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1500
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Biofilament",
+    "icon": "UI/ItemIcons/T_Biofilament_Icon",
+    "name": "Biofilament",
+    "quantity": 1,
+    "output": "I_Biofilament",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SyntheticProtein",
+        "amount": 2
+      },
+      {
+        "id": "I_RNAStabilizer",
+        "amount": 1
+      },
+      {
+        "id": "I_SubstanceFHS-135-493",
+        "amount": 4
+      },
+      {
+        "id": "I_Nanofibre",
+        "amount": 8
+      },
+      {
+        "id": "I_Superconductor",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Superconductor",
+        "amount": 100
+      },
+      {
+        "id": "I_SyntheticProtein",
+        "amount": 400
+      },
+      {
+        "id": "I_RNAStabilizer",
+        "amount": 300
+      },
+      {
+        "id": "I_SubstanceFHS-135-493",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 12
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Bioprinter",
+    "icon": "UI/ItemIcons/T_Bioprinter_Icon",
+    "name": "Biodrucker",
+    "quantity": 1,
+    "output": "I_Bioprinter",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Scanner",
+        "amount": 1
+      },
+      {
+        "id": "I_Biofilament",
+        "amount": 2
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 2
+      },
+      {
+        "id": "I_Nozzle",
+        "amount": 1
+      }
+    ],
+    "level": 13,
+    "faction": "FutureCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_CalciteSheets",
+    "icon": "UI/ItemIcons/T_CalciteSheets_Icon",
+    "name": "Kalzittafeln",
+    "quantity": 2,
+    "output": "I_CalciteSheets",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciumBlock",
+        "amount": 1
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_CalciumBlock",
+    "icon": "UI/ItemIcons/T_CalciumBlock_Icon",
+    "name": "Calciumblock",
+    "quantity": 2,
+    "output": "I_CalciumBlock",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciumOre",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_CalciumOre",
+        "amount": 1000
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_CalciumPowder",
+    "icon": "UI/ItemIcons/T_CalciumPowder_Icon",
+    "name": "Calciumpulver",
+    "quantity": 3,
+    "output": "I_CalciumPowder",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciumBlock",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_CalciumBlock",
+        "amount": 600
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_CalciumPowder_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_CalciumPowder_RecV2_Icon",
+    "name": "Calciumpulver",
+    "quantity": 10,
+    "output": "I_CalciumPowder",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciumBlock",
+        "amount": 2
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_CarbonSonar",
+    "icon": "UI/ItemIcons/T_CarbonSonar_Icon",
+    "name": "Kohlenstoffsonar",
+    "quantity": 1,
+    "output": "I_CarbonSonar",
+    "time": 12,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_IonStabilizer",
+        "amount": 1
+      },
+      {
+        "id": "I_QuantumTranqualizer",
+        "amount": 1
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 2
+      },
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 3
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 200
+      },
+      {
+        "id": "I_IonStabilizer",
+        "amount": 300
+      },
+      {
+        "id": "I_QuantumTranqualizer",
+        "amount": 300
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 12
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Ceramics",
+    "icon": "UI/ItemIcons/T_Ceramics_Icon",
+    "name": "Keramik",
+    "quantity": 2,
+    "output": "I_Ceramics",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciteSheets",
+        "amount": 1
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_WolframPowder",
+        "amount": 900
+      },
+      {
+        "id": "I_CalciteSheets",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 400
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Ceramics_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Ceramics_RecV2_Icon",
+    "name": "Keramik",
+    "quantity": 4,
+    "output": "I_Ceramics",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciteSheets",
+        "amount": 1
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 2
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 1
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_CleanWater",
+    "icon": "WhiteSquareTexture",
+    "quantity": 1,
+    "output": "I_CleanWater",
+    "time": 3,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "unlock": [
+      {
+        "id": "I_Accumulator",
+        "amount": 1
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Coil",
+    "icon": "UI/ItemIcons/T_Coil_Icon",
+    "name": "Induktor",
+    "quantity": 2,
+    "output": "I_Coil",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Tube",
+        "amount": 2
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 1
+      },
+      {
+        "id": "I_Ceramics",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Tube",
+        "amount": 600
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 300
+      },
+      {
+        "id": "I_Ceramics",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 600
+      }
+    ],
+    "level": 5
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Condenser",
+    "icon": "UI/ItemIcons/T_Condenser_Icon",
+    "name": "Kondensator",
+    "quantity": 1,
+    "output": "I_Condenser",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Resonator",
+        "amount": 1
+      },
+      {
+        "id": "I_Pump",
+        "amount": 3
+      },
+      {
+        "id": "I_Nanofibre",
+        "amount": 8
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_CondenserBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_Resonator",
+        "amount": 200
+      },
+      {
+        "id": "I_Nanofibre",
+        "amount": 300
+      },
+      {
+        "id": "I_Pump",
+        "amount": 100
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 3000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Condenser_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Condenser_RecV2_Icon",
+    "name": "Kondensator",
+    "quantity": 2,
+    "output": "I_Condenser",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Resonator",
+        "amount": 1
+      },
+      {
+        "id": "I_Pump",
+        "amount": 1
+      },
+      {
+        "id": "I_Nanofibre",
+        "amount": 2
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 1
+      },
+      {
+        "id": "I_BasicFuel",
+        "amount": 3
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ContainmentVessel",
+    "icon": "UI/ItemIcons/T_ContainmentVessel_Icon",
+    "name": "Eindämmungsgefäß",
+    "quantity": 1,
+    "output": "I_ContainmentVessel",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Anti-RadiationCovers",
+        "amount": 1
+      },
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 2
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 3
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 2
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 1
+      }
+    ],
+    "level": 12,
+    "faction": "MoonCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ControlSystems",
+    "icon": "UI/ItemIcons/T_ControlSystems_Icon",
+    "name": "Kontrollsysteme",
+    "quantity": 1,
+    "output": "I_ControlSystems",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Electronics",
+        "amount": 3
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 2
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 1
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 2
+      }
+    ],
+    "level": 11,
+    "faction": "GriffithsCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Converter",
+    "icon": "UI/ItemIcons/T_PlasmaOxygenConverter_Icon",
+    "name": "Konverter",
+    "quantity": 1,
+    "output": "I_Converter",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_LaserEmitter",
+        "amount": 2
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 1
+      },
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 4
+      },
+      {
+        "id": "I_UberOil",
+        "amount": 3
+      },
+      {
+        "id": "I_RTSC",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_UberOil",
+        "amount": 800
+      },
+      {
+        "id": "I_LaserEmitter",
+        "amount": 100
+      },
+      {
+        "id": "I_RTSC",
+        "amount": 300
+      },
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 13
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Cyclotrone",
+    "icon": "UI/ItemIcons/T_Cyclotrone_Icon",
+    "name": "Cyclotron",
+    "quantity": 1,
+    "output": "I_Cyclotrone",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Aerogel",
+        "amount": 8
+      },
+      {
+        "id": "I_Electromagnet",
+        "amount": 1
+      },
+      {
+        "id": "I_IonInjector",
+        "amount": 2
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 5
+      },
+      {
+        "id": "I_PlasticDust",
+        "amount": 5
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 800
+      },
+      {
+        "id": "I_Aerogel",
+        "amount": 800
+      },
+      {
+        "id": "I_PlasticDust",
+        "amount": 600
+      },
+      {
+        "id": "I_IonInjector",
+        "amount": 100
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 12
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Dome",
+    "icon": "UI/ItemIcons/T_Dome_Icon",
+    "name": "Kuppel",
+    "quantity": 1,
+    "output": "I_Dome",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Uberfilament",
+        "amount": 8
+      },
+      {
+        "id": "I_Condenser",
+        "amount": 2
+      },
+      {
+        "id": "I_Airlock",
+        "amount": 1
+      },
+      {
+        "id": "I_Scafolding",
+        "amount": 4
+      },
+      {
+        "id": "I_Converter",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Scafolding",
+        "amount": 500
+      },
+      {
+        "id": "I_Converter",
+        "amount": 300
+      },
+      {
+        "id": "I_Condenser",
+        "amount": 100
+      },
+      {
+        "id": "I_Airlock",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Electromagnet",
+    "icon": "UI/ItemIcons/T_Electromagnet_Icon",
+    "name": "Elektromagnet",
+    "quantity": 1,
+    "output": "I_Electromagnet",
+    "time": 5,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 3
+      },
+      {
+        "id": "I_SyntheticResin",
+        "amount": 3
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 200
+      },
+      {
+        "id": "I_SyntheticResin",
+        "amount": 400
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 200
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ElectromagneticCoil",
+    "icon": "UI/ItemIcons/T_ElectromagneticCoil_Icon",
+    "name": "Elektromagnetische Spule",
+    "quantity": 1,
+    "output": "I_ElectromagneticCoil",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Coil",
+        "amount": 1
+      },
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 1
+      },
+      {
+        "id": "I_WolframPlate",
+        "amount": 6
+      },
+      {
+        "id": "I_Supermagnet",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ElectromagneticCoilBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_Supermagnet",
+        "amount": 400
+      },
+      {
+        "id": "I_Coil",
+        "amount": 400
+      },
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1500
+      }
+    ],
+    "level": 7
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Electronics",
+    "icon": "UI/ItemIcons/T_Electronics_Icon",
+    "name": "Elektronik",
+    "quantity": 1,
+    "output": "I_Electronics",
+    "time": 5,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SilicaSand",
+        "amount": 2
+      },
+      {
+        "id": "I_Coil",
+        "amount": 1
+      },
+      {
+        "id": "I_Stator",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ElectronicsBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_SilicaSand",
+        "amount": 600
+      },
+      {
+        "id": "I_Coil",
+        "amount": 200
+      },
+      {
+        "id": "I_Stator",
+        "amount": 200
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 800
+      }
+    ],
+    "level": 5
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Epoxy",
+    "icon": "UI/ItemIcons/T_Epoxy_Icon",
+    "name": "Epoxid",
+    "quantity": 2,
+    "output": "I_Epoxy",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_LiquidHelium",
+        "amount": 1
+      },
+      {
+        "id": "I_GoethitePowder",
+        "amount": 3
+      },
+      {
+        "id": "I_SyntheticResin",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GoethitePowder",
+        "amount": 600
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 600
+      },
+      {
+        "id": "I_SyntheticResin",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Explosive",
+    "icon": "UI/ItemIcons/T_Explosive_Icon",
+    "name": "Chemikalien",
+    "quantity": 2,
+    "output": "I_Explosive",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SilicaSand",
+        "amount": 1
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 3
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ExplosiveBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_SilicaSand",
+        "amount": 600
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 1000
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 2000
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 800
+      }
+    ],
+    "level": 4
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Explosive_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Explosive_RecV2_Icon",
+    "name": "Chemikalien",
+    "quantity": 4,
+    "output": "I_Explosive",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciumPowder",
+        "amount": 1
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 2
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 4
+      },
+      {
+        "id": "I_GoethiteIngot",
+        "amount": 1
+      }
+    ],
+    "level": 4
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_FEAccessItem_ItemPrinter",
+    "icon": "UI/Buildings/Icons/T_PowerCell_Icon",
+    "name": "Energiezelle",
+    "quantity": 1,
+    "output": "I_PowerCell",
+    "time": 0,
+    "description": "Eine äußerst fortschrittliche und effiziente Energiezelle. Sie wird vermutlich für den Betrieb irgendeiner Maschine verwendet.",
+    "ingredients": [
+      {
+        "id": "I_Electronics",
+        "amount": 10
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 10
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Electronics",
+        "amount": 400
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Generator",
+    "icon": "UI/ItemIcons/T_Generator_Icon",
+    "name": "Generator",
+    "quantity": 1,
+    "output": "I_Generator",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Turbine",
+        "amount": 1
+      },
+      {
+        "id": "I_Battery",
+        "amount": 1
+      },
+      {
+        "id": "I_Nozzle",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Turbine",
+        "amount": 200
+      },
+      {
+        "id": "I_Nozzle",
+        "amount": 300
+      },
+      {
+        "id": "I_Battery",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1500
+      }
+    ],
+    "level": 7
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_GenomeAlternator",
+    "icon": "UI/ItemIcons/T_GenomeAlternator_Icon",
+    "name": "Genomalternator",
+    "quantity": 1,
+    "output": "I_GenomeAlternator",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_MolecularScalpel",
+        "amount": 1
+      },
+      {
+        "id": "I_SyntheticDNA",
+        "amount": 1
+      },
+      {
+        "id": "I_LaserEmitter",
+        "amount": 1
+      },
+      {
+        "id": "I_ReinforcedFrame",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GenomeAlternatorBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 14,
+    "faction": "FutureCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Glass",
+    "icon": "UI/ItemIcons/T_Glass_Icon",
+    "name": "Glas",
+    "quantity": 1,
+    "output": "I_Glass",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_HeliumOre",
+        "amount": 1
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_HeliumOre",
+        "amount": 2500
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 400
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Glass_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Glass_RecV2_Icon",
+    "name": "Glas",
+    "quantity": 4,
+    "output": "I_Glass",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 1
+      },
+      {
+        "id": "I_CalciteSheets",
+        "amount": 1
+      },
+      {
+        "id": "I_GoethiteIngot",
+        "amount": 1
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_GoethiteIngot",
+    "icon": "UI/ItemIcons/T_GoethiteIngot_Icon",
+    "name": "Goethitbarren",
+    "quantity": 10,
+    "output": "I_GoethiteIngot",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_GoethiteOre",
+        "amount": 1
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_GoethiteLattice",
+    "icon": "UI/ItemIcons/T_GoethiteLattice_Icon",
+    "name": "Goethitgitter",
+    "quantity": 2,
+    "output": "I_GoethiteLattice",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_GoethiteIngot",
+        "amount": 2
+      },
+      {
+        "id": "I_UberTitanium",
+        "amount": 2
+      },
+      {
+        "id": "I_UberWolfram",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GoethiteLatticeBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_GoethiteIngot",
+        "amount": 600
+      },
+      {
+        "id": "I_UberTitanium",
+        "amount": 400
+      },
+      {
+        "id": "I_UberWolfram",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_GoethitePowder",
+    "icon": "UI/ItemIcons/T_GoethitePowder_Icon",
+    "name": "Goethitpulver",
+    "quantity": 4,
+    "output": "I_GoethitePowder",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_GoethiteIngot",
+        "amount": 1
+      },
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 1
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GoethiteIngot",
+        "amount": 400
+      },
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 400
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Grenade",
+    "icon": "UI/ItemIcons/T_Grenade_Icon",
+    "name": "Explosive Ladung",
+    "quantity": 1,
+    "output": "I_Grenade",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 2
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GrenadeBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 800
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Gyroscope",
+    "icon": "UI/ItemIcons/T_Gyroscope_Icon",
+    "name": "Stabilisator",
+    "quantity": 1,
+    "output": "I_Gyroscope",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Rotor",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumRod",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GyroscopeBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_Rotor",
+        "amount": 100
+      },
+      {
+        "id": "I_TitaniumRod",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 600
+      }
+    ],
+    "level": 4
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_HardeningAgent",
+    "icon": "UI/ItemIcons/T_HardeningAgent_Icon",
+    "name": "Härtungsmittel",
+    "quantity": 2,
+    "output": "I_HardeningAgent",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 5
+      },
+      {
+        "id": "I_SilicaSand",
+        "amount": 1
+      },
+      {
+        "id": "I_Syringe",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_HardeningAgentBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_Syringe",
+        "amount": 300
+      },
+      {
+        "id": "I_SilicaSand",
+        "amount": 800
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1500
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_HardeningAgent_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_HardeningAgent_RecV2_Icon",
+    "name": "Härtungsmittel",
+    "quantity": 5,
+    "output": "I_HardeningAgent",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 2
+      },
+      {
+        "id": "I_SilicaSand",
+        "amount": 1
+      },
+      {
+        "id": "I_Syringe",
+        "amount": 1
+      },
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 1
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_HeatResistantSheet",
+    "icon": "UI/ItemIcons/T_HeatResistantSheet_Icon",
+    "name": "Hitzeresistente Tafel",
+    "quantity": 1,
+    "output": "I_HeatResistantSheet",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_WolframPlate",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumSheet",
+        "amount": 2
+      },
+      {
+        "id": "I_Glass",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_TitaniumSheet",
+        "amount": 600
+      },
+      {
+        "id": "I_WolframPlate",
+        "amount": 600
+      },
+      {
+        "id": "I_Glass",
+        "amount": 200
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 600
+      }
+    ],
+    "level": 4
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_HeatResistantSheet_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_HeatResistantSheet_RecV2_Icon",
+    "name": "Hitzeresistente Tafel",
+    "quantity": 5,
+    "output": "I_HeatResistantSheet",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_UberTitanium",
+        "amount": 1
+      },
+      {
+        "id": "I_UberWolfram",
+        "amount": 1
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 3
+      }
+    ],
+    "level": 4
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_HeatShield",
+    "icon": "UI/ItemIcons/T_HeatShield_Icon",
+    "name": "Hitzeschild",
+    "quantity": 2,
+    "output": "I_HeatShield",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Epoxy",
+        "amount": 3
+      },
+      {
+        "id": "I_Aerogel",
+        "amount": 3
+      },
+      {
+        "id": "I_Uberfilament",
+        "amount": 3
+      },
+      {
+        "id": "I_ReinforcedFrame",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_HeatShieldBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_Aerogel",
+        "amount": 400
+      },
+      {
+        "id": "I_Uberfilament",
+        "amount": 400
+      },
+      {
+        "id": "I_ReinforcedFrame",
+        "amount": 500
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 12
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_HeavyAmmo",
+    "icon": "Weapons/AmmoTypes/T_HeavyAmmoIcon",
+    "name": "Schwere Munition",
+    "quantity": 15,
+    "output": "I_HeavyAmmoItem",
+    "time": 6,
+    "description": "Kugeln, die für Scharfschützengewehre und andere Waffen mit großer Durchschlagskraft verwendet werden.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 24
+      },
+      {
+        "id": "I_TitaniumRod",
+        "amount": 6
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_HeavyAmmo_ItemPrinter",
+    "icon": "Weapons/AmmoTypes/T_HeavyAmmoIcon",
+    "name": "Schwere Munition",
+    "quantity": 6,
+    "output": "I_HeavyAmmoItem",
+    "time": 0,
+    "description": "Kugeln, die für Scharfschützengewehre und andere Waffen mit großer Durchschlagskraft verwendet werden.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 12
+      },
+      {
+        "id": "I_TitaniumRod",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Helium",
+    "icon": "UI/RawMaterialsIcons/T_Helium-3_Icon",
+    "name": "Helium-3",
+    "quantity": 8,
+    "output": "I_HeliumOre",
+    "time": 2,
+    "description": "Gas",
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Impeller",
+    "icon": "UI/ItemIcons/T_Impeller_Icon",
+    "name": "Antreiber",
+    "quantity": 1,
+    "output": "I_Impeller",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumRod",
+        "amount": 2
+      },
+      {
+        "id": "I_HeatResistantSheet",
+        "amount": 2
+      },
+      {
+        "id": "I_WolframPlate",
+        "amount": 1
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 1
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_IntermediateBuildingMaterial",
+    "icon": "UI/ItemIcons/T_IntermediateBuildingMaterial",
+    "name": "Besseres Baumaterial",
+    "quantity": 25,
+    "output": "I_IntermediateBuildingMaterial",
+    "time": 6,
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung verbesserter Konstruktionen.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 40
+      },
+      {
+        "id": "I_Coil",
+        "amount": 2
+      },
+      {
+        "id": "I_Glass",
+        "amount": 2
+      },
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_IntermediateBuildingMaterial",
+        "amount": 500
+      },
+      {
+        "id": "I_MeteorCore",
+        "amount": 10
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 500
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_IntermediateBuildingMaterial_ItemPrinter",
+    "icon": "UI/ItemIcons/T_IntermediateBuildingMaterial",
+    "name": "Besseres Baumaterial",
+    "quantity": 10,
+    "output": "I_IntermediateBuildingMaterial",
+    "time": 0,
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung verbesserter Konstruktionen.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 20
+      },
+      {
+        "id": "I_Coil",
+        "amount": 1
+      },
+      {
+        "id": "I_Glass",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 1000
+      },
+      {
+        "id": "I_Glass",
+        "amount": 100
+      },
+      {
+        "id": "I_Coil",
+        "amount": 100
+      },
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 100
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 300
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_IonBomb",
+    "icon": "UI/ItemIcons/T_IonBomb_Icon",
+    "name": "Ionenbombe",
+    "quantity": 1,
+    "output": "I_IonBomb",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_IonInjector",
+        "amount": 2
+      },
+      {
+        "id": "I_IonStabilizer",
+        "amount": 2
+      },
+      {
+        "id": "I_Grenade",
+        "amount": 6
+      },
+      {
+        "id": "I_TrackingDevice",
+        "amount": 1
+      },
+      {
+        "id": "I_Resonator",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_TrackingDevice",
+        "amount": 200
+      },
+      {
+        "id": "I_IonInjector",
+        "amount": 100
+      },
+      {
+        "id": "I_IonStabilizer",
+        "amount": 400
+      },
+      {
+        "id": "I_Grenade",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 13
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_IonInjector",
+    "icon": "UI/ItemIcons/T_IonInjector_Icon",
+    "name": "Ioneninjektor",
+    "quantity": 1,
+    "output": "I_IonInjector",
+    "time": 12,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Syringe",
+        "amount": 8
+      },
+      {
+        "id": "I_Electromagnet",
+        "amount": 2
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Syringe",
+        "amount": 400
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 100
+      },
+      {
+        "id": "I_Electromagnet",
+        "amount": 200
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 3000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_IonInjector_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_IonInjector_RecV2_Icon",
+    "name": "Ioneninjektor",
+    "quantity": 2,
+    "output": "I_IonInjector",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Syringe",
+        "amount": 4
+      },
+      {
+        "id": "I_Electromagnet",
+        "amount": 1
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 1
+      },
+      {
+        "id": "I_GoethiteLattice",
+        "amount": 1
+      },
+      {
+        "id": "I_UberOil",
+        "amount": 1
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_IonStabilizer",
+    "icon": "UI/ItemIcons/T_IonStabilizer_Icon",
+    "name": "Ionenstabilisator",
+    "quantity": 1,
+    "output": "I_IonStabilizer",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Epoxy",
+        "amount": 1
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 3
+      },
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 1
+      },
+      {
+        "id": "I_Grenade",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 200
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 400
+      },
+      {
+        "id": "I_Grenade",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_IonThrusters",
+    "icon": "UI/ItemIcons/T_IonThrusters_Icon",
+    "name": "Ionentriebwerk",
+    "quantity": 1,
+    "output": "I_IonThrusters",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Valve",
+        "amount": 1
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 1
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 1
+      },
+      {
+        "id": "I_RocketFuel",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_RocketFuel",
+        "amount": 600
+      },
+      {
+        "id": "I_Valve",
+        "amount": 400
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 600
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_LaserEmitter",
+    "icon": "UI/ItemIcons/T_LaserEmitter_Icon",
+    "name": "Laseremitter",
+    "quantity": 1,
+    "output": "I_LaserEmitter",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Lens",
+        "amount": 1
+      },
+      {
+        "id": "I_Resonator",
+        "amount": 1
+      },
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 6
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Resonator",
+        "amount": 200
+      },
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 300
+      },
+      {
+        "id": "I_Lens",
+        "amount": 200
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 3000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_LaserEmitter_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_LaserEmitter_RecV2_Icon",
+    "name": "Laseremitter",
+    "quantity": 2,
+    "output": "I_LaserEmitter",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Lens",
+        "amount": 1
+      },
+      {
+        "id": "I_Resonator",
+        "amount": 1
+      },
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 3
+      },
+      {
+        "id": "I_Grenade",
+        "amount": 1
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 1
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Lens",
+    "icon": "UI/ItemIcons/T_Lens_Icon",
+    "name": "Linse",
+    "quantity": 1,
+    "output": "I_Lens",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Glass",
+        "amount": 10
+      },
+      {
+        "id": "I_HardeningAgent",
+        "amount": 6
+      },
+      {
+        "id": "I_SyntheticResin",
+        "amount": 4
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_SyntheticResin",
+        "amount": 300
+      },
+      {
+        "id": "I_HardeningAgent",
+        "amount": 500
+      },
+      {
+        "id": "I_Glass",
+        "amount": 500
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_LiquidHelium",
+    "icon": "UI/ItemIcons/T_LiquidHelium_Icon",
+    "name": "Flüssiges Helium",
+    "quantity": 1,
+    "output": "I_LiquidHelium",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 1
+      },
+      {
+        "id": "I_HardeningAgent",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 400
+      },
+      {
+        "id": "I_HardeningAgent",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1500
+      }
+    ],
+    "level": 7
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_LiquidHelium_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_HeliumLiquid_RecV2_Icon",
+    "name": "Flüssiges Helium",
+    "quantity": 5,
+    "output": "I_LiquidHelium",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_PressurizedHelium",
+        "amount": 1
+      },
+      {
+        "id": "I_HardeningAgent",
+        "amount": 1
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 1
+      }
+    ],
+    "level": 7
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_MagicOilOre",
+    "icon": "UI/RawMaterialsIcons/T_Oil_Icon",
+    "name": "Fortudium",
+    "quantity": 1,
+    "output": "I_MagicOilOre",
+    "time": 6,
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_MarsHabitatBase",
+    "icon": "UI/ItemIcons/T_MarsHabitatBase_Icon",
+    "name": "Mars-Wohnkomplexbasis",
+    "quantity": 1,
+    "output": "I_MarsHabitatBase",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Uberfilament",
+        "amount": 2
+      },
+      {
+        "id": "I_Dome",
+        "amount": 1
+      },
+      {
+        "id": "I_Airlock",
+        "amount": 1
+      },
+      {
+        "id": "I_Pump",
+        "amount": 2
+      },
+      {
+        "id": "I_Scafolding",
+        "amount": 3
+      }
+    ],
+    "level": 13,
+    "faction": "SelenianCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_MECSPart",
+    "icon": "WhiteSquareTexture",
+    "name": "Zentraler Kern der Hauptmaschine",
+    "quantity": 1,
+    "output": "I_MECSPart",
+    "time": 0,
+    "description": "Der zentrale Kern, der für den Betrieb der Hauptmaschine der Anlage unerlässlich ist.",
+    "ingredients": [
+      {
+        "id": "I_Gyroscope",
+        "amount": 3
+      },
+      {
+        "id": "I_Generator",
+        "amount": 3
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 4
+      },
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 8
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_MegaMachine_Scenario_Test_Victory_Item",
+    "icon": "WhiteSquareTexture",
+    "quantity": 1,
+    "output": "I_Scenario_Victory_Item",
+    "time": 3,
+    "description": "Victory_Item",
+    "ingredients": [
+      {
+        "id": "I_Scenario_Item_A",
+        "amount": 1
+      },
+      {
+        "id": "I_Scenario_Item_B",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_MicroSatellite",
+    "icon": "UI/ItemIcons/T_MicroSatellite_Icon",
+    "name": "Mikrosatellit",
+    "quantity": 1,
+    "output": "I_MicroSatellite",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SatelliteBody",
+        "amount": 1
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 3
+      },
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 1
+      },
+      {
+        "id": "I_Electronics",
+        "amount": 4
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_MicroSatelliteBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1200
+      }
+    ],
+    "level": 14,
+    "faction": "CleverCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_MicroSatelliteMaxLvl",
+    "icon": "UI/ItemIcons/T_MicroSatellite_Icon",
+    "name": "Mikrosatellit",
+    "quantity": 1,
+    "output": "I_MicroSatellite",
+    "time": 10,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_SatelliteAssembly",
+        "amount": 1
+      },
+      {
+        "id": "I_RocketFuel",
+        "amount": 6
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_MicroSatellite",
+        "amount": 1
+      }
+    ],
+    "level": 10,
+    "faction": "CleverCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_MissileHousing",
+    "icon": "UI/ItemIcons/T_MissileHousing_Icon",
+    "name": "Raketengehäuse",
+    "quantity": 1,
+    "output": "I_MissileHousing",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_PressureTank",
+        "amount": 1
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 1
+      },
+      {
+        "id": "I_Nozzle",
+        "amount": 2
+      },
+      {
+        "id": "I_Valve",
+        "amount": 2
+      }
+    ],
+    "level": 11,
+    "faction": "GriffithsCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_MolecularScalpel",
+    "icon": "UI/ItemIcons/T_MolecularScalpel_Icon",
+    "name": "Molekularskalpell",
+    "quantity": 1,
+    "output": "I_MolecularScalpel",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Scanner",
+        "amount": 1
+      },
+      {
+        "id": "I_RNAStabilizer",
+        "amount": 1
+      },
+      {
+        "id": "I_Nanosyringe",
+        "amount": 2
+      },
+      {
+        "id": "I_Lens",
+        "amount": 2
+      },
+      {
+        "id": "I_UberOil",
+        "amount": 4
+      }
+    ],
+    "level": 13,
+    "faction": "FutureCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Nanofibre",
+    "icon": "UI/ItemIcons/T_Nanofibre_Icon",
+    "name": "Nanofaser",
+    "quantity": 2,
+    "output": "I_Nanofibre",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Tube",
+        "amount": 20
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 5
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 8
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Tube",
+        "amount": 1000
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Nanosyringe",
+    "icon": "UI/ItemIcons/T_Nanosyringe_Icon",
+    "name": "Nanospritze",
+    "quantity": 1,
+    "output": "I_Nanosyringe",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_HardeningAgent",
+        "amount": 1
+      },
+      {
+        "id": "I_Syringe",
+        "amount": 2
+      },
+      {
+        "id": "I_Nanofibre",
+        "amount": 1
+      },
+      {
+        "id": "I_SubstanceFHS-135-493",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_NanosyringeBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_SubstanceFHS-135-493",
+        "amount": 500
+      },
+      {
+        "id": "I_Syringe",
+        "amount": 600
+      },
+      {
+        "id": "I_Nanofibre",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 11
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_NeutrinoBomb",
+    "icon": "UI/ItemIcons/T_NeutrinoBomb_Icon",
+    "name": "Neutrinobombe",
+    "quantity": 1,
+    "output": "I_NeutrinoBomb",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_QuantumTranqualizer",
+        "amount": 2
+      },
+      {
+        "id": "I_IonBomb",
+        "amount": 1
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 3
+      },
+      {
+        "id": "I_ReinforcedFrame",
+        "amount": 1
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_NeutrinoBombBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 14,
+    "faction": "GriffithsCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_NeutrinoMissile",
+    "icon": "UI/ItemIcons/T_NeutrinoMissile_Icon",
+    "name": "Neutrinorakete",
+    "quantity": 1,
+    "output": "I_NeutrinoMissile",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_NeutrinoBomb",
+        "amount": 1
+      },
+      {
+        "id": "I_TrackingDevice",
+        "amount": 1
+      },
+      {
+        "id": "I_MissileHousing",
+        "amount": 1
+      },
+      {
+        "id": "I_ControlSystems",
+        "amount": 1
+      },
+      {
+        "id": "I_BasicFuel",
+        "amount": 4
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_NeutrinoMissileBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1200
+      }
+    ],
+    "level": 15,
+    "faction": "GriffithsCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_NeutrinoMissileMaxLvl",
+    "icon": "UI/ItemIcons/T_NeutrinoMissile_Icon",
+    "name": "Neutrinorakete",
+    "quantity": 1,
+    "output": "I_NeutrinoMissile",
+    "time": 8,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_NeutrinoBomb",
+        "amount": 1
+      },
+      {
+        "id": "I_TrackingDevice",
+        "amount": 1
+      },
+      {
+        "id": "I_MissileHousing",
+        "amount": 1
+      },
+      {
+        "id": "I_ControlSystems",
+        "amount": 1
+      },
+      {
+        "id": "I_BasicFuel",
+        "amount": 5
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_NeutrinoMissile",
+        "amount": 1
+      }
+    ],
+    "level": 10,
+    "faction": "GriffithsCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Nozzle",
+    "icon": "UI/ItemIcons/T_Nozzle_Icon",
+    "name": "Düse",
+    "quantity": 1,
+    "output": "I_Nozzle",
+    "time": 5,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_HeatResistantSheet",
+        "amount": 2
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 6
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_HeatResistantSheet",
+        "amount": 200
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 2000
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 100
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 800
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_OnboardInstruments",
+    "icon": "UI/ItemIcons/T_OnboardInstruments_Icon",
+    "name": "Bordinstrumente",
+    "quantity": 1,
+    "output": "I_OnboardInstruments",
+    "time": 5,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Electronics",
+        "amount": 1
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 2
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Electronics",
+        "amount": 600
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 800
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 1000
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 11
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_OrganicCompound",
+    "icon": "UI/ItemIcons/T_OrganicCompound_Icon",
+    "name": "Organische Verbindung",
+    "quantity": 3,
+    "output": "I_OrganicCompound",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1
+      },
+      {
+        "id": "I_RefinedOil",
+        "amount": 2
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1000
+      },
+      {
+        "id": "I_RefinedOil",
+        "amount": 600
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 200
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_OrganProducer",
+    "icon": "UI/ItemIcons/T_OrganProducer_Icon",
+    "name": "Organfertiger",
+    "quantity": 1,
+    "output": "I_OrganProducer",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Bioprinter",
+        "amount": 1
+      },
+      {
+        "id": "I_GenomeAlternator",
+        "amount": 1
+      },
+      {
+        "id": "I_Biofilament",
+        "amount": 3
+      },
+      {
+        "id": "I_Nanofibre",
+        "amount": 2
+      },
+      {
+        "id": "I_OrganicCompound",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_OrganProducerBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1200
+      }
+    ],
+    "level": 15,
+    "faction": "FutureCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_OrganProducerMaxLvl",
+    "icon": "UI/ItemIcons/T_OrganProducer_Icon",
+    "name": "Organfertiger",
+    "quantity": 1,
+    "output": "I_OrganProducer",
+    "time": 6,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_Bioprinter",
+        "amount": 1
+      },
+      {
+        "id": "I_GenomeAlternator",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_OrganProducer",
+        "amount": 1
+      }
+    ],
+    "level": 10,
+    "faction": "FutureCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PayloadStage",
+    "icon": "UI/ItemIcons/T_PayloadStage_Icon",
+    "name": "Nutzlaststufe",
+    "quantity": 1,
+    "output": "I_PayloadStage",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 2
+      },
+      {
+        "id": "I_IonThrusters",
+        "amount": 2
+      },
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 1
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 3
+      },
+      {
+        "id": "I_Nanofibre",
+        "amount": 2
+      }
+    ],
+    "level": 13,
+    "faction": "CleverCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PistolAmmoItem",
+    "icon": "Weapons/AmmoTypes/T_SR_PistolAmmoBox_Icon",
+    "name": "Pistolenmunition",
+    "quantity": 25,
+    "output": "I_PistolAmmoItem",
+    "time": 4,
+    "description": "Pistolenmunition für Faustwaffen.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 14
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PistolAmmo_ItemPrinter",
+    "icon": "Weapons/AmmoTypes/T_SR_PistolAmmoBox_Icon",
+    "name": "Pistolenmunition",
+    "quantity": 10,
+    "output": "I_PistolAmmoItem",
+    "time": 0,
+    "description": "Pistolenmunition für Faustwaffen.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 7
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PlaceholderCraftingRecipe",
+    "icon": "UI/Buildings/CommonAssets/Textures/SR_buildingIconSTART",
+    "quantity": 1,
+    "output": "I_PlaceholderCraftingResult",
+    "time": 5,
+    "description": "Crafting test",
+    "ingredients": [
+      {
+        "id": "I_PlaceholderCraftingIngredient",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PlasmaGenerator",
+    "icon": "UI/ItemIcons/T_PlasmaGenerator_Icon",
+    "name": "Plasmagenerator",
+    "quantity": 1,
+    "output": "I_PlasmaGenerator",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_LaserEmitter",
+        "amount": 1
+      },
+      {
+        "id": "I_Generator",
+        "amount": 2
+      },
+      {
+        "id": "I_ReinforcedHousing",
+        "amount": 2
+      },
+      {
+        "id": "I_IonInjector",
+        "amount": 1
+      }
+    ],
+    "level": 12,
+    "faction": "SelenianCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PlasmaOxygenConverter",
+    "icon": "UI/ItemIcons/T_PlasmaOxygenConverter_Icon",
+    "name": "Plasma-Sauerstoff-Konverter",
+    "quantity": 1,
+    "output": "I_PlasmaOxygenConverter",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Converter",
+        "amount": 1
+      },
+      {
+        "id": "I_PressureTank",
+        "amount": 2
+      },
+      {
+        "id": "I_PlasmaGenerator",
+        "amount": 1
+      },
+      {
+        "id": "I_ElectromagneticCoil",
+        "amount": 1
+      },
+      {
+        "id": "I_Tube",
+        "amount": 3
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_PlasmaOxygenConverterBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 14,
+    "faction": "SelenianCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PlasticDust",
+    "icon": "UI/ItemIcons/T_PlasticDust_Icon",
+    "name": "Plastikstaub",
+    "quantity": 2,
+    "output": "I_PlasticDust",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_OrganicCompound",
+        "amount": 2
+      },
+      {
+        "id": "I_BasicFuel",
+        "amount": 1
+      },
+      {
+        "id": "I_UberOil",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_PlasticDustBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_OrganicCompound",
+        "amount": 300
+      },
+      {
+        "id": "I_BasicFuel",
+        "amount": 300
+      },
+      {
+        "id": "I_UberOil",
+        "amount": 700
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PressureTank",
+    "icon": "UI/ItemIcons/T_PressureTank_Icon",
+    "name": "Drucktank",
+    "quantity": 1,
+    "output": "I_PressureTank",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_HeatResistantSheet",
+        "amount": 5
+      },
+      {
+        "id": "I_Valve",
+        "amount": 2
+      },
+      {
+        "id": "I_Pump",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Pump",
+        "amount": 100
+      },
+      {
+        "id": "I_Valve",
+        "amount": 100
+      },
+      {
+        "id": "I_HeatResistantSheet",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 7
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PressurizedHelium",
+    "icon": "UI/ItemIcons/T_PressurizedHelium_Icon",
+    "name": "Komprimiertes Helium",
+    "quantity": 1,
+    "output": "I_PressurizedHelium",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_HeliumOre",
+        "amount": 1
+      },
+      {
+        "id": "I_SulphurOre",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_HeliumOre",
+        "amount": 2000
+      },
+      {
+        "id": "I_SulphurOre",
+        "amount": 3000
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PressurizedHelium_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_HeliumPressured_RecV2_Icon",
+    "name": "Komprimiertes Helium",
+    "quantity": 5,
+    "output": "I_PressurizedHelium",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_HeliumOre",
+        "amount": 3
+      },
+      {
+        "id": "I_SulphurOre",
+        "amount": 3
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 2
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PropulsionStage",
+    "icon": "UI/ItemIcons/T_PropulsionStage_Icon",
+    "name": "Schubstufe",
+    "quantity": 1,
+    "output": "I_PropulsionStage",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_PressureTank",
+        "amount": 2
+      },
+      {
+        "id": "I_RocketEngine",
+        "amount": 3
+      },
+      {
+        "id": "I_Valve",
+        "amount": 3
+      },
+      {
+        "id": "I_Pump",
+        "amount": 3
+      },
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 1
+      }
+    ],
+    "level": 13,
+    "faction": "CleverCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_PseudorubberInsulator",
+    "icon": "UI/ItemIcons/T_PseudorubberInsulator_Icon",
+    "name": "Pseudogummi-Isolator",
+    "quantity": 2,
+    "output": "I_PseudorubberInsulator",
+    "time": 12,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_UberOil",
+        "amount": 5
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 2
+      },
+      {
+        "id": "I_GoethiteLattice",
+        "amount": 3
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_UberOil",
+        "amount": 800
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 600
+      },
+      {
+        "id": "I_GoethiteLattice",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Pump",
+    "icon": "UI/ItemIcons/T_Pump_Icon",
+    "name": "Pumpe",
+    "quantity": 1,
+    "output": "I_Pump",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Valve",
+        "amount": 1
+      },
+      {
+        "id": "I_Turbine",
+        "amount": 1
+      },
+      {
+        "id": "I_Impeller",
+        "amount": 1
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 3
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Valve",
+        "amount": 100
+      },
+      {
+        "id": "I_Impeller",
+        "amount": 300
+      },
+      {
+        "id": "I_Turbine",
+        "amount": 200
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1500
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1500
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_QuantumTranqualizer",
+    "icon": "UI/ItemIcons/T_QuantumTranqualizer_Icon",
+    "name": "Quanten-Ruhigsteller",
+    "quantity": 1,
+    "output": "I_QuantumTranqualizer",
+    "time": 12,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_IonStabilizer",
+        "amount": 1
+      },
+      {
+        "id": "I_Supermagnet",
+        "amount": 1
+      },
+      {
+        "id": "I_PlasticDust",
+        "amount": 1
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 3
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_IonStabilizer",
+        "amount": 300
+      },
+      {
+        "id": "I_Supermagnet",
+        "amount": 300
+      },
+      {
+        "id": "I_PlasticDust",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 12
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_QuartzBuildingMaterialItemPrinter",
+    "icon": "UI/ItemIcons/T_AdvancedBuildingMaterial",
+    "name": "Quarz-Baumaterial",
+    "quantity": 20,
+    "output": "I_QuartzBuildingMaterial",
+    "time": 0,
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung einzigartiger Konstruktionen.",
+    "ingredients": [
+      {
+        "id": "I_QuartzOre",
+        "amount": 1
+      },
+      {
+        "id": "I_IntermediateBuildingMaterial",
+        "amount": 50
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_QuartzOre",
+        "amount": 35
+      },
+      {
+        "id": "I_IntermediateBuildingMaterial",
+        "amount": 500
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_RefinedOil",
+    "icon": "UI/ItemIcons/T_RefinedOil_Icon",
+    "name": "Raffiniertes Öl",
+    "quantity": 10,
+    "output": "I_RefinedOil",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_MagicOilOre",
+        "amount": 1
+      },
+      {
+        "id": "I_CalciumOre",
+        "amount": 12
+      },
+      {
+        "id": "I_TitaniumOre",
+        "amount": 12
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ReinforcedFrame",
+    "icon": "UI/ItemIcons/T_ReinforcedFrame_Icon",
+    "name": "Verstärkter Rahmen",
+    "quantity": 1,
+    "output": "I_ReinforcedFrame",
+    "time": 5,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_Tube",
+        "amount": 4
+      },
+      {
+        "id": "I_UberTitanium",
+        "amount": 4
+      },
+      {
+        "id": "I_TitaniumBeam",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_UberTitanium",
+        "amount": 500
+      },
+      {
+        "id": "I_Tube",
+        "amount": 600
+      },
+      {
+        "id": "I_TitaniumBeam",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ReinforcedHousing",
+    "icon": "UI/ItemIcons/T_ReinforcedHousing_Icon",
+    "name": "Verstärktes Gehäuse",
+    "quantity": 1,
+    "output": "I_ReinforcedHousing",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 1
+      },
+      {
+        "id": "I_UberWolfram",
+        "amount": 4
+      },
+      {
+        "id": "I_WolframPlate",
+        "amount": 3
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_UberWolfram",
+        "amount": 500
+      },
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 600
+      },
+      {
+        "id": "I_WolframPlate",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Resonator",
+    "icon": "UI/ItemIcons/T_Resonator_Icon",
+    "name": "Resonator",
+    "quantity": 1,
+    "output": "I_Resonator",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Accumulator",
+        "amount": 1
+      },
+      {
+        "id": "I_Generator",
+        "amount": 2
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Accumulator",
+        "amount": 200
+      },
+      {
+        "id": "I_Generator",
+        "amount": 100
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_RNAStabilizer",
+    "icon": "UI/ItemIcons/T_RNAStabilizer_Icon",
+    "name": "RNA-Stabilisator",
+    "quantity": 1,
+    "output": "I_RNAStabilizer",
+    "time": 12,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_OrganicCompound",
+        "amount": 2
+      },
+      {
+        "id": "I_Nanosyringe",
+        "amount": 1
+      },
+      {
+        "id": "I_SyntheticProtein",
+        "amount": 2
+      },
+      {
+        "id": "I_UberOil",
+        "amount": 4
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_UberOil",
+        "amount": 800
+      },
+      {
+        "id": "I_OrganicCompound",
+        "amount": 600
+      },
+      {
+        "id": "I_Nanosyringe",
+        "amount": 200
+      },
+      {
+        "id": "I_SyntheticProtein",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 11
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_RocketEngine",
+    "icon": "UI/ItemIcons/T_RocketEngine_Icon",
+    "name": "Raketentriebwerk",
+    "quantity": 1,
+    "output": "I_RocketEngine",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Nozzle",
+        "amount": 2
+      },
+      {
+        "id": "I_Turbine",
+        "amount": 1
+      },
+      {
+        "id": "I_Pump",
+        "amount": 3
+      },
+      {
+        "id": "I_RocketFuel",
+        "amount": 5
+      },
+      {
+        "id": "I_Condenser",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_RocketFuel",
+        "amount": 600
+      },
+      {
+        "id": "I_Condenser",
+        "amount": 100
+      },
+      {
+        "id": "I_Turbine",
+        "amount": 400
+      },
+      {
+        "id": "I_Pump",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_RocketFuel",
+    "icon": "UI/ItemIcons/T_RocketFuel_Icon",
+    "name": "Raketentreibstoff",
+    "quantity": 2,
+    "output": "I_RocketFuel",
+    "time": 12,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_LiquidHelium",
+        "amount": 6
+      },
+      {
+        "id": "I_BasicFuel",
+        "amount": 2
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 3
+      },
+      {
+        "id": "I_RefinedOil",
+        "amount": 8
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_LiquidHelium",
+        "amount": 600
+      },
+      {
+        "id": "I_BasicFuel",
+        "amount": 800
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1000
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 12
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Rotor",
+    "icon": "UI/ItemIcons/T_Rotor_Icon",
+    "name": "Rotor",
+    "quantity": 1,
+    "output": "I_Rotor",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumRod",
+        "amount": 2
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_RotorBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 300
+      },
+      {
+        "id": "I_TitaniumRod",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 400
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Rotor_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Rotor_RecV2_Icon",
+    "name": "Rotor",
+    "quantity": 6,
+    "output": "I_Rotor",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumRod",
+        "amount": 1
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 2
+      },
+      {
+        "id": "I_WolframPlate",
+        "amount": 1
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_RTSC",
+    "icon": "UI/ItemIcons/T_RTSC_Icon",
+    "name": "RTSC",
+    "quantity": 1,
+    "output": "I_RTSC",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Anti-RadiationCovers",
+        "amount": 1
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 2
+      },
+      {
+        "id": "I_Aerogel",
+        "amount": 2
+      },
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 200
+      },
+      {
+        "id": "I_Anti-RadiationCovers",
+        "amount": 500
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 600
+      },
+      {
+        "id": "I_Aerogel",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 6000
+      }
+    ],
+    "level": 11
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_RTSCGenerator",
+    "icon": "UI/ItemIcons/T_RTSCGenerator_Icon",
+    "name": "RTSC-Generator",
+    "quantity": 1,
+    "output": "I_RTSCGenerator",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_RTSC",
+        "amount": 2
+      },
+      {
+        "id": "I_Generator",
+        "amount": 4
+      },
+      {
+        "id": "I_LaserEmitter",
+        "amount": 2
+      },
+      {
+        "id": "I_Anti-RadiationCovers",
+        "amount": 4
+      },
+      {
+        "id": "I_Cyclotrone",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Anti-RadiationCovers",
+        "amount": 600
+      },
+      {
+        "id": "I_RTSC",
+        "amount": 400
+      },
+      {
+        "id": "I_Cyclotrone",
+        "amount": 300
+      },
+      {
+        "id": "I_LaserEmitter",
+        "amount": 100
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 13
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SatelliteAssembly",
+    "icon": "UI/ItemIcons/T_SatelliteAssembly_Icon",
+    "name": "Satellitenmontage",
+    "quantity": 1,
+    "output": "I_SatelliteAssembly",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_MicroSatellite",
+        "amount": 1
+      },
+      {
+        "id": "I_PropulsionStage",
+        "amount": 1
+      },
+      {
+        "id": "I_PayloadStage",
+        "amount": 1
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 2
+      },
+      {
+        "id": "I_RocketFuel",
+        "amount": 3
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_SatelliteAssemblyBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 15,
+    "faction": "CleverCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SatelliteBody",
+    "icon": "UI/ItemIcons/T_SatelliteBody_Icon",
+    "name": "Satellitenrumpf",
+    "quantity": 1,
+    "output": "I_SatelliteBody",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 4
+      },
+      {
+        "id": "I_Scanner",
+        "amount": 2
+      },
+      {
+        "id": "I_IonThrusters",
+        "amount": 2
+      },
+      {
+        "id": "I_RocketEngine",
+        "amount": 1
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 6
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_RocketEngine",
+        "amount": 600
+      },
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 800
+      },
+      {
+        "id": "I_Scanner",
+        "amount": 100
+      },
+      {
+        "id": "I_IonThrusters",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 11
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Scafolding",
+    "icon": "UI/ItemIcons/T_Scafolding_Icon",
+    "name": "Gerüst",
+    "quantity": 1,
+    "output": "I_Scafolding",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Uberfilament",
+        "amount": 2
+      },
+      {
+        "id": "I_ReinforcedFrame",
+        "amount": 2
+      },
+      {
+        "id": "I_GoethiteLattice",
+        "amount": 1
+      },
+      {
+        "id": "I_PlasticDust",
+        "amount": 1
+      }
+    ],
+    "level": 11
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Scanner",
+    "icon": "UI/ItemIcons/T_Scanner_Icon",
+    "name": "Scanner",
+    "quantity": 1,
+    "output": "I_Scanner",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Lens",
+        "amount": 3
+      },
+      {
+        "id": "I_Generator",
+        "amount": 3
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 12
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Lens",
+        "amount": 400
+      },
+      {
+        "id": "I_Generator",
+        "amount": 100
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 3000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Scanner_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Scanner_RecV2_Icon",
+    "name": "Scanner",
+    "quantity": 2,
+    "output": "I_Scanner",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Lens",
+        "amount": 2
+      },
+      {
+        "id": "I_Generator",
+        "amount": 2
+      },
+      {
+        "id": "I_Gyroscope",
+        "amount": 6
+      },
+      {
+        "id": "I_Uberfilament",
+        "amount": 1
+      },
+      {
+        "id": "I_PseudorubberInsulator",
+        "amount": 3
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Self-sustainedHabitat",
+    "icon": "UI/ItemIcons/T_Self-sustainedHabitat_Icon",
+    "name": "Autarker Wohnkomplex",
+    "quantity": 1,
+    "output": "I_Self-sustainedHabitat",
+    "time": 30,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_MarsHabitatBase",
+        "amount": 1
+      },
+      {
+        "id": "I_PlasmaOxygenConverter",
+        "amount": 1
+      },
+      {
+        "id": "I_BasicFuel",
+        "amount": 4
+      },
+      {
+        "id": "I_Accumulator",
+        "amount": 2
+      },
+      {
+        "id": "I_Generator",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Self-sustainedHabitatBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1200
+      }
+    ],
+    "level": 15,
+    "faction": "SelenianCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Self-sustainedHabitatMaxLvl",
+    "icon": "UI/ItemIcons/T_Self-sustainedHabitat_Icon",
+    "name": "Autarker Wohnkomplex",
+    "quantity": 1,
+    "output": "I_Self-sustainedHabitat",
+    "time": 12,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_MarsHabitatBase",
+        "amount": 1
+      },
+      {
+        "id": "I_PlasmaOxygenConverter",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Self-sustainedHabitat",
+        "amount": 1
+      }
+    ],
+    "level": 10,
+    "faction": "SelenianCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ShotgunAmmo",
+    "icon": "Weapons/AmmoTypes/T_ShotgunAmmoIcon",
+    "name": "Schrotflintenmunition",
+    "quantity": 15,
+    "output": "I_ShotgunAmmoItem",
+    "time": 6,
+    "description": "Schrotflintenmunition für Waffen mit glattem Lauf.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 20
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 6
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_ShotgunAmmo_ItemPrinter",
+    "icon": "Weapons/AmmoTypes/T_ShotgunAmmoIcon",
+    "name": "Schrotflintenmunition",
+    "quantity": 6,
+    "output": "I_ShotgunAmmoItem",
+    "time": 0,
+    "description": "Schrotflintenmunition für Waffen mit glattem Lauf.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 10
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SilicaSand",
+    "icon": "UI/ItemIcons/T_SilicaSand_Icon",
+    "name": "Synthetisches Silikon",
+    "quantity": 2,
+    "output": "I_SilicaSand",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciumPowder",
+        "amount": 2
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 1
+      },
+      {
+        "id": "I_Ceramics",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_SilicaSandBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 600
+      },
+      {
+        "id": "I_Ceramics",
+        "amount": 800
+      },
+      {
+        "id": "I_HeliumOre",
+        "amount": 2000
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 600
+      }
+    ],
+    "level": 4
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_StandardAmmo",
+    "icon": "UI/ItemIcons/T_StandardAmmo_Icon",
+    "name": "Standardmunition",
+    "quantity": 20,
+    "output": "I_StandardAmmoItem",
+    "time": 6,
+    "description": "Standardmunition für verschiedene Gewehre und Geschütztürme.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 18
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 4
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_StandardAmmo_ItemPrinter",
+    "icon": "UI/ItemIcons/T_StandardAmmo_Icon",
+    "name": "Standardmunition",
+    "quantity": 8,
+    "output": "I_StandardAmmoItem",
+    "time": 0,
+    "description": "Standardmunition für verschiedene Gewehre und Geschütztürme.",
+    "ingredients": [
+      {
+        "id": "I_BasicBuildingMaterial",
+        "amount": 9
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Stator",
+    "icon": "UI/ItemIcons/T_Stator_Icon",
+    "name": "Stator",
+    "quantity": 1,
+    "output": "I_Stator",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 2
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_StatorBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 300
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 600
+      }
+    ],
+    "level": 4
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Stator_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Stator_RecV2_Icon",
+    "name": "Stator",
+    "quantity": 3,
+    "output": "I_Stator",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 1
+      },
+      {
+        "id": "I_WolframWire",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumSheet",
+        "amount": 1
+      }
+    ],
+    "level": 4
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SubstanceFHS-135-493",
+    "icon": "UI/ItemIcons/T_SubstanceFHS-135-493_Icon",
+    "name": "Substanz #FHS-135-493",
+    "quantity": 1,
+    "output": "I_SubstanceFHS-135-493",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1
+      },
+      {
+        "id": "I_GoethitePowder",
+        "amount": 3
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GoethitePowder",
+        "amount": 800
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 600
+      },
+      {
+        "id": "I_LiquidHelium",
+        "amount": 400
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SulphuricAcid",
+    "icon": "UI/ItemIcons/T_Battery_Icon",
+    "name": "Schwefelsäure",
+    "quantity": 4,
+    "output": "I_SulphuricAcid",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_SulphurOre",
+        "amount": 8
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 4
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SulphuricAcid_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_SulphuricAcid_RecV2_Icon",
+    "name": "Schwefelsäure",
+    "quantity": 8,
+    "output": "I_SulphuricAcid",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_SulphurOre",
+        "amount": 10
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 2
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 1
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SulphurOre",
+    "icon": "UI/RawMaterialsIcons/T_Sulphur_Icon",
+    "name": "Schwefelerz",
+    "quantity": 8,
+    "output": "I_SulphurOre",
+    "time": 2,
+    "description": "Highly Acidic",
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Superconductor",
+    "icon": "UI/ItemIcons/T_Superconductor_Icon",
+    "name": "Supraleiter",
+    "quantity": 1,
+    "output": "I_Superconductor",
+    "time": 5,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SyntheticResin",
+        "amount": 4
+      },
+      {
+        "id": "I_Electromagnet",
+        "amount": 2
+      },
+      {
+        "id": "I_Supermagnet",
+        "amount": 6
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Electromagnet",
+        "amount": 300
+      },
+      {
+        "id": "I_Supermagnet",
+        "amount": 400
+      },
+      {
+        "id": "I_SyntheticResin",
+        "amount": 1000
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 3000
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Superconductor_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Superconductor_RecV2_Icon",
+    "name": "Supraleiter",
+    "quantity": 2,
+    "output": "I_Superconductor",
+    "time": 5,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SyntheticResin",
+        "amount": 2
+      },
+      {
+        "id": "I_Electromagnet",
+        "amount": 1
+      },
+      {
+        "id": "I_Supermagnet",
+        "amount": 3
+      },
+      {
+        "id": "I_Aerogel",
+        "amount": 2
+      },
+      {
+        "id": "I_HeatShield",
+        "amount": 2
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SuperCoolant",
+    "icon": "WhiteSquareTexture",
+    "quantity": 1,
+    "output": "I_CoolantSuper",
+    "time": 5,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_CoolantBasic",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Supermagnet",
+    "icon": "UI/ItemIcons/T_Supermagnet_Icon",
+    "name": "Supermagnet",
+    "quantity": 1,
+    "output": "I_Supermagnet",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 4
+      },
+      {
+        "id": "I_WolframPlate",
+        "amount": 4
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Explosive",
+        "amount": 600
+      },
+      {
+        "id": "I_WolframPlate",
+        "amount": 800
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1500
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 6
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SyntheticDNA",
+    "icon": "UI/ItemIcons/T_SyntheticDNA_Icon",
+    "name": "Synthetische DNA",
+    "quantity": 1,
+    "output": "I_SyntheticDNA",
+    "time": 20,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_SyntheticProtein",
+        "amount": 10
+      },
+      {
+        "id": "I_SubstanceFHS-135-493",
+        "amount": 6
+      },
+      {
+        "id": "I_Nanosyringe",
+        "amount": 5
+      },
+      {
+        "id": "I_UberOil",
+        "amount": 10
+      },
+      {
+        "id": "I_Biofilament",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Biofilament",
+        "amount": 200
+      },
+      {
+        "id": "I_SyntheticProtein",
+        "amount": 600
+      },
+      {
+        "id": "I_SubstanceFHS-135-493",
+        "amount": 800
+      },
+      {
+        "id": "I_Nanosyringe",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 8000
+      }
+    ],
+    "level": 12
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SyntheticFertilizer",
+    "icon": "UI/ItemIcons/T_SyntheticFertilizer_Icon",
+    "name": "Synthetischer Dünger",
+    "quantity": 1,
+    "output": "I_SyntheticFertilizer",
+    "time": 8,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_LiquidHelium",
+        "amount": 8
+      },
+      {
+        "id": "I_PlasticDust",
+        "amount": 5
+      }
+    ],
+    "level": 7,
+    "faction": "SelenianCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SyntheticProtein",
+    "icon": "UI/ItemIcons/T_SyntheticProtein_Icon",
+    "name": "Synthetisches Protein",
+    "quantity": 1,
+    "output": "I_SyntheticProtein",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_OrganicCompound",
+        "amount": 2
+      },
+      {
+        "id": "I_SubstanceFHS-135-493",
+        "amount": 1
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_OrganicCompound",
+        "amount": 300
+      },
+      {
+        "id": "I_SubstanceFHS-135-493",
+        "amount": 500
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 700
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 10
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SyntheticResin",
+    "icon": "UI/ItemIcons/T_SyntheticResin_Icon",
+    "name": "Synthetisches Harz",
+    "quantity": 1,
+    "output": "I_SyntheticResin",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_HardeningAgent",
+        "amount": 1
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 3
+      },
+      {
+        "id": "I_CalciteSheets",
+        "amount": 6
+      }
+    ],
+    "level": 7
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_SyntheticResin_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_SyntheticResin_RecV2_Icon",
+    "name": "Synthetisches Harz",
+    "quantity": 3,
+    "output": "I_SyntheticResin",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_HardeningAgent",
+        "amount": 2
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 5
+      },
+      {
+        "id": "I_CalciteSheets",
+        "amount": 6
+      }
+    ],
+    "level": 7
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Syringe",
+    "icon": "UI/ItemIcons/T_Syringe_Icon",
+    "name": "Applikator",
+    "quantity": 1,
+    "output": "I_Syringe",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Tube",
+        "amount": 8
+      },
+      {
+        "id": "I_Glass",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_Tube",
+        "amount": 600
+      },
+      {
+        "id": "I_Glass",
+        "amount": 200
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 800
+      }
+    ],
+    "level": 5
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumBar",
+    "icon": "UI/ItemIcons/T_titaniumBar_Icon",
+    "name": "Titanbarren",
+    "quantity": 2,
+    "output": "I_TitaniumBar",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumOre",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumBeam",
+    "icon": "UI/ItemIcons/T_TitaniumBeam_Icon",
+    "name": "Titanträger",
+    "quantity": 3,
+    "output": "I_TitaniumBeam",
+    "time": 3,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumBar",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_TitaniumBar",
+        "amount": 600
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumHousing",
+    "icon": "UI/ItemIcons/T_TitaniumHousing_Icon",
+    "name": "Titangehäuse",
+    "quantity": 1,
+    "output": "I_TitaniumHousing",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumBeam",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumSheet",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_TitaniumSheet",
+        "amount": 600
+      },
+      {
+        "id": "I_TitaniumBeam",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 400
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumRod",
+    "icon": "UI/ItemIcons/T_titaniumRod_Icon",
+    "name": "Titanstab",
+    "quantity": 1,
+    "output": "I_TitaniumRod",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumBar",
+        "amount": 1
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumRod_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_TitaniumRod_RecV2_Icon",
+    "name": "Titanstab",
+    "quantity": 4,
+    "output": "I_TitaniumRod",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumBar",
+        "amount": 2
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumSheet",
+    "icon": "UI/ItemIcons/T_titaniumSheet_Icon",
+    "name": "Titanblech",
+    "quantity": 2,
+    "output": "I_TitaniumSheet",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumBar",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_TitaniumBar",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 200
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumSheet_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_TitaniumSheet_RecV2_Icon",
+    "name": "Titanblech",
+    "quantity": 6,
+    "output": "I_TitaniumSheet",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumBar",
+        "amount": 2
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TrackingDevice",
+    "icon": "UI/ItemIcons/T_TrackingDevice_Icon",
+    "name": "Ortungsgerät",
+    "quantity": 1,
+    "output": "I_TrackingDevice",
+    "time": 15,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CarbonSonar",
+        "amount": 1
+      },
+      {
+        "id": "I_QuantumTranqualizer",
+        "amount": 1
+      },
+      {
+        "id": "I_Lens",
+        "amount": 1
+      },
+      {
+        "id": "I_OnboardInstruments",
+        "amount": 3
+      },
+      {
+        "id": "I_Scanner",
+        "amount": 1
+      }
+    ],
+    "level": 13
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Tube",
+    "icon": "UI/ItemIcons/T_Tube_Icon",
+    "name": "Rohr",
+    "quantity": 2,
+    "output": "I_Tube",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumRod",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumSheet",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_TubeBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumRod",
+        "amount": 300
+      },
+      {
+        "id": "I_TitaniumSheet",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 400
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Tube_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_Tube_RecV2_Icon",
+    "name": "Rohr",
+    "quantity": 8,
+    "output": "I_Tube",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_GoethiteIngot",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumSheet",
+        "amount": 1
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 1
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Turbine",
+    "icon": "UI/ItemIcons/T_Turbine_Icon",
+    "name": "Turbine",
+    "quantity": 1,
+    "output": "I_Turbine",
+    "time": 6,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_Impeller",
+        "amount": 1
+      },
+      {
+        "id": "I_Stator",
+        "amount": 1
+      },
+      {
+        "id": "I_Rotor",
+        "amount": 2
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_TurbineBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_Impeller",
+        "amount": 200
+      },
+      {
+        "id": "I_Stator",
+        "amount": 300
+      },
+      {
+        "id": "I_Rotor",
+        "amount": 200
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 5
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Uberfilament",
+    "icon": "UI/ItemIcons/T_Uberfilament_Icon",
+    "name": "Hyperfilament",
+    "quantity": 1,
+    "output": "I_Uberfilament",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_CalciumPowder",
+        "amount": 6
+      },
+      {
+        "id": "I_GoethiteLattice",
+        "amount": 2
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_UberfilamentBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_Epoxy",
+        "amount": 400
+      },
+      {
+        "id": "I_GoethiteLattice",
+        "amount": 600
+      },
+      {
+        "id": "I_CalciumPowder",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 11
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_UberOil",
+    "icon": "UI/ItemIcons/T_UberOil_Icon",
+    "name": "Plastik",
+    "quantity": 5,
+    "output": "I_UberOil",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_RefinedOil",
+        "amount": 3
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 1
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_RefinedOil",
+        "amount": 600
+      },
+      {
+        "id": "I_SulphuricAcid",
+        "amount": 800
+      },
+      {
+        "id": "I_Explosive",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 4000
+      }
+    ],
+    "level": 9
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_UberTitanium",
+    "icon": "UI/ItemIcons/T_UberTitanium_Icon",
+    "name": "Titaneisenbarren",
+    "quantity": 10,
+    "output": "I_UberTitanium",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumOre",
+        "amount": 10
+      },
+      {
+        "id": "I_GoethiteOre",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GoethiteOre",
+        "amount": 200
+      },
+      {
+        "id": "I_TitaniumOre",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_UberWolfram",
+    "icon": "UI/ItemIcons/T_WolframBar_Icon",
+    "name": "Wolframstahlbarren",
+    "quantity": 10,
+    "output": "I_UberWolfram",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_WolframOre",
+        "amount": 10
+      },
+      {
+        "id": "I_GoethiteOre",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_GoethiteOre",
+        "amount": 200
+      },
+      {
+        "id": "I_WolframOre",
+        "amount": 800
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 2000
+      }
+    ],
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_UniversalSpaceSoil",
+    "icon": "UI/ItemIcons/T_UniversalSpaceSoil_Icon",
+    "name": "Universelle Weltraumerde",
+    "quantity": 1,
+    "output": "I_UniversalSpaceSoil",
+    "time": 10,
+    "description": "<MISSING STRING TABLE ENTRY>",
+    "ingredients": [
+      {
+        "id": "I_SyntheticFertilizer",
+        "amount": 2
+      },
+      {
+        "id": "I_GoethitePowder",
+        "amount": 10
+      }
+    ],
+    "level": 8,
+    "faction": "SelenianCorporation"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_Valve",
+    "icon": "UI/ItemIcons/T_Valve_Icon",
+    "name": "Ventil",
+    "quantity": 1,
+    "output": "I_Valve",
+    "time": 10,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 1
+      },
+      {
+        "id": "I_TitaniumBeam",
+        "amount": 3
+      },
+      {
+        "id": "I_TitaniumRod",
+        "amount": 2
+      },
+      {
+        "id": "I_Nozzle",
+        "amount": 1
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_ValveBlueprint",
+        "amount": 1
+      },
+      {
+        "id": "I_Nozzle",
+        "amount": 200
+      },
+      {
+        "id": "I_TitaniumHousing",
+        "amount": 400
+      },
+      {
+        "id": "I_TitaniumRod",
+        "amount": 300
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 1000
+      }
+    ],
+    "level": 5
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframBar",
+    "icon": "UI/ItemIcons/T_WolframBar_Icon",
+    "name": "Wolframbarren",
+    "quantity": 2,
+    "output": "I_WolframBar",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_WolframOre",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframPlate",
+    "icon": "UI/ItemIcons/T_WolframPlate_Icon",
+    "name": "Wolframplatte",
+    "quantity": 2,
+    "output": "I_WolframPlate",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_WolframBar",
+        "amount": 2
+      }
+    ],
+    "unlock": [
+      {
+        "id": "I_WolframBar",
+        "amount": 600
+      },
+      {
+        "id": "I_DataPoint",
+        "amount": 400
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframPlate_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_WolframPlate_RecV2_Icon",
+    "name": "Wolframplatte",
+    "quantity": 5,
+    "output": "I_WolframPlate",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_WolframBar",
+        "amount": 2
+      },
+      {
+        "id": "I_WolframPowder",
+        "amount": 1
+      }
+    ],
+    "level": 3
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframPowder",
+    "icon": "UI/ItemIcons/T_WolframPowder_Icon",
+    "name": "Wolframpulver",
+    "quantity": 3,
+    "output": "I_WolframPowder",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_WolframBar",
+        "amount": 1
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframPowder_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_WolframPowder_RecV2_Icon",
+    "name": "Wolframpulver",
+    "quantity": 10,
+    "output": "I_WolframPowder",
+    "time": 2,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird.",
+    "ingredients": [
+      {
+        "id": "I_WolframBar",
+        "amount": 2
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframWire",
+    "icon": "UI/ItemIcons/T_WolframWire_Icon",
+    "name": "Wolframdraht",
+    "quantity": 2,
+    "output": "I_WolframWire",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_WolframBar",
+        "amount": 1
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframWire_v2",
+    "icon": "UI/ItemIcons/ItemRecipiesIcons/T_WolframWire_RecV2_Icon",
+    "name": "Wolframdraht",
+    "quantity": 8,
+    "output": "I_WolframWire",
+    "time": 4,
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden.",
+    "ingredients": [
+      {
+        "id": "I_WolframBar",
+        "amount": 2
+      }
+    ],
+    "level": 2
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_GoethiteOre_LaserDrill",
+    "icon": "UI/RawMaterialsIcons/T_Goethite2_Icon",
+    "name": "Goethiterz",
+    "quantity": 1,
+    "output": "I_GoethiteOre",
+    "time": 4,
+    "description": "Ore",
+    "level": 8
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_CalciumOre_MechanicalDrill",
+    "icon": "UI/RawMaterialsIcons/T_CalciumNormal_Icon",
+    "name": "Calciumerz",
+    "quantity": 4,
+    "output": "I_CalciumOre",
+    "time": 2,
+    "description": "Ore"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumOre_MechanicalDrill",
+    "icon": "UI/RawMaterialsIcons/T_TitaniumNormal_Icon",
+    "name": "Titanerz",
+    "quantity": 4,
+    "output": "I_TitaniumOre",
+    "time": 2,
+    "description": "Ore"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframOre_MechanicalDrill",
+    "icon": "UI/RawMaterialsIcons/T_WolframeNormal_Icon",
+    "name": "Wolframerz",
+    "quantity": 4,
+    "output": "I_WolframOre",
+    "time": 2,
+    "description": "Ore"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_CalciumOre_MechanicalDrillTier2",
+    "icon": "UI/RawMaterialsIcons/T_CalciumNormal_Icon",
+    "name": "Calciumerz",
+    "quantity": 10,
+    "output": "I_CalciumOre",
+    "time": 2,
+    "description": "Ore"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_TitaniumOre_MechanicalDrillTier2",
+    "icon": "UI/RawMaterialsIcons/T_TitaniumNormal_Icon",
+    "name": "Titanerz",
+    "quantity": 10,
+    "output": "I_TitaniumOre",
+    "time": 2,
+    "description": "Ore"
+  },
+  {
+    "type": "recipe",
+    "internalId": "CR_WolframOre_MechanicalDrillTier2",
+    "icon": "UI/RawMaterialsIcons/T_WolframeNormal_Icon",
+    "name": "Wolframerz",
+    "quantity": 10,
+    "output": "I_WolframOre",
+    "time": 2,
+    "description": "Ore"
+  },
+  {
+    "type": "material",
+    "internalId": "I_Accumulator",
+    "icon": "UI/ItemIcons/T_Accumulator_Icon",
+    "name": "Akkumulator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Aerogel",
+    "icon": "UI/ItemIcons/T_Aerogel_Icon",
+    "name": "Aerogel",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Airlock",
+    "icon": "UI/ItemIcons/T_Airlock_Icon",
+    "name": "Luftschleuse",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Anti-RadiationCovers",
+    "icon": "UI/ItemIcons/T_Anti-RadiationCovers_Icon",
+    "name": "Strahlenschutzabdeckung",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_AntimatterGenerator",
+    "icon": "UI/ItemIcons/T_AntimatterGenerator_Icon",
+    "name": "Antimateriegenerator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_ArcReactor",
+    "icon": "UI/ItemIcons/T_ArcReactor_Icon",
+    "name": "ARC-Reaktor",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_BasicBuildingMaterial",
+    "icon": "UI/ItemIcons/T_BasicBuildingMaterial",
+    "name": "Einfaches Baumaterial",
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung einfacher Konstruktionen."
+  },
+  {
+    "type": "material",
+    "internalId": "I_BasicFuel",
+    "icon": "UI/ItemIcons/T_BasicFuel_Icon",
+    "name": "Einfacher Treibstoff",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Battery",
+    "icon": "UI/ItemIcons/T_Battery_Icon",
+    "name": "Batterie",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Biofilament",
+    "icon": "UI/ItemIcons/T_Biofilament_Icon",
+    "name": "Biofilament",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Bioprinter",
+    "icon": "UI/ItemIcons/T_Bioprinter_Icon",
+    "name": "Biodrucker",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_CalciteSheets",
+    "icon": "UI/ItemIcons/T_CalciteSheets_Icon",
+    "name": "Kalzittafeln",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_CalciumBlock",
+    "icon": "UI/ItemIcons/T_CalciumBlock_Icon",
+    "name": "Calciumblock",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_CalciumOre",
+    "icon": "UI/ItemIcons/T_calciumOre_Icon",
+    "name": "Calciumerz",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_CalciumPowder",
+    "icon": "UI/ItemIcons/T_CalciumPowder_Icon",
+    "name": "Calciumpulver",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_CarbonSonar",
+    "icon": "UI/ItemIcons/T_CarbonSonar_Icon",
+    "name": "Kohlenstoffsonar",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Ceramics",
+    "icon": "UI/ItemIcons/T_Ceramics_Icon",
+    "name": "Keramik",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Coil",
+    "icon": "UI/ItemIcons/T_Coil_Icon",
+    "name": "Induktor",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Condenser",
+    "icon": "UI/ItemIcons/T_Condenser_Icon",
+    "name": "Kondensator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_ContainmentVessel",
+    "icon": "UI/ItemIcons/T_ContainmentVessel_Icon",
+    "name": "Eindämmungsgefäß",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_ControlSystems",
+    "icon": "UI/ItemIcons/T_ControlSystems_Icon",
+    "name": "Kontrollsysteme",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Converter",
+    "icon": "UI/ItemIcons/T_Converter_Icon",
+    "name": "Konverter",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Cyclotrone",
+    "icon": "UI/ItemIcons/T_Cyclotrone_Icon",
+    "name": "Cyclotron",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Dome",
+    "icon": "UI/ItemIcons/T_Dome_Icon",
+    "name": "Kuppel",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Electromagnet",
+    "icon": "UI/ItemIcons/T_Electromagnet_Icon",
+    "name": "Elektromagnet",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_ElectromagneticCoil",
+    "icon": "UI/ItemIcons/T_ElectromagneticCoil_Icon",
+    "name": "Elektromagnetische Spule",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Electronics",
+    "icon": "UI/ItemIcons/T_Electronics_Icon",
+    "name": "Elektronik",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_ElementaryBuildingMaterial",
+    "icon": "UI/ItemIcons/T_ElementaryBuildingMaterial27",
+    "name": "Elementares Baumaterial",
+    "description": "Smallest building block of every Product."
+  },
+  {
+    "type": "material",
+    "internalId": "I_EmptyItem",
+    "icon": "UI/ItemIcons/Temp/T_NoItem_White_Icon",
+    "name": "Kein Auftrag.",
+    "description": "Folge den Trainingszielen."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Epoxy",
+    "icon": "UI/ItemIcons/T_Epoxy_Icon",
+    "name": "Epoxid",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Explosive",
+    "icon": "UI/ItemIcons/T_Explosive_Icon",
+    "name": "Chemikalien",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Generator",
+    "icon": "UI/ItemIcons/T_Generator_Icon",
+    "name": "Generator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_GenomeAlternator",
+    "icon": "UI/ItemIcons/T_GenomeAlternator_Icon",
+    "name": "Genomalternator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Glass",
+    "icon": "UI/ItemIcons/T_Glass_Icon",
+    "name": "Glas",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_GoethiteIngot",
+    "icon": "UI/ItemIcons/T_GoethiteIngot_Icon",
+    "name": "Goethitbarren",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_GoethiteLattice",
+    "icon": "UI/ItemIcons/T_GoethiteLattice_Icon",
+    "name": "Goethitgitter",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_GoethiteOre",
+    "icon": "UI/ItemIcons/T_GoethiteOre_Icon",
+    "name": "Goethiterz",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_GoethitePowder",
+    "icon": "UI/ItemIcons/T_GoethitePowder_Icon",
+    "name": "Goethitpulver",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Grenade",
+    "icon": "UI/ItemIcons/T_Grenade_Icon",
+    "name": "Explosive Ladung",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Gyroscope",
+    "icon": "UI/ItemIcons/T_Gyroscope_Icon",
+    "name": "Stabilisator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_HardeningAgent",
+    "icon": "UI/ItemIcons/T_HardeningAgent_Icon",
+    "name": "Härtungsmittel",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_HeatResistantSheet",
+    "icon": "UI/ItemIcons/T_HeatResistantSheet_Icon",
+    "name": "Hitzeresistente Tafel",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_HeatShield",
+    "icon": "UI/ItemIcons/T_HeatShield_Icon",
+    "name": "Hitzeschild",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_HeliumCell",
+    "icon": "UI/ItemIcons/T_PressurizedHelium_Icon",
+    "name": "Heliumzelle",
+    "description": "<MISSING STRING TABLE ENTRY>"
+  },
+  {
+    "type": "material",
+    "internalId": "I_HeliumOre",
+    "icon": "UI/ItemIcons/T_HeliumOre_Icon",
+    "name": "Helium-3",
+    "description": "Rohstoff. Kann weiterverarbeitet werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Impeller",
+    "icon": "UI/ItemIcons/T_Impeller_Icon",
+    "name": "Antreiber",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_IntermediateBuildingMaterial",
+    "icon": "UI/ItemIcons/T_IntermediateBuildingMaterial",
+    "name": "Besseres Baumaterial",
+    "description": "Vom Bauwerkzeug genutztes Material zur Herstellung verbesserter Konstruktionen."
+  },
+  {
+    "type": "material",
+    "internalId": "I_IonBomb",
+    "icon": "UI/ItemIcons/T_IonBomb_Icon",
+    "name": "Ionenbombe",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_IonInjector",
+    "icon": "UI/ItemIcons/T_IonInjector_Icon",
+    "name": "Ioneninjektor",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_IonStabilizer",
+    "icon": "UI/ItemIcons/T_IonStabilizer_Icon",
+    "name": "Ionenstabilisator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_IonThrusters",
+    "icon": "UI/ItemIcons/T_IonThrusters_Icon",
+    "name": "Ionentriebwerk",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_LaserEmitter",
+    "icon": "UI/ItemIcons/T_LaserEmitter_Icon",
+    "name": "Laseremitter",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Lens",
+    "icon": "UI/ItemIcons/T_Lens_Icon",
+    "name": "Linse",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_LiquidHelium",
+    "icon": "UI/ItemIcons/T_LiquidHelium_Icon",
+    "name": "Flüssiges Helium",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_MagicOilOre",
+    "icon": "UI/ItemIcons/T_MagicOilOre_Icon",
+    "name": "Fortudium",
+    "description": "Rohstoff. Kann weiterverarbeitet werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_MarsHabitatBase",
+    "icon": "UI/ItemIcons/T_MarsHabitatBase_Icon",
+    "name": "Mars-Wohnkomplexbasis",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_MicroSatellite",
+    "icon": "UI/ItemIcons/T_MicroSatellite_Icon",
+    "name": "Mikrosatellit",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_MissileHousing",
+    "icon": "UI/ItemIcons/T_MissileHousing_Icon",
+    "name": "Raketengehäuse",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_MolecularScalpel",
+    "icon": "UI/ItemIcons/T_MolecularScalpel_Icon",
+    "name": "Molekularskalpell",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Nanofibre",
+    "icon": "UI/ItemIcons/T_Nanofibre_Icon",
+    "name": "Nanofaser",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Nanosyringe",
+    "icon": "UI/ItemIcons/T_Nanosyringe_Icon",
+    "name": "Nanospritze",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_NeutrinoBomb",
+    "icon": "UI/ItemIcons/T_NeutrinoBomb_Icon",
+    "name": "Neutrinobombe",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_NeutrinoMissile",
+    "icon": "UI/ItemIcons/T_NeutrinoMissile_Icon",
+    "name": "Neutrinorakete",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Nozzle",
+    "icon": "UI/ItemIcons/T_Nozzle_Icon",
+    "name": "Düse",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_OnboardInstruments",
+    "icon": "UI/ItemIcons/T_OnboardInstruments_Icon",
+    "name": "Bordinstrumente",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_OrganicCompound",
+    "icon": "UI/ItemIcons/T_OrganicCompound_Icon",
+    "name": "Organische Verbindung",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_OrganProducer",
+    "icon": "UI/ItemIcons/T_OrganProducer_Icon",
+    "name": "Organfertiger",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Panaceum",
+    "icon": "UI/ItemIcons/T_Panaceum_Icon",
+    "name": "Panaceum™",
+    "description": "<MISSING STRING TABLE ENTRY>"
+  },
+  {
+    "type": "material",
+    "internalId": "I_PayloadStage",
+    "icon": "UI/ItemIcons/T_PayloadStage_Icon",
+    "name": "Nutzlaststufe",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_PlasmaGenerator",
+    "icon": "UI/ItemIcons/T_PlasmaGenerator_Icon",
+    "name": "Plasmagenerator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_PlasmaOxygenConverter",
+    "icon": "UI/ItemIcons/T_PlasmaOxygenConverter_Icon",
+    "name": "Plasma-Sauerstoff-Konverter",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_PlasticDust",
+    "icon": "UI/ItemIcons/T_PlasticDust_Icon",
+    "name": "Plastikstaub",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_PressureTank",
+    "icon": "UI/ItemIcons/T_PressureTank_Icon",
+    "name": "Drucktank",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_PressurizedHelium",
+    "icon": "UI/ItemIcons/T_PressurizedHelium_Icon",
+    "name": "Komprimiertes Helium",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird."
+  },
+  {
+    "type": "material",
+    "internalId": "I_PropulsionStage",
+    "icon": "UI/ItemIcons/T_PropulsionStage_Icon",
+    "name": "Schubstufe",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_PseudorubberInsulator",
+    "icon": "UI/ItemIcons/T_PseudorubberInsulator_Icon",
+    "name": "Pseudogummi-Isolator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Pump",
+    "icon": "UI/ItemIcons/T_Pump_Icon",
+    "name": "Pumpe",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_QuantumTranqualizer",
+    "icon": "UI/ItemIcons/T_QuantumTranqualizer_Icon",
+    "name": "Quanten-Ruhigsteller",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_QuartzBuildingMaterial",
+    "icon": "UI/ItemIcons/T_AdvancedBuildingMaterial",
+    "name": "Quarz-Baumaterial",
+    "description": "Veraltetes Baumaterial. Verwende den Recycler, um Materialien zurückzugewinnen."
+  },
+  {
+    "type": "material",
+    "internalId": "I_RefinedOil",
+    "icon": "UI/ItemIcons/T_RefinedOil_Icon",
+    "name": "Raffiniertes Öl",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird."
+  },
+  {
+    "type": "material",
+    "internalId": "I_ReinforcedFrame",
+    "icon": "UI/ItemIcons/T_ReinforcedFrame_Icon",
+    "name": "Verstärkter Rahmen",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_ReinforcedHousing",
+    "icon": "UI/ItemIcons/T_ReinforcedHousing_Icon",
+    "name": "Verstärktes Gehäuse",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Resonator",
+    "icon": "UI/ItemIcons/T_Resonator_Icon",
+    "name": "Resonator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_RNAStabilizer",
+    "icon": "UI/ItemIcons/T_RNAStabilizer_Icon",
+    "name": "RNA-Stabilisator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_RocketEngine",
+    "icon": "UI/ItemIcons/T_RocketEngine_Icon",
+    "name": "Raketentriebwerk",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_RocketFuel",
+    "icon": "UI/ItemIcons/T_RocketFuel_Icon",
+    "name": "Raketentreibstoff",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Rotor",
+    "icon": "UI/ItemIcons/T_Rotor_Icon",
+    "name": "Rotor",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_RTSC",
+    "icon": "UI/ItemIcons/T_RTSC_Icon",
+    "name": "RTSC",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_RTSCGenerator",
+    "icon": "UI/ItemIcons/T_RTSCGenerator_Icon",
+    "name": "RTSC-Generator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SatelliteAssembly",
+    "icon": "UI/ItemIcons/T_SatelliteAssembly_Icon",
+    "name": "Satellitenmontage",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SatelliteBody",
+    "icon": "UI/ItemIcons/T_SatelliteBody_Icon",
+    "name": "Satellitenrumpf",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Scafolding",
+    "icon": "UI/ItemIcons/T_Scafolding_Icon",
+    "name": "Gerüst",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Scanner",
+    "icon": "UI/ItemIcons/T_Scanner_Icon",
+    "name": "Scanner",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Self-sustainedHabitat",
+    "icon": "UI/ItemIcons/T_Self-sustainedHabitat_Icon",
+    "name": "Autarker Wohnkomplex",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SilicaSand",
+    "icon": "UI/ItemIcons/T_SilicaSand_Icon",
+    "name": "Synthetisches Silikon",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Stator",
+    "icon": "UI/ItemIcons/T_Stator_Icon",
+    "name": "Stator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SubstanceFHS-135-493",
+    "icon": "UI/ItemIcons/T_SubstanceFHS-135-493_Icon",
+    "name": "Substanz #FHS-135-493",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SulphuricAcid",
+    "icon": "UI/ItemIcons/T_SulphuricAcid_Icon",
+    "name": "Schwefelsäure",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SulphurOre",
+    "icon": "UI/ItemIcons/T_SulphurOre_Icon",
+    "name": "Schwefelerz",
+    "description": "Rohstoff. Kann weiterverarbeitet werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Superconductor",
+    "icon": "UI/ItemIcons/T_Superconductor_Icon",
+    "name": "Supraleiter",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Supermagnet",
+    "icon": "UI/ItemIcons/T_Supermagnet_Icon",
+    "name": "Supermagnet",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SyntheticDNA",
+    "icon": "UI/ItemIcons/T_SyntheticDNA_Icon",
+    "name": "Synthetische DNA",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SyntheticFertilizer",
+    "icon": "UI/ItemIcons/T_SyntheticFertilizer_Icon",
+    "name": "Synthetischer Dünger",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SyntheticProtein",
+    "icon": "UI/ItemIcons/T_SyntheticProtein_Icon",
+    "name": "Synthetisches Protein",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_SyntheticResin",
+    "icon": "UI/ItemIcons/T_SyntheticResin_Icon",
+    "name": "Synthetisches Harz",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Syringe",
+    "icon": "UI/ItemIcons/T_Syringe_Icon",
+    "name": "Applikator",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_TitaniumBar",
+    "icon": "UI/ItemIcons/T_titaniumBar_Icon",
+    "name": "Titanbarren",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_TitaniumBeam",
+    "icon": "UI/ItemIcons/T_TitaniumBeam_Icon",
+    "name": "Titanträger",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_TitaniumHousing",
+    "icon": "UI/ItemIcons/T_TitaniumHousing_Icon",
+    "name": "Titangehäuse",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_TitaniumOre",
+    "icon": "UI/ItemIcons/T_titaniumOre_Icon",
+    "name": "Titanerz",
+    "description": "Rohstoff. Kann weiterverarbeitet werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_TitaniumRod",
+    "icon": "UI/ItemIcons/T_titaniumRod_Icon",
+    "name": "Titanstab",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_TitaniumSheet",
+    "icon": "UI/ItemIcons/T_titaniumSheet_Icon",
+    "name": "Titanblech",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_TrackingDevice",
+    "icon": "UI/ItemIcons/T_TrackingDevice_Icon",
+    "name": "Ortungsgerät",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Tube",
+    "icon": "UI/ItemIcons/T_Tube_Icon",
+    "name": "Rohr",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Turbine",
+    "icon": "UI/ItemIcons/T_Turbine_Icon",
+    "name": "Turbine",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_Uberfilament",
+    "icon": "UI/ItemIcons/T_Uberfilament_Icon",
+    "name": "Hyperfilament",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_UberOil",
+    "icon": "UI/ItemIcons/T_UberOil_Icon",
+    "name": "Plastik",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_UberTitanium",
+    "icon": "UI/ItemIcons/T_UberTitanium_Icon",
+    "name": "Titaneisenbarren",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird."
+  },
+  {
+    "type": "material",
+    "internalId": "I_UberWolfram",
+    "icon": "UI/ItemIcons/T_UberWolfram_Icon",
+    "name": "Wolframstahlbarren",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_UniversalSpaceSoil",
+    "icon": "UI/ItemIcons/T_UniversalSpaceSoil_Icon",
+    "name": "Universelle Weltraumerde",
+    "description": "<MISSING STRING TABLE ENTRY>"
+  },
+  {
+    "type": "material",
+    "internalId": "I_Valve",
+    "icon": "UI/ItemIcons/T_Valve_Icon",
+    "name": "Ventil",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_WolframBar",
+    "icon": "UI/ItemIcons/T_WolframBar_Icon",
+    "name": "Wolframbarren",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_WolframOre",
+    "icon": "UI/ItemIcons/T_WolframOre_Icon",
+    "name": "Wolframerz",
+    "description": "Rohstoff. Kann weiterverarbeitet werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_WolframPlate",
+    "icon": "UI/ItemIcons/T_WolframPlate_Icon",
+    "name": "Wolframplatte",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_WolframPowder",
+    "icon": "UI/ItemIcons/T_WolframPowder_Icon",
+    "name": "Wolframpulver",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  },
+  {
+    "type": "material",
+    "internalId": "I_WolframWire",
+    "icon": "UI/ItemIcons/T_WolframWire_Icon",
+    "name": "Wolframdraht",
+    "description": "Herstellungsmaterial, das für verschiedene Anleitungen verwendet wird. Kann exportiert werden."
+  }
+]

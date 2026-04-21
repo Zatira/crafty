@@ -12,6 +12,8 @@ import { signal } from "./signals.mjs"
 //@ts-ignore
 window.loadFile = loadFile
 //@ts-ignore
+window.loadMeta = loadMeta
+//@ts-ignore
 window.init = init
 //@ts-ignore
 window.noi = noi
@@ -36,7 +38,7 @@ const defaultConfig = {
     factories: [],
     materials: [],
     todo: [],
-    game: ''
+    game: '',
 }
 
 
@@ -63,16 +65,12 @@ const translation = new Map([
     ["CR_IntermediateBuildingMaterial", "Material Gelb"],
     ["CR_GoethiteOre_LaserDrill", "Göthit"],
 
-    ["CR_CalciumPowder", "Kalziumpulver"],
-    ["CR_WolframBar", "Wolframbarren"],
-    ["CR_SulphurOre", "Schwefel"],
-    ["CR_Ceramics", "Keramik"],
 
     ["AcidExtractor", "Extraktor"],
     ["MechanicalDrill", "Bergwerk"],
     ["BaseCore", "Basis"],
     ["PackageSender", "Sender"],
-    ["PackageReveiver", "Empfänger"],
+    ["PackageReceiver", "Empfänger"],
     ["ZipRail", "Zipline"],
     ["ZiplineVariants", "Zipline"],
     ["Furnace", "Schmelzhütte"],
@@ -150,7 +148,6 @@ const state = {
     set config(config) {
         this._config = { ...config }
         updateTranslations(this._config)
-        //console.log(new Set(this._config.markers.map(markerText).filter(t => t.indexOf("CR_") == 0)))
         displayConfig()
         configSignal.value = this._config
     },
@@ -165,7 +162,13 @@ const state = {
  */
 function updateTranslations(config) {
     config.materials.filter(m => m.internalId).forEach(m => translation.set(m.internalId, m.name))
-    config.factories.filter(m => m.internalId).forEach(m => translation.set(m.internalId, m.name))
+    config.factories.filter(m => m.internalId).forEach(m => {
+        if (m.internalId) {
+            translation.set(m.internalId, m.name)
+            translation.set(m.internalId.replace("DA_", ""), m.name)
+        }
+    })
+    config.recipes.filter(m => m.internalId).forEach(m => translation.set(m.internalId, m.name))
 }
 
 function updateLocalConfig(config) {
@@ -206,6 +209,102 @@ async function loadFile(event) {
     }
     const content = await filehandle.text()
     readInfo(content, filehandle.name)
+}
+
+async function loadMeta(event) {
+    const formData = new FormData(event.target)
+    const filehandle = formData.get("meta")
+    if (!filehandle || typeof filehandle === "string") {
+        return
+    }
+    const content = await filehandle.text()
+    readMeta(content, filehandle.name)
+}
+
+function readMeta(meta, name) {
+    config().recipes = []
+    config().materials = []
+    config().factories = []
+    const parsedMeta = JSON.parse(meta)
+    const materials = parsedMeta.filter(e => e.type == "material")
+    const recipeMaterialLink = new Map()
+    materials.forEach(m => {
+        const existingMaterial = config().materials.find(em => em.internalId == m.internalId)
+        if (existingMaterial) {
+            Object.assign(existingMaterial, m)
+            recipeMaterialLink.set(existingMaterial.internalId, existingMaterial.id)
+        } else {
+            upsert(config().materials, m, null)
+            recipeMaterialLink.set(m.internalId, m.id)
+        }
+    })
+    const factories = parsedMeta.filter(e => e.type == "factory")
+    const recipeFactoryLink = new Map()
+    factories.forEach(f => {
+        const existingFactory = config().factories.find(ef => ef.internalId == f.internalId)
+        if (existingFactory) {
+            Object.assign(existingFactory, f)
+            f.recipes?.forEach(r => {
+                recipeFactoryLink.set(r, existingFactory.id)
+            })
+        } else {
+            upsert(config().factories, f, null)
+            f.recipes?.forEach(r => {
+                recipeFactoryLink.set(r, f.id)
+            })
+        }
+    })
+    const recipes = parsedMeta.filter(e => e.type == "recipe")
+    recipes.forEach(r => {
+        if (!r.name) {
+            console.log('recipe without name:', r)
+            return
+        }
+        const existingRecipe = config().recipes.find(er => er.internalId == r.internalId)
+        if (existingRecipe) {
+            Object.assign(existingRecipe, r)
+            existingRecipe.factoryId = recipeFactoryLink.get(r.internalId)
+            existingRecipe.ingredients?.forEach(i => {
+                const id = recipeMaterialLink.get(i.id)
+                if (id !== 0 && !id) {
+                    console.log('missing material for recipe:', id, i.id)
+                    return
+                }
+                i.id = id
+            })
+            existingRecipe.unlock?.forEach(i => {
+                const id = recipeMaterialLink.get(i.id)
+                if (id !== 0 && !id) {
+                    console.log('missing material for recipe:', id, i.id)
+                    return
+                }
+                i.id = id
+            })
+            existingRecipe.materialId = recipeMaterialLink.get(r.output)
+        } else {
+            upsert(config().recipes, r, null)
+            r.factoryId = recipeFactoryLink.get(r.internalId)
+            r.ingredients?.forEach(i => {
+                const id = recipeMaterialLink.get(i.id)
+                if (id !== 0 && !id) {
+                    console.log('missing material for recipe:', id, i.id)
+                    return
+                }
+                i.id = id
+            })
+            r.unlock?.forEach(i => {
+                const id = recipeMaterialLink.get(i.id)
+                if (id !== 0 && !id) {
+                    console.log('missing material for recipe:', id, i.id)
+                    return
+                }
+                i.id = id
+            })
+            r.materialId = recipeMaterialLink.get(r.output)
+        }
+    })
+    updateLocalConfig(config())
+    saveInternal(config())
 }
 
 function readInfo(configContent, name) {
@@ -518,11 +617,19 @@ function recipeLink(recipe) {
     return n('a', [recipe.name], { href: '#recipe/' + recipe.id + '-' + sluggy(recipe.name) })
 }
 
-function factoryLink(factory) {
+function factoryLink(factoryId) {
+    const factory = factoryById(config(), factoryId)
+    if (!factory) {
+        return n('span', [factoryId ?? 'unbekannte Fabrik'])
+    }
     return n('a', [factory.name], { href: '#factory/' + factory.id + '-' + sluggy(factory.name) })
 }
 
-function materialLink(material) {
+function materialLink(materialId) {
+    const material = materialById(config(), materialId)
+    if (!material) {
+        return n('span', [materialId ?? 'unbekanntes Material'])
+    }
     return n('a', [material.name], { href: '#material/' + material.id + '-' + sluggy(material.name) })
 }
 
@@ -968,7 +1075,7 @@ class MapComponent {
                     const from = markerById(config(), md.target.from);;
                     const to = markerById(config(), md.target.to);
                     if (!to || !from) {
-                        console.log(md.target)
+                        // console.log(md.target)
                         return
                     }
                     const lp = L.polygon([
@@ -1255,7 +1362,7 @@ function renderMaterialList() {
                 n('th', ['Name'], { $click: () => sortTable('materialTbl', 0), style: "cursor:pointer;" }),
             ]),
             ...materials.toSorted((a, b) => a.name.localeCompare(b.name)).map(f => n('tr', [
-                n('td', [materialLink(f)]),
+                n('td', [materialLink(f.id)]),
             ]))
         ], { id: 'materialTbl' })
     ])
@@ -1303,7 +1410,7 @@ function renderFactoryList() {
                 n('th', ['Hitze'], { $click: () => sortTable('factoryTbl', 2), style: "cursor:pointer;" })
             ]),
             ...factories.toSorted((a, b) => a.name.localeCompare(b.name)).map(f => n('tr', [
-                n('td', [factoryLink(f)]),
+                n('td', [factoryLink(f.id)]),
                 n('td', [f.power], { style: 'color: cyan' }),
                 n('td', [f.heat], { style: 'color: coral' })
             ]))
@@ -1349,8 +1456,8 @@ function renderRecipeList() {
             ]),
             ...recipes.toSorted((a, b) => a.name.localeCompare(b.name)).map(r => n('tr', [
                 n('td', [recipeLink(r)]),
-                n('td', [materialLink(materialById(config(), r.materialId))]),
-                n('td', [factoryLink(factoryById(config(), r.factoryId))])
+                n('td', [materialLink(r.materialId)]),
+                n('td', [factoryLink(r.factoryId)])
             ]))
         ], { id: 'recipeTbl' })
     ])
@@ -1375,18 +1482,29 @@ function renderRecipe(id) {
             dependantRecipies.push(r);
         }
     }
-    const recipeFactory = factoryById(config(), recipe.factoryId)
     const recipeNodes = []
-    for (const recipe of recipeUsedByRecipes(config(), id)) {
+    for (const mr of materialUsedByRecipes(config(), recipe.materialId)) {
         recipeNodes.push(n('br'))
-        recipeNodes.push(recipeLink(recipe))
+        recipeNodes.push(recipeLink(mr))
+    }
+    const unlockNodes = []
+    if (recipe.unlock) {
+        recipe.unlock.forEach((u) => {
+            unlockNodes.push(n('div', [materialLink(u.id), ' ', u.amount]))
+        })
+    }
+    if (unlockNodes.length == 0) {
+        unlockNodes.push(n('div', ['sofort Freigeschalten']))
     }
     const material = materialById(config(), recipe.materialId)
     const markerNodes = []
-    const relevantMarkers = config().markers.filter(m => translate(m.currentRecipe) == material.name).toSorted((a, b) => (a.x + a.y) - (b.x + b.y))
-    relevantMarkers.forEach(m => {
-        markerNodes.push(n('div', [markerLink(m)]))
-    })
+    let relevantMarkers = []
+    if (material) {
+        relevantMarkers = config().markers.filter(m => translate(m.currentRecipe) == material.name).toSorted((a, b) => (a.x + a.y) - (b.x + b.y))
+        relevantMarkers.forEach(m => {
+            markerNodes.push(n('div', [markerLink(m)]))
+        })
+    }
     const minimap = (markerNodes) => {
         const minimapElement = n('div', [], { id: 'minimap', width: 256, height: 256, style: "width:256px; height:256px;" })
         setTimeout(() => {
@@ -1415,6 +1533,13 @@ function renderRecipe(id) {
         }, 100);
         return minimapElement
     }
+    const tt = (() => {
+        try {
+            return techtree({}, dependantRecipies)
+        } catch {
+            return n('div')
+        }
+    })()
     return n('div', [
         n('div', [
             n('div', [
@@ -1429,11 +1554,13 @@ function renderRecipe(id) {
                 n('br'),
                 n('div', [
                     n('div', [
-                        n('p', ['Erzeugt: ', materialLink(material)]),
+                        n('p', ['Erzeugt: ', materialLink(recipe.materialId)]),
                         n('br'),
-                        n('p', ['Hergestellt in: ', factoryLink(recipeFactory)]),
+                        n('p', ['Hergestellt in: ', factoryLink(recipe.factoryId)]),
                         n('br'),
-                        n('p', ['Verwendet von: ', ...recipeNodes])
+                        n('p', ['Verwendet von: ', ...recipeNodes]),
+                        n('br'),
+                        n('p', ['Freigeschalten mit: ', ...unlockNodes])
                     ]),
                     n('div', [
                         n('p', ['Hergestellt bei: ', minimap(relevantMarkers), n('div', markerNodes, { style: "max-height: 250px; overflow:auto; overscroll-behavior: contain;" })]),
@@ -1444,12 +1571,12 @@ function renderRecipe(id) {
             n('div', [
                 n('h2', ['Zutaten']),
                 ...(recipe.ingredients?.map(i => {
-                    return n('div', [materialLink(materialById(config(), i.id)), ' ', i.amount])
+                    return n('div', [materialLink(i.id), ' ', i.amount])
                 }) ?? []),
             ]),
         ], { style: 'display:flex; gap: 10px; align-items:start; justify-content: space-between;' }),
         displayCalc(recipe.id),
-        techtree({}, dependantRecipies)
+        tt
     ], { style: 'max-width: 1000px' })
 }
 
@@ -1471,8 +1598,8 @@ function hookIntoNav() {
 }
 
 function key() {
-    return "crafty"
-    // return window.location.href.indexOf("localhost") > -1 ? "local:crafty" : "crafty"
+    //return "crafty"
+    return window.location.href.indexOf("localhost") > -1 ? "local:crafty" : "crafty"
 }
 
 function saveInternal(cfg) {
@@ -1764,7 +1891,7 @@ function renderCalcTree(data) {
     const singleRecipe = n('div', [
         n('b', [recipe.name]),
         ' ',
-        n('i', [factory.name, ' x', p2(data.machines)]),
+        n('i', [factory?.name ?? data.factoryId, ' x', p2(data.machines)]),
         ' ',
         p2(data.amount),
         '/s',
@@ -1967,7 +2094,7 @@ function filterRecipes(config, recipe, filter) {
                             * @param {number} id
                             * @returns {Recipe[]}
                             */
-function recipeUsedByRecipes(config, id) {
+function materialUsedByRecipes(config, id) {
     return config.recipes.filter(r => (r.ingredients ?? []).filter(i => +i.id == +id).length > 0)
 }
 
@@ -1991,7 +2118,7 @@ function materialMadeByRecipes(config, id) {
 
 function deleteRecipe(recipe) {
     const cfg = config()
-    if (recipeUsedByRecipes(cfg, recipe.id).length > 0) {
+    if (materialUsedByRecipes(cfg, recipe.materialId).length > 0) {
         alert("Rezept wird verwendet, kann nicht gelöscht werden")
     } else {
         cfg.recipes = cfg.recipes.filter(r => r != recipe)
@@ -2038,7 +2165,7 @@ function recipeCard(recipe, cfg) {
             ], {
                 style: "display:flex; justify-content: space-between;"
             }),
-            n('span', [factoryById(cfg, recipe.factoryId)?.name ?? 'unbekannt']),
+            n('span', [factoryById(cfg, recipe.factoryId)?.name ?? 'unbekannte Fabrik']),
             n('br'),
             ...(recipe.ingredients?.map(i => {
                 return renderIngredient(i, cfg)
@@ -2058,8 +2185,12 @@ function displayFilter(root) {
 }
 
 function renderIngredient(ingredient, cfg) {
-    const r = cfg.recipes.filter(r => +r.id == +ingredient.id)[0]
-    return n('div', [n('b', r.name), ' ', ingredient.amount])
+    const m = cfg.materials.filter(m => +m.id == +ingredient.id)?.[0]
+    if (!m) {
+        console.log('missing material for', ingredient)
+        return n('div', [n('b', ingredient.id), ' ', ingredient.amount])
+    }
+    return n('div', [n('b', m.name), ' ', ingredient.amount])
 }
 
 function displayConfig() {
@@ -2088,13 +2219,16 @@ function techtree(options, recipes) {
     const height = 1000;
 
     const mo = Object.assign(defaults, options)
-    const nodes = recipes.map((r, i) => ({ id: +r.id, name: r.name, primary: r.primary ?? false, ...(r.primary ? { fx: -(width / 4), fy: -(height / 4) } : {}) }))
+    const nodes = recipes.map((r, i) => ({ id: +r.materialId, name: r.name, primary: r.primary ?? false, ...(r.primary ? { fx: -(width / 4), fy: -(height / 4) } : {}) }))
 
     const links = []
     for (const recipe of recipes) {
         recipe.ingredients?.forEach(i => {
+            if (!nodes.find(n => n.id == +i.id)) {
+                nodes.push({ id: +i.id, name: 'unbekannt' })
+            }
             links.push({
-                target: +recipe.id,
+                target: +recipe.materialId,
                 source: +i.id,
                 level: recipe.level
             })
