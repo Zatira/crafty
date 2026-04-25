@@ -1525,9 +1525,9 @@ function renderRecipe(id) {
             setTimeout(() => {
                 markerNodes.forEach((md) => {
                     const di = L.divIcon({ className: machineMeta.get(md.path)?.icon ?? 'b-icon' })
-                    hovermarker = L.marker(asLeafletCoord(md), { title: markerText(md), icon: di })
-                    hovermarker.addTo(minimapMap);
-                    hovermarker.getElement().addEventListener("click", () => window.location.href = '#map/' + md.id + "-")
+                    const minmapmarker = L.marker(asLeafletCoord(md), { title: markerText(md), icon: di })
+                    minmapmarker.addTo(minimapMap);
+                    minmapmarker.getElement().addEventListener("click", () => window.location.href = '#map/' + md.id + "-")
                 })
             }, 100);
         }, 100);
@@ -1555,25 +1555,19 @@ function renderRecipe(id) {
                 n('div', [
                     n('div', [
                         n('p', ['Erzeugt: ', materialLink(recipe.materialId)]),
-                        n('br'),
+                        n('p', ['Zutaten: ', ...(recipe.ingredients?.map(i => {
+                            return n('div', [materialLink(i.id), ' ', i.amount])
+                        }) ?? [])]),
                         n('p', ['Hergestellt in: ', factoryLink(recipe.factoryId)]),
-                        n('br'),
                         n('p', ['Verwendet von: ', ...recipeNodes]),
-                        n('br'),
                         n('p', ['Freigeschalten mit: ', ...unlockNodes])
                     ]),
                     n('div', [
                         n('p', ['Hergestellt bei: ', minimap(relevantMarkers), n('div', markerNodes, { style: "max-height: 250px; overflow:auto; overscroll-behavior: contain;" })]),
                     ]),
-                ], { style: "display:grid; grid-template-columns:1fr 1fr;" }),
+                ], { class: "columns" }),
 
-            ], { style: 'flex-grow:1' }),
-            n('div', [
-                n('h2', ['Zutaten']),
-                ...(recipe.ingredients?.map(i => {
-                    return n('div', [materialLink(i.id), ' ', i.amount])
-                }) ?? []),
-            ]),
+            ], { style: 'flex-grow:1' })
         ], { style: 'display:flex; gap: 10px; align-items:start; justify-content: space-between;' }),
         displayCalc(recipe.id),
         tt

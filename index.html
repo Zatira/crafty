@@ -51,8 +51,15 @@
     </dialog>
     <header style="display: flex; align-items: center; justify-content: space-between;">
         <h1>🛠️ Crafty</h1>
-        <nav>
-            <ul style="margin: 0;">
+        <nav class="main-nav">
+            <button class="burger" id="burger"
+                onclick="document.getElementById('nav-links').classList.toggle('active')">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="nav-links" style="margin: 0;"
+                onclick="document.querySelector('.nav-links.active')?.classList.toggle('active')">
                 <li>
                     <a href="#recipe"><strong>Rezepte</strong></a>
                 </li>

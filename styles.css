@@ -116,3 +116,58 @@ button.active {
     outline-style: solid !important;
     outline: 2px solid greenyellow;
 }
+
+.columns {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+    .columns {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1000px) {
+    .columns {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+
+.burger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.burger span {
+    height: 3px;
+    width: 25px;
+    background: white;
+    margin: 4px 0;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        right: 10px;
+        background: #333;
+        flex-direction: column;
+        display: none;
+    }
+
+    .nav-links.active {
+        display: flex;
+        z-index: 10;
+
+        li {
+            text-align: right;
+        }
+    }
+
+    .burger {
+        display: flex;
+    }
+}
