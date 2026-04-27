@@ -71,7 +71,6 @@ body {
 footer,
 header,
 main {
-  margin: 0 auto;
   max-width: var(--width-content);
   padding: 1rem 1rem;
 }

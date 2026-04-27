@@ -352,8 +352,8 @@ function init() {
     L.tileLayer('./tiles/{z}/{x}_{y}.webp', {
         noWrap: true
     }).addTo(mapTipMap);
-
     mapTipMap.setView([-140, 70], 4);
+    document.querySelector("dialog#loadConfig")?.append(new SaveImportComponent().render())
 }
 
 /**
@@ -699,6 +699,202 @@ function markerText(marker) {
     return l ? [l, t].join(' - ') : t
 }
 
+class SaveImportComponent {
+
+    render() {
+        return this.markerImportForm()
+    }
+
+    markerImportForm() {
+        const form = n('div', [
+            n('h2', ['Marker Import']),
+            n('form', [
+                n('div', [
+                    fieldFn('Datei', { name: "markerFile", type: 'file', requierd: true })
+                ], { style: "display: flex; gap: 0.5rem" }),
+                n('div', [
+                    n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
+                    n('button', ['OK'], { type: "submit" })
+                ], { style: "display:flex; justify-content:end; gap:10px;" }),
+            ], { $submit: async (event) => await this.submitImportMarker(event), class: "formRows", method: "dialog" }),
+            n('br'),
+            n('p', [
+                "Save Game Locations:",
+                n('br'),
+                'Client: C:\\Program Files (x86)\\Steam\\userdata\\[RandomNumber]\\1631270\\remote\\Saved\\SaveGames',
+                n('br'),
+                'Server: StarRupture\\Saved\\SaveGames'
+            ])
+        ])
+        return form
+    }
+
+    async submitImportMarker(event) {
+        const formData = new FormData(event.target)
+        const filehandle = formData.get("markerFile")
+        if (!filehandle || typeof filehandle === "string") {
+            return
+        }
+        let content = ""
+        if (filehandle.name.endsWith(".sav")) {
+            const buffer = (await filehandle.arrayBuffer()).slice(4);
+            const ds = new DecompressionStream("deflate")
+            const writer = ds.writable.getWriter()
+            writer.write(buffer)
+            writer.close()
+            content = await new Response(ds.readable).text()
+        } else {
+            content = await filehandle.text()
+        }
+        //console.debug(JSON.parse(content))
+        const itemData = JSON.parse(content).itemData
+
+        const fb = Object.entries(itemData.Mass.entities)
+        const itemSet = new Set()
+        fb.map(b => {
+            return {
+                item: b[1].fragmentValues.map(v => {
+                    const marr = v.match(/ItemDataBase=\"([^,]*)\"/)
+                    if (marr) {
+                        const i = marr[1].split("'").join("").split("/").pop()
+                        itemSet.add(i)
+                        return i
+                    } else {
+                        return null
+                    }
+                }).filter(Boolean).pop()
+            }
+        })
+        console.debug(itemSet)
+        const recipeSet = new Set()
+        fb.map(b => {
+            return {
+                item: b[1].fragmentValues.map(v => {
+                    const marr = v.match(/CurrentRecipe=\"([^,]*)\"/)
+                    if (marr) {
+                        const i = marr[1].split("'").join("").split("/").pop().split("\.").pop()
+                        recipeSet.add(i)
+                        return i
+                    } else {
+                        return null
+                    }
+                }).filter(Boolean).pop()
+            }
+        })
+        console.debug(recipeSet)
+
+        const excludes = [
+            "ForgottenEngine", "Foundations", "Interiors", "Modular",
+            "Cooler", "WindPowerGenerator", "DroneConnections", "Foundable",
+            "Antena", "ResourceRedistributor", "Exporter", "StartingPrinter", "Hub",
+            "Turret_Tier1", "Turret_Tier2", "SolarPowerGenerator", "SolarPowerGeneratorTier2"]
+        const buildings = Object.entries(itemData.Mass.entities).filter(([key, entry]) => {
+            const path = entry.spawnData.entityConfigDataPath
+            return path.indexOf("Buildings") >= 0 && excludes.every(e => path.indexOf(e) == -1)
+        })
+        const connections = Object.entries(itemData.CrPackageTransportReplicator.senderConnections).map(([key, val]) => {
+            return {
+                from: key,
+                to: `(ID=${val.receiver.iD})`
+            }
+        })
+        const paths = new Set()
+        buildings.forEach(b => paths.add(b[1].spawnData.entityConfigDataPath))
+        const strData = []
+        const shorten = (marr) => {
+            if (!marr) {
+                return marr
+            }
+            const key = marr[1].split("'").join("").split("/").pop().split("\.").pop()
+            return key;
+        }
+        const buildStr = () => {
+            const fb = buildings
+            strData.length = 0
+            const fs = fb.map(b => {
+                return {
+                    id: b[0],
+                    path: b[1].spawnData.entityConfigDataPath.split("/").slice(-2, -1).pop(),
+                    name: itemData.CrBuildingCustomNameSubsystem.customNames[b[0]],
+                    mainInventoryContainer: b[1].fragmentValues.map(v => {
+                        return shorten(v.match(/MainInventoryContainer.*ItemDataBase=\"([^,]*)\"/))
+                    }).filter(Boolean).pop(),
+                    itemTypeFilter: b[1].fragmentValues.map(v => {
+                        return shorten(v.match(/ItemTypeFilter=\(\"([^,]*)\"/))
+                    }).filter(Boolean).pop(),
+                    currentRecipe: b[1].fragmentValues.map(v => {
+                        return shorten(v.match(/CurrentRecipe=\"([^,]*)\"/))
+                    }).filter(Boolean).pop(),
+                    translation: b[1].spawnData.transform.translation,
+                }
+            })
+            fs.forEach(n => strData.push(n))
+        }
+        const opt = {
+            mx: 350000,
+            my: 300000,
+            rx: 2385,
+            ry: 2048,
+            ox: 3273,
+            oy: 2593,
+            ct: 0,
+            ds: 0
+        }
+        buildStr()
+        const ratiox = opt.mx / opt.rx
+        const ratioy = opt.my / opt.ry
+        strData.forEach(s => {
+            s.x = (s.translation.x / ratiox) + opt.ox
+            s.y = (s.translation.y / ratioy) + opt.oy
+        })
+        function combineLocations(nodes, threshold = 50) {
+            const remaining = nodes.map(n => ({ ...n }))
+            if (threshold == 0) {
+                return remaining
+            }
+            let merged = true
+            while (merged) {
+                merged = false
+                for (let i = 0; i < remaining.length; i++) {
+                    for (let j = i + 1; j < remaining.length; j++) {
+                        if (remaining[i].currentRecipe != undefined
+                            && remaining[j].currentRecipe != undefined
+                            && remaining[i].currentRecipe == remaining[j].currentRecipe) {
+                            const dx = remaining[i].x - remaining[j].x
+                            const dy = remaining[i].y - remaining[j].y
+                            const d = Math.sqrt(dx * dx + dy * dy)
+                            if (d < threshold) {
+                                remaining[i].x = (remaining[i].x + remaining[j].x) / 2
+                                remaining[i].y = (remaining[i].y + remaining[j].y) / 2
+                                remaining.splice(j, 1)
+                                merged = true
+                                break
+                            }
+                        }
+                    }
+                    if (merged) break
+                }
+            }
+            return remaining
+        }
+        const combined = combineLocations(strData, opt.ct)
+        strData.length = 0
+        strData.push(...combined)
+        for (const s of strData) {
+            const label = s.name ?? (s.currentRecipe ?? s.itemTypeFilter ?? s.mainInventoryContainer)
+            const type = s.path
+            const text = label ? [label, type].join(' - ') : type;
+            s.text = text
+            s.type = type
+            s.icon = machineMeta.get(s.path) ?? 'b-icon'
+            s.target = connections.find((c) => c.from == s.id)
+            s.source = connections.find((c) => c.to == s.id)
+        }
+        config().markers = strData
+        updateLocalConfig(config())
+    }
+}
+
 class MapComponent {
     element;
     attached = false;
@@ -736,12 +932,11 @@ class MapComponent {
     }
 
     renderMap(attachCallbacks) {
-        const maxX = 16
-        const maxY = 16
         let selectedId = null
         let sContainer;
         let leafmap;
-        let markers = []
+        let renderedMapMarkers = []
+        let filteredMarkers = []
         let lps = []
         const entities = new Map()
         const focused = []
@@ -782,240 +977,6 @@ class MapComponent {
             displayModal(markerForm(marker))
         }
 
-        function importMarkers() {
-            displayModal(markerImportForm())
-        }
-
-        function markerImportForm() {
-            const form = n('div', [
-                n('h2', ['Marker Import']),
-                n('form', [
-                    n('div', [
-                        fieldFn('Datei', { name: "markerFile", type: 'file', requierd: true })
-                    ], { style: "display: flex; gap: 0.5rem" }),
-                    n('div', [
-                        n('button', ['Abbrechen'], { $click: (event) => event.target.closest('dialog').close() }),
-                        n('button', ['OK'], { type: "submit" })
-                    ], { style: "display:flex; justify-content:end; gap:10px;" }),
-                ], { $submit: async (event) => await submitImportMarker(event), class: "formRows", method: "dialog" }),
-                n('br'),
-                n('p', [
-                    "Save Game Locations:",
-                    n('br'),
-                    'Client: C:\\Program Files (x86)\\Steam\\userdata\\[RandomNumber]\\1631270\\remote\\Saved\\SaveGames',
-                    n('br'),
-                    'Server: StarRupture\\Saved\\SaveGames'
-                ])
-            ])
-            return form
-        }
-
-        async function submitImportMarker(event) {
-            const formData = new FormData(event.target)
-            const filehandle = formData.get("markerFile")
-            if (!filehandle || typeof filehandle === "string") {
-                return
-            }
-            let content = ""
-            if (filehandle.name.endsWith(".sav")) {
-                const buffer = (await filehandle.arrayBuffer()).slice(4);
-                const ds = new DecompressionStream("deflate")
-                const writer = ds.writable.getWriter()
-                writer.write(buffer)
-                writer.close()
-                content = await new Response(ds.readable).text()
-            } else {
-                content = await filehandle.text()
-            }
-            //console.debug(JSON.parse(content))
-            const itemData = JSON.parse(content).itemData
-
-            const fb = Object.entries(itemData.Mass.entities)
-            const itemSet = new Set()
-            fb.map(b => {
-                return {
-                    item: b[1].fragmentValues.map(v => {
-                        const marr = v.match(/ItemDataBase=\"([^,]*)\"/)
-                        if (marr) {
-                            const i = marr[1].split("'").join("").split("/").pop()
-                            itemSet.add(i)
-                            return i
-                        } else {
-                            return null
-                        }
-                    }).filter(Boolean).pop()
-                }
-            })
-            console.debug(itemSet)
-            const recipeSet = new Set()
-            fb.map(b => {
-                return {
-                    item: b[1].fragmentValues.map(v => {
-                        const marr = v.match(/CurrentRecipe=\"([^,]*)\"/)
-                        if (marr) {
-                            const i = marr[1].split("'").join("").split("/").pop().split("\.").pop()
-                            recipeSet.add(i)
-                            return i
-                        } else {
-                            return null
-                        }
-                    }).filter(Boolean).pop()
-                }
-            })
-            console.debug(recipeSet)
-
-            const excludes = [
-                "ForgottenEngine", "Foundations", "Interiors", "Modular",
-                "Cooler", "WindPowerGenerator", "DroneConnections", "Foundable",
-                "Antena", "ResourceRedistributor", "Exporter", "StartingPrinter", "Hub",
-                "Turret_Tier1", "Turret_Tier2", "SolarPowerGenerator", "SolarPowerGeneratorTier2"]
-            const buildings = Object.entries(itemData.Mass.entities).filter(([key, entry]) => {
-                const path = entry.spawnData.entityConfigDataPath
-                return path.indexOf("Buildings") >= 0 && excludes.every(e => path.indexOf(e) == -1)
-            })
-            const connections = Object.entries(itemData.CrPackageTransportReplicator.senderConnections).map(([key, val]) => {
-                return {
-                    from: key,
-                    to: `(ID=${val.receiver.iD})`
-                }
-            })
-            const paths = new Set()
-            buildings.forEach(b => paths.add(b[1].spawnData.entityConfigDataPath))
-            const strData = []
-            const shorten = (marr) => {
-                if (!marr) {
-                    return marr
-                }
-                const key = marr[1].split("'").join("").split("/").pop().split("\.").pop()
-                return key;
-            }
-            const buildStr = () => {
-                const fb = buildings
-                strData.length = 0
-                const fs = fb.map(b => {
-                    return {
-                        id: b[0],
-                        path: b[1].spawnData.entityConfigDataPath.split("/").slice(-2, -1).pop(),
-                        name: itemData.CrBuildingCustomNameSubsystem.customNames[b[0]],
-                        mainInventoryContainer: b[1].fragmentValues.map(v => {
-                            return shorten(v.match(/MainInventoryContainer.*ItemDataBase=\"([^,]*)\"/))
-                        }).filter(Boolean).pop(),
-                        itemTypeFilter: b[1].fragmentValues.map(v => {
-                            return shorten(v.match(/ItemTypeFilter=\(\"([^,]*)\"/))
-                        }).filter(Boolean).pop(),
-                        currentRecipe: b[1].fragmentValues.map(v => {
-                            return shorten(v.match(/CurrentRecipe=\"([^,]*)\"/))
-                        }).filter(Boolean).pop(),
-                        translation: b[1].spawnData.transform.translation,
-                    }
-                })
-                fs.forEach(n => strData.push(n))
-                // console.debug(strData)
-            }
-            // console.debug(paths)
-            // console.debug(buildings)
-            // console.debug(strData)
-            const opt = {
-                mx: 350000,
-                my: 300000,
-                rx: 2385,
-                ry: 2048,
-                ox: 3273,
-                oy: 2593,
-                ct: 0,
-                ds: 0
-            }
-            const render = (opt) => {
-                buildStr()
-                const ratiox = opt.mx / opt.rx
-                const ratioy = opt.my / opt.ry
-                strData.forEach(s => {
-                    s.x = (s.translation.x / ratiox) + opt.ox
-                    s.y = (s.translation.y / ratioy) + opt.oy
-                })
-                function combineLocations(nodes, threshold = 50) {
-                    const remaining = nodes.map(n => ({ ...n }))
-                    if (threshold == 0) {
-                        return remaining
-                    }
-                    let merged = true
-                    while (merged) {
-                        merged = false
-                        for (let i = 0; i < remaining.length; i++) {
-                            for (let j = i + 1; j < remaining.length; j++) {
-                                if (remaining[i].currentRecipe != undefined
-                                    && remaining[j].currentRecipe != undefined
-                                    && remaining[i].currentRecipe == remaining[j].currentRecipe) {
-                                    const dx = remaining[i].x - remaining[j].x
-                                    const dy = remaining[i].y - remaining[j].y
-                                    const d = Math.sqrt(dx * dx + dy * dy)
-                                    if (d < threshold) {
-                                        remaining[i].x = (remaining[i].x + remaining[j].x) / 2
-                                        remaining[i].y = (remaining[i].y + remaining[j].y) / 2
-                                        remaining.splice(j, 1)
-                                        merged = true
-                                        break
-                                    }
-                                }
-                            }
-                            if (merged) break
-                        }
-                    }
-                    return remaining
-                }
-                const combined = combineLocations(strData, opt.ct)
-                strData.length = 0
-                strData.push(...combined)
-                for (const m of markers) {
-                    m.remove()
-                }
-                for (const s of strData) {
-                    const label = s.name ?? (s.currentRecipe ?? s.itemTypeFilter ?? s.mainInventoryContainer)
-                    const type = s.path
-                    const text = label ? [label, type].join(' - ') : type;
-                    s.text = text
-                    s.type = type
-                    s.icon = machineMeta.get(s.path) ?? 'b-icon'
-                    s.target = connections.find((c) => c.from == s.id)
-                    renderMarker(s, opt.ds, entities)
-                }
-                renderMarkerList("")
-                lps.forEach(lp => lp.remove())
-                connections.forEach(element => {
-                    const from = strData.find(e => e.id === element.from)
-                    const to = strData.find(e => e.id === element.to)
-                    if (!from || !to) {
-                        return
-                    }
-                    const lp = L.polygon([
-                        asLeafletCoord(from),
-                        asLeafletCoord(to)
-                    ]).addTo(leafmap);
-                    lps.push(lp)
-                });
-                config().markers = strData
-                updateLocalConfig(config())
-            }
-            render(opt)
-            const bx = n('div', [
-                fieldFn('Dot Size', { $input: (ev) => { opt.ds = +ev.target.value; render(opt) }, value: opt.ds, type: "number" }),
-                fieldFn('Combine Threshold', { $input: (ev) => { opt.ct = +ev.target.value; render(opt) }, value: opt.ct, type: "number" }),
-                fieldFn('Map max x', { $input: (ev) => { opt.mx = +ev.target.value; render(opt) }, value: opt.mx, type: "number" }),
-                fieldFn('Map max y', { $input: (ev) => { opt.my = +ev.target.value; render(opt) }, value: opt.my, type: "number" }),
-                fieldFn('Map ratio x', { $input: (ev) => { opt.rx = +ev.target.value; render(opt) }, value: opt.rx, type: "number" }),
-                fieldFn('Map ratio y', { $input: (ev) => { opt.ry = +ev.target.value; render(opt) }, value: opt.ry, type: "number" }),
-                fieldFn('Map offset x', { $input: (ev) => { opt.ox = +ev.target.value; render(opt) }, value: opt.ox, type: "number" }),
-                fieldFn('Map offset y', { $input: (ev) => { opt.oy = +ev.target.value; render(opt) }, value: opt.oy, type: "number" }),
-            ], { style: "position:fixed; top:0;left:0; display:flex;flex-direction:column; max-width: 300px; max-height: 100vh; overflow:auto; background: #333c" })
-            //document.body.appendChild(bx)
-        }
-
-        function exportMarkers() {
-            const stringified = serialize(config().markers)
-            const fileName = "CraftyMarkers-" + sluggy(config().game) + '-' + new Date().getTime() + '.json'
-            download(stringified, fileName, 'application/json')
-        }
-
         function removeMarker(marker) {
             const markerIndex = config().markers.findIndex(m => m.id == marker.id)
             if (markerIndex != -1) {
@@ -1038,53 +999,70 @@ class MapComponent {
         }
 
         function renderMarkers() {
-            for (const m of markers) {
+            for (const m of renderedMapMarkers) {
                 m.remove()
             }
-            config().markers.forEach(m => renderMarker(m, 0, entities))
+            renderedMapMarkers.length = 0
+            const shouldFilter = filterMapMarkersSignal.value;
+            (shouldFilter ? filteredMarkers : config().markers).forEach(m => renderMarker(m, 0, entities))
         }
 
-        /**
-         * 
-         * @param {String|null} [filter]
-         */
-        function renderMarkerList(filter = "") {
-            markerList.innerHTML = '';
-            config().markers.forEach(md => {
+        function filterMarkers() {
+            const filter = markerFilterSignal.value
+            filteredMarkers = config().markers.filter(md => {
                 const text = markerText(md);
-                const shouldDisplay = (text).toLowerCase().indexOf((filter ?? "").toLowerCase()) > -1
-                if (shouldDisplay) {
-                    const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
-                    const markerRow = n('div', [markerLink(md, false), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
-                    markerList.append(
-                        markerRow
-                    )
-                }
+                return (text).toLowerCase().indexOf((filter ?? "").toLowerCase()) > -1
             })
+        }
+
+        function renderMarkerList() {
+            markerList.replaceChildren(...filteredMarkers.map(md => {
+                const markerEditButton = n('button', ['✏️'], { '$click': () => editMarker(md), class: 'fab' })
+                const markerRow = n('div', [markerLink(md, false), markerEditButton], { style: "display:flex; gap:2rem; align-items:center; justify-content:space-between;", class: 'hoverRow' })
+                return markerRow
+            }))
         }
 
         function clearConnections() {
             lps.forEach(lp => lp.remove())
+            lps.length = 0
         }
 
         function renderConntecions() {
+            const showConnections = connectionsSignal.value
             clearConnections()
-            const markers = config().markers
-            markers.forEach(md => {
-                if (md.target) {
-                    const from = markerById(config(), md.target.from);;
-                    const to = markerById(config(), md.target.to);
-                    if (!to || !from) {
-                        // console.log(md.target)
-                        return
+            if (showConnections) {
+                const shouldFilter = filterMapMarkersSignal.value
+                const markers = (shouldFilter ? filteredMarkers : config().markers)
+                const renderedConnections = []
+                markers.forEach(md => {
+                    if (md.target || md.source) {
+                        const con = md.target ?? md.source
+                        if (renderedConnections.indexOf(con) > -1) {
+                            return
+                        }
+                        renderedConnections.push(con)
+                        const from = markerById(config(), con.from);;
+                        const to = markerById(config(), con.to);
+                        if (!to || !from) {
+                            return
+                        }
+                        const fromRendered = renderedMapMarkers.find(mapMarker => mapMarker.craftyRef == from)
+                        if (!fromRendered) {
+                            renderMarker(from)
+                        }
+                        const toRendered = renderedMapMarkers.find(mapMarker => mapMarker.craftyRef == to)
+                        if (!toRendered) {
+                            renderMarker(to)
+                        }
+                        const lp = L.polygon([
+                            asLeafletCoord(from),
+                            asLeafletCoord(to)
+                        ]).addTo(leafmap);
+                        lps.push(lp)
                     }
-                    const lp = L.polygon([
-                        asLeafletCoord(from),
-                        asLeafletCoord(to)
-                    ]).addTo(leafmap);
-                    lps.push(lp)
-                }
-            });
+                });
+            }
         }
 
 
@@ -1097,7 +1075,8 @@ class MapComponent {
         const renderMarker = (md, ds = 0, entries = undefined) => {
             const di = L.divIcon({ className: machineMeta.get(md.path)?.icon ?? 'b-icon' })
             const marker = L.marker(asLeafletCoord(md), { title: markerText(md), icon: di })
-            markers.push(marker.addTo(leafmap));
+            marker.craftyRef = md;
+            renderedMapMarkers.push(marker.addTo(leafmap));
             if (entries) {
                 entries.set(md.id, { marker, meta: md })
             }
@@ -1119,6 +1098,9 @@ class MapComponent {
             setTimeout(() => {
                 focused.forEach(m => m?.getElement()?.classList.remove("highlight"))
                 focused.length = 0
+                if (!entities) {
+                    return
+                }
                 const marker = entities.get(md.id).marker
                 marker.getElement().classList.add("highlight")
                 focused.push(marker)
@@ -1186,22 +1168,26 @@ class MapComponent {
 
                     const zoomViewerControl = (new Legend()).addTo(leafmap);
 
-                    markerFilterSignal.subscribe((filter) => {
-                        renderMarkerList(filter)
+                    markerFilterSignal.subscribe(() => {
+                        filterMarkers()
+                        renderMarkerList()
+                        renderMarkers()
+                        renderConntecions()
                     })
-                    connectionsSignal.subscribe((active) => {
-                        if (active) {
-                            renderConntecions()
-                        } else {
-                            clearConnections()
-                        }
+                    connectionsSignal.subscribe(() => {
+                        renderMarkers()
+                        renderConntecions()
+                    })
+                    filterMapMarkersSignal.subscribe(() => {
+                        renderMarkers()
+                        renderConntecions()
                     })
 
                     configSignal.subscribe(() => {
-                        setTimeout(() => {
-                            renderMarkers()
-                        }, 30)
-                        renderMarkerList(markerFilterSignal.value)
+                        filterMarkers()
+                        renderMarkerList()
+                        renderMarkers()
+                        renderConntecions()
                     })
                 }, 10);
             }, 10)
@@ -1220,12 +1206,15 @@ class MapComponent {
         attachCallbacks.push(
             (id) => {
                 if (id === 0 || id) {
-                    focusMarkerAndScroll(markerById(config(), id), leafmap, !leafmap)
-                } else {
-                    removeFocus(map)
-                    if (leafmap) {
-                        leafmap.setView([-140, 70], 5);
+                    const marker = markerById(config(), id)
+                    if (marker) {
+                        focusMarkerAndScroll(marker, leafmap, !leafmap)
+                        return
                     }
+                }
+                removeFocus(map)
+                if (leafmap) {
+                    leafmap.setView([-140, 70], 5);
                 }
             }
         )
@@ -1234,7 +1223,8 @@ class MapComponent {
         const markerFilterInput = n('input', [], {
             placeholder: 'Marker Filter', $input: (ev) => {
                 markerFilterSignal.value = ev.target.value
-            }
+            },
+            style: "width: 100%;  box-sizing: border-box;"
         }, "marker-filter-input")
         const connectionsSignal = signal(false)
         const connectionsInput = fieldFn("Verbindungen", {
@@ -1247,39 +1237,25 @@ class MapComponent {
                 }
             }
         }, "connections-input")
+        const filterMapMarkersSignal = signal(false)
+        const filterMapMarkersInput = fieldFn("Kartenmarker filtern", {
+            checked: filterMapMarkersSignal.value,
+            type: "checkbox", $click: (ev) => {
+                if (ev.target.checked) {
+                    filterMapMarkersSignal.value = true
+                } else {
+                    filterMapMarkersSignal.value = false
+                }
+            }
+        }, "filter-map-markers-input")
 
 
         const markerFilter = n('div', [markerFilterInput])
-        const markerActions = n('div', [
-            n('button', ['Marker Import'], { $click: () => importMarkers() }),
-            n('button', ['Marker Export'], { $click: () => exportMarkers() })
-        ], { style: 'display:flex; gap:10px' })
-        const makerListContainer = n('div', [markerFilter, connectionsInput, markerList, markerActions], { style: 'display:flex; gap:10px; flex-direction: column; height: 90vh; width: 250px' })
+        const makerListContainer = n('div', [markerFilter, connectionsInput, filterMapMarkersInput, markerList], { style: 'display:flex; gap:10px; flex-direction: column; height: 90vh; width: 250px' })
         return n('div', [
             n('h2', ['Map']),
-            // n('div', [
-            //     n('span', ['Marker können mit Rechtsklick hinzugefügt werden.']),
-            //     n('div', [], { style: "flex-grow:1" }),
-            //     n('button', ['Mit Strahlung'], {
-            //         $click: (event) => {
-            //             if (event.target.classList.contains("active")) return
-            //             map.replaceChildren(...createTiles("tiles_rad"))
-            //             event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
-            //             event.target.classList.add("active")
-            //         }
-            //     }),
-            //     n('button', ['Ohne Strahlung'], {
-            //         $click: (event) => {
-            //             if (event.target.classList.contains("active")) return
-            //             map.replaceChildren(...createTiles("tiles"))
-            //             event.target.parentElement.querySelectorAll("button.active").forEach(n => n.classList.remove("active"))
-            //             event.target.classList.add("active")
-            //         },
-            //         class: "active"
-            //     })
-            // ], { style: "display:flex; gap:10px; align-items:center;" }),
             n('div', [container, makerListContainer], { style: "display: grid; gap: 10px; grid-template-columns: 1fr 250px" })
-        ], { style: "display:flex; gap:5px; flex-direction:column;" })
+        ], { style: "display:grid; gap:5px; grid-template-rows:auto 1fr; height: 100%" })
 
         function createTiles(base) {
             const tiles = []
@@ -2175,7 +2151,7 @@ function recipeCard(recipe, cfg) {
 function displayFilter(root) {
     root.innerHTML = ""
     const eh = (event) => displayRecipes(event.target.value)
-    root.append(n('input', [], { placeholder: 'Filter', $input: eh }, "recipes-filter-input"))
+    root.append(n('input', [], { placeholder: 'Filter', $input: eh, style: "width: 100%;  box-sizing: border-box;" }, "recipes-filter-input"))
 }
 
 function renderIngredient(ingredient, cfg) {
